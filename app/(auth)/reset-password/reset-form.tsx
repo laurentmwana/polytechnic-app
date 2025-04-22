@@ -12,48 +12,30 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
 import {
-  RegisterUserSchemaInfer,
-  RegisterUserSchema,
+  ResetPasswordSchema,
+  ResetPasswordSchemaInfer,
 } from '@/definitions/auth-schema'
 import { PasswordInput } from '@/components/ui/password-input'
+import { Input } from '@/components/ui/input'
 
-export const RegisterUserForm = () => {
-  const form = useForm<RegisterUserSchemaInfer>({
-    resolver: zodResolver(RegisterUserSchema),
+export const ResetPasswordForm = () => {
+  const form = useForm<ResetPasswordSchemaInfer>({
+    resolver: zodResolver(ResetPasswordSchema),
     defaultValues: {
-      name: '',
       email: '',
       password: '',
       password_confirmation: '',
     },
   })
 
-  const onSubmit = (values: RegisterUserSchemaInfer) => {
+  const onSubmit = (values: ResetPasswordSchemaInfer): void => {
     console.log(values)
   }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Nom</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormDescription>
-                Votre nom complet tel qu’il doit apparaître sur votre compte.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
         <FormField
           control={form.control}
           name="email"
@@ -91,7 +73,7 @@ export const RegisterUserForm = () => {
 
         <FormField
           control={form.control}
-          name="password_confirmation"
+          name="password"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Confirmation du mot de passe</FormLabel>
@@ -99,7 +81,8 @@ export const RegisterUserForm = () => {
                 <PasswordInput {...field} />
               </FormControl>
               <FormDescription>
-                Entrez à nouveau le mot de passe pour confirmation.
+                Doit contenir au moins 8 caractères pour des raisons de
+                sécurité.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -107,7 +90,7 @@ export const RegisterUserForm = () => {
         />
 
         <Button type="submit" className="w-full">
-          Créer
+          Modifier
         </Button>
       </form>
     </Form>

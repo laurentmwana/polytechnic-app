@@ -1,7 +1,5 @@
-"use server"
+'use server'
 
-import { RegisterUserSchemaInfer } from "@/src/schemas/auth-schema"
+import { RegisterUserSchemaInfer } from '@/definitions/auth-schema'
 
-const registerUser = async (data: RegisterUserSchemaInfer) => {
-    
-}
+const registerUser = async (data: RegisterUserSchemaInfer) => {}

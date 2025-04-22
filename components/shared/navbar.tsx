@@ -13,6 +13,8 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import { ThemeToggle } from '../themes/theme-toggle'
+import { AvatarDropdown } from './avatar-user'
+import { NotificationButton } from './notification-button'
 
 export const NavbarBase = () => {
   const [open, setOpen] = useState(false)
@@ -64,6 +66,8 @@ export const NavbarBase = () => {
           <div className="flex items-center space-x-4">
             <div className="flex items-center gap-4">
               <ThemeToggle />
+              <NotificationButton />
+              <AvatarDropdown />
             </div>
 
             {/* Mobile Menu Sheet */}
