@@ -2,7 +2,7 @@ import { ErrorResponse } from '@/types/fetch'
 
 type FetchOptions = {
   method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
-  body?: Record<string, unknown> // Modifié pour accepter les objets complexes
+  body?: Record<string, unknown> // Accepte objets complexes
   headers?: Record<string, string>
 }
 
@@ -15,7 +15,8 @@ type ValidationError = {
   [key: string]: string[]
 }
 
-type ApiResponseData<T> = T & {
+type ApiResponseData<T> = {
+  data?: T
   errors?: ValidationError
   message?: string
 }
@@ -59,7 +60,6 @@ export async function fetchJson<T>(
         responseData.errors
       )
     }
-    
 
     if (!response.ok) {
       throw new ApiError({
@@ -68,15 +68,20 @@ export async function fetchJson<T>(
       })
     }
 
+    // Extraction intelligente de la donnée utile
+    // Si responseData.data est défini, on le retourne, sinon responseData (cas où la donnée est au premier niveau)
+    const data: T =
+      responseData.data !== undefined
+        ? responseData.data
+        : (responseData as unknown as T)
+
     return {
-      data: responseData as T,
+      data,
       status: response.status,
     }
   } catch (error) {
-    // On propage les ApiError existantes
     if (error instanceof ApiError) throw error
 
-    // Gestion des erreurs réseau
     throw new ApiError({
       status: 500,
       message: error instanceof Error ? error.message : 'Échec réseau',

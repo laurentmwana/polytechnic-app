@@ -18,7 +18,7 @@ import {
   LoginUserSchemaInfer,
 } from '@/definitions/auth-schema'
 import { PasswordInput } from '@/components/ui/password-input'
-import { loginUser } from './action'
+import { loginUser } from '@/actions/auth'
 import { ApiError } from '@/lib/fetch'
 import { toast } from 'sonner'
 import { useState } from 'react'

@@ -1,5 +1,8 @@
-import { webRoute } from '@/lib/route'
+export const ROUTE_GUEST = [
+  '/login',
+  '/register',
+  '/forgot-password',
+  '/reset-password',
+]
 
-export const ROUTE_GUEST = [webRoute('login')]
-
-export const ADMIN_ROUTE_PREFIX = []
+export const ADMIN_ROUTE = ['']

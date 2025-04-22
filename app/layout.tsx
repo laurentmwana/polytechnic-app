@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 import { ThemeProvider } from '@/components/themes/theme-provider'
 import { Inter } from 'next/font/google'
+import { Toaster } from '@/components/ui/sonner'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -24,7 +25,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <div>{children}</div>
+
+          <Toaster className="w-auto" position="top-center" />
         </ThemeProvider>
       </body>
     </html>

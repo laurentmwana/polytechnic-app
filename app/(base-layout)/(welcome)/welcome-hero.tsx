@@ -4,18 +4,23 @@ import { Button } from '@/components/ui/button'
 import { motion } from 'framer-motion'
 
 function FloatingPaths({ position }: { position: number }) {
-  const paths = Array.from({ length: 36 }, (_, i) => ({
-    id: i,
-    d: `M-${100 - i * 5 * position} -${189 + i * 6}C-${
-      380 - i * 5 * position
-    } -${189 + i * 6} -${212 - i * 5 * position} ${216 - i * 6} ${
-      152 - i * 5 * position
-    } ${300 - i * 6}C${616 - i * 5 * position} ${900 - i * 6} ${
-      684 - i * 5 * position
-    } ${875 - i * 6} ${200 - i * 5 * position} ${875 - i * 6}`,
-    color: `rgba(59,130,246,${0.1 + i * 0.02})`,
-    width: 0.5 + i * 0.03,
-  }))
+  const paths = Array.from({ length: 36 }, (_, i) => {
+    // Alterner la direction avec (-1)^i
+    const direction = position * (i % 2 === 0 ? 1 : -1)
+
+    return {
+      id: i,
+      d: `M-${100 - i * 5 * direction} -${189 + i * 6}C-${
+        380 - i * 5 * direction
+      } -${189 + i * 6} -${212 - i * 5 * direction} ${216 - i * 6} ${
+        152 - i * 5 * direction
+      } ${300 - i * 6}C${616 - i * 5 * direction} ${900 - i * 6} ${
+        684 - i * 5 * direction
+      } ${875 - i * 6} ${200 - i * 5 * direction} ${875 - i * 6}`,
+      color: `rgba(59,130,246,${0.1 + i * 0.02})`,
+      width: 0.5 + i * 0.03,
+    }
+  })
 
   return (
     <div className="pointer-events-none absolute inset-0">
@@ -23,6 +28,7 @@ function FloatingPaths({ position }: { position: number }) {
         className="h-full w-full text-primary"
         viewBox="0 0 696 316"
         fill="none"
+        aria-hidden="true"
       >
         <title>Background Paths</title>
         {paths.map((path) => (
@@ -32,6 +38,7 @@ function FloatingPaths({ position }: { position: number }) {
             stroke="currentColor"
             strokeWidth={path.width}
             strokeOpacity={0.1 + path.id * 0.02}
+            fill="none"
             initial={{ pathLength: 0.3, opacity: 0.4 }}
             animate={{
               pathLength: 1,
@@ -40,7 +47,7 @@ function FloatingPaths({ position }: { position: number }) {
             }}
             transition={{
               duration: 20 + Math.random() * 10,
-              repeat: Number.POSITIVE_INFINITY,
+              repeat: Infinity,
               ease: 'easeInOut',
             }}
           />
@@ -63,7 +70,7 @@ export const WelcomeHero = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="mb-6 inline-flex items-center rounded-full bg-primary/30 px-4 py-2 text-sm font-medium text-primary-foregound"
+          className="mb-6 inline-flex items-center rounded-full bg-primary/30 px-4 py-2 text-sm font-medium text-primary-foreground"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -71,14 +78,15 @@ export const WelcomeHero = () => {
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            strokeWidth="2"
+            strokeWidth={2}
             strokeLinecap="round"
             strokeLinejoin="round"
+            aria-hidden="true"
           >
             <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
             <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
           </svg>
-          Université de kinshasa
+          Université de Kinshasa
         </motion.div>
 
         <motion.div

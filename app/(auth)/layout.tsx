@@ -9,7 +9,9 @@ const AuthLayout = ({ children }: PropsWithChildren) => {
           href="/"
           className="flex items-center gap-2 self-center font-medium"
         >
-          <div className="flex h-9 w-9 items-center justify-center"></div>
+          <div className="flex h-9 w-9 items-center justify-center">
+            PolyTechinique Application
+          </div>
         </Link>
 
         <div className="flex flex-col gap-6">{children}</div>

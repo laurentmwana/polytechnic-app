@@ -1,33 +1,33 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { cookies } from 'next/headers'
 import { decrypt } from './lib/encryption'
+import { webRoute } from './lib/route'
+import { ROUTE_GUEST } from './constants/authorization'
 
-// 1. Specify protected and public routes
-const protectedRoutes = ['/dashboard']
-const publicRoutes = ['/login', '/signup', '/']
+const SESSION_ID = 'session'
 
 export default async function middleware(req: NextRequest) {
-  // 2. Check if the current route is protected or public
   const path = req.nextUrl.pathname
-  const isProtectedRoute = protectedRoutes.includes(path)
-  const isPublicRoute = publicRoutes.includes(path)
+  const cookieStore = req.cookies
+  const cookieData = cookieStore.get(SESSION_ID)?.value
 
-  // 3. Decrypt the session from the cookie
-  const cookie = (await cookies()).get('session')?.value
-  const session = await decrypt(cookie)
-
-  // 4. Redirect to /login if the user is not authenticated
-  if (isProtectedRoute && !session?.userId) {
-    return NextResponse.redirect(new URL('/login', req.nextUrl))
+  if (!cookieData) {
+    return NextResponse.next()
   }
 
-  // 5. Redirect to /dashboard if the user is authenticated
-  if (
-    isPublicRoute &&
-    session?.userId &&
-    !req.nextUrl.pathname.startsWith('/dashboard')
-  ) {
-    return NextResponse.redirect(new URL('/dashboard', req.nextUrl))
+  let session
+  try {
+    // Tenter de déchiffrer et vérifier le JWT
+    session = await decrypt(cookieData)
+  } catch (error) {
+    console.error('Session verification failed:', error)
+    cookieStore.delete(SESSION_ID)
+    return NextResponse.redirect(new URL(webRoute('login'), req.nextUrl))
+  }
+
+  if (ROUTE_GUEST.includes(path) && session?.token) {
+    return NextResponse.redirect(
+      new URL(webRoute('welcome', { is_login: true }), req.nextUrl)
+    )
   }
 
   return NextResponse.next()

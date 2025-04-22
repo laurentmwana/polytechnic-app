@@ -3,14 +3,17 @@ import { cookies } from 'next/headers'
 import { encrypt } from './encryption'
 
 export async function createSession(userId: string, token: string) {
-  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+  const maxAge = 7 * 24 * 60 * 60
   const session = await encrypt({ userId, token })
+
   const cookieStore = await cookies()
 
-  cookieStore.set('session', session, {
+  cookieStore.set({
+    name: 'session',
+    value: session,
     httpOnly: true,
-    secure: true,
-    expires: expiresAt,
+    secure: process.env.NODE_ENV === 'production',
+    maxAge,
     sameSite: 'lax',
     path: '/',
   })
