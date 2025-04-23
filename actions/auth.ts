@@ -24,14 +24,12 @@ export const loginUser = async (
   return false
 }
 
-export const logoutUser = async (): Promise<string> => {
-  const response = await fetchJson<{ message: string }>(apiRoute('login'), {
+export const logoutUser = async (token: string) => {
+  return await fetchJson<{ message: string }>(apiRoute('logout'), {
     method: 'POST',
     headers: {
       Accept: 'application/json',
+      Authorization: `Bearer ${token}`,
     },
   })
-
-    return response.data.message
-
 }

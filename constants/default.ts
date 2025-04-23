@@ -11,6 +11,7 @@ export const ROUTES = {
 export const API_ROUTES = {
   register: '/register',
   login: '/login',
+  logout: '/logout',
   'reset-password': '/reset-password',
   'forgot-password': '/forgot-password',
   me: '/me',

@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { decrypt } from './lib/encryption'
 import { webRoute } from './lib/route'
-import { ROUTE_GUEST } from './constants/authorization'
-
-const SESSION_ID = 'session'
+import { SESSION_ID } from './constants/authorization'
 
 export default async function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname
+  
   const cookieStore = req.cookies
   const cookieData = cookieStore.get(SESSION_ID)?.value
 
@@ -24,11 +23,11 @@ export default async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL(webRoute('login'), req.nextUrl))
   }
 
-  if (ROUTE_GUEST.includes(path) && session?.token) {
-    return NextResponse.redirect(
-      new URL(webRoute('welcome', { is_login: true }), req.nextUrl)
-    )
-  }
+  // if (ROUTE_GUEST.includes(path) && session?.token) {
+  //   return NextResponse.redirect(
+  //     new URL(webRoute('welcome', { is_login: true }), req.nextUrl)
+  //   )
+  // }
 
   return NextResponse.next()
 }

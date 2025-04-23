@@ -6,3 +6,5 @@ export const ROUTE_GUEST = [
 ]
 
 export const ADMIN_ROUTE = ['']
+
+export const SESSION_ID = "session";
