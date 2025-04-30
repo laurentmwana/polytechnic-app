@@ -1,5 +1,7 @@
-'use client' 
+'use client'
 
+import { Heading } from '@/components/shared/heading'
+import { Button } from '@/components/ui/button'
 import { useEffect } from 'react'
 
 export default function Error({
@@ -14,16 +16,16 @@ export default function Error({
   }, [error])
 
   return (
-    <div>
-      <h2>Something went wrong!</h2>
-      <button
+    <div className="container py-12 space-y-6">
+      <Heading title="Une erreur est survenue" description={error.message} />
+      <Button
         onClick={
           // Attempt to recover by trying to re-render the segment
           () => reset()
         }
       >
-        Try again
-      </button>
+        Réessayer
+      </Button>
     </div>
   )
 }

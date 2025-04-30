@@ -16,7 +16,7 @@ import { Input } from '@/components/ui/input'
 import {
   RegisterUserSchemaInfer,
   RegisterUserSchema,
-} from '@/definitions/auth-schema'
+} from '@/definitions/auth.schema'
 import { PasswordInput } from '@/components/ui/password-input'
 
 export const RegisterUserForm = () => {
@@ -31,7 +31,6 @@ export const RegisterUserForm = () => {
   })
 
   const onSubmit = (values: RegisterUserSchemaInfer) => {
-    console.log(values)
   }
 
   return (

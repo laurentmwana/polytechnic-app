@@ -13,9 +13,21 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { ForgotPasswordSchema, ForgotPasswordSchemaInfer } from '@/definitions/auth-schema'
+import {
+  ForgotPasswordSchema,
+  ForgotPasswordSchemaInfer,
+} from '@/definitions/auth.schema'
+import { Loader } from '@/components/ui/loader'
 
-export const ForgotPasswordForm = () => {
+type ForgotPasswordFormProps = {
+  onSubmit: (values: ForgotPasswordSchemaInfer) => Promise<void>
+  processing: boolean
+}
+
+export const ForgotPasswordForm = ({
+  processing,
+  onSubmit,
+}: ForgotPasswordFormProps) => {
   const form = useForm<ForgotPasswordSchemaInfer>({
     resolver: zodResolver(ForgotPasswordSchema),
     defaultValues: {
@@ -23,13 +35,17 @@ export const ForgotPasswordForm = () => {
     },
   })
 
-  const onSubmit = (values: ForgotPasswordSchemaInfer): void => {
-    console.log(values)
+  const handleSubmit = async (values: ForgotPasswordSchemaInfer) => {
+    onSubmit(values).then(() => {
+      if (!processing) {
+        form.reset({ email: '' })
+      }
+    })
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
         <FormField
           control={form.control}
           name="email"
@@ -48,7 +64,7 @@ export const ForgotPasswordForm = () => {
         />
 
         <Button type="submit" className="w-full">
-          Réinitialiser
+          {processing ? <Loader /> : 'Envoyer'}
         </Button>
       </form>
     </Form>

@@ -1,33 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { decrypt } from './lib/encryption'
+import { GUEST_ROUTES } from './constants/granted'
 import { webRoute } from './lib/route'
-import { SESSION_ID } from './constants/authorization'
+import { getToken } from 'next-auth/jwt'
+
+const secret = process.env.NEXTAUTH_SECRET
 
 export default async function middleware(req: NextRequest) {
-  const path = req.nextUrl.pathname
-  
-  const cookieStore = req.cookies
-  const cookieData = cookieStore.get(SESSION_ID)?.value
+  const pathname = req.nextUrl.pathname
 
-  if (!cookieData) {
-    return NextResponse.next()
+  // Récupérer le token de session (côté serveur)
+  const token = await getToken({ req, secret })
+
+  if (token?.email) {
+    if (GUEST_ROUTES.includes(pathname)) {
+      return NextResponse.redirect(new URL(webRoute('welcome'), req.nextUrl))
+    }
   }
-
-  let session
-  try {
-    // Tenter de déchiffrer et vérifier le JWT
-    session = await decrypt(cookieData)
-  } catch (error) {
-    console.error('Session verification failed:', error)
-    cookieStore.delete(SESSION_ID)
-    return NextResponse.redirect(new URL(webRoute('login'), req.nextUrl))
-  }
-
-  // if (ROUTE_GUEST.includes(path) && session?.token) {
-  //   return NextResponse.redirect(
-  //     new URL(webRoute('welcome', { is_login: true }), req.nextUrl)
-  //   )
-  // }
 
   return NextResponse.next()
 }

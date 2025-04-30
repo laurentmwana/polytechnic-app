@@ -29,8 +29,7 @@ function resolveRoute<T extends Record<keyof T, string>>(
       queryParams[paramKey] = String(paramValue)
     }
   }
-
-  // Vérification des paramètres manquants
+  
   const missingParams = resolvedRoute.match(/\[([^\]]+)\]/g)
   if (missingParams) {
     throw new Error(
@@ -40,7 +39,6 @@ function resolveRoute<T extends Record<keyof T, string>>(
     )
   }
 
-  // Construction de la query string
   const queryString =
     Object.keys(queryParams).length > 0
       ? `?${new URLSearchParams(queryParams)}`
@@ -52,9 +50,13 @@ function resolveRoute<T extends Record<keyof T, string>>(
 export const webRoute = (
   key: keyof typeof ROUTES,
   params?: RouteParams
-): string => resolveRoute(ROUTES, key, params)
+): string => {
+  return resolveRoute(ROUTES, key, params)
+}
 
 export const apiRoute = (
   key: keyof typeof API_ROUTES,
   params?: RouteParams
-): string => resolveRoute(API_ROUTES, key, params)
+): string => {
+  return 'http://localhost:8000/api' + resolveRoute(API_ROUTES, key, params)
+}

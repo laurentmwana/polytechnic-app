@@ -22,12 +22,18 @@ type ApiResponseData<T> = {
 }
 
 export class ApiError extends Error {
-  constructor(
-    public response: ErrorResponse,
-    public validationErrors?: ValidationError
-  ) {
+  public response: ErrorResponse
+  public validationErrors?: ValidationError
+
+  constructor(response: ErrorResponse, validationErrors?: ValidationError) {
     super(response.message)
     this.name = 'ApiError'
+    this.response = response
+    this.validationErrors = validationErrors
+    // Maintenir la trace de la pile d'appels (utile pour le debug)
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, ApiError)
+    }
   }
 }
 
@@ -36,19 +42,36 @@ export async function fetchJson<T>(
   options: FetchOptions = {}
 ): Promise<ApiResponse<T>> {
   const { method = 'GET', body, headers = {} } = options
-  const url = process.env.API_ENTRY_POINT_URL + path
+
 
   try {
-    const response = await fetch(url, {
+    const response = await fetch(path, {
       method,
       headers: {
         'Content-Type': 'application/json',
         ...headers,
       },
-      body: body ? JSON.stringify(body) : undefined,
+      // Ne pas envoyer de body pour GET ou HEAD (certains fetch l’interdisent)
+      body: ['GET', 'HEAD'].includes(method) ? undefined : body ? JSON.stringify(body) : undefined,
     })
 
-    const responseData: ApiResponseData<T> = await response.json()
+    // Gestion du cas où la réponse ne contient pas de JSON (ex: 204 No Content)
+    let responseData: ApiResponseData<T> = {} as ApiResponseData<T>
+    try {
+      responseData = await response.json()
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (jsonError) {
+      // Si la réponse n’est pas JSON, on peut gérer ça ici
+      if (response.ok) {
+        // Réponse sans corps, on retourne un objet vide ou null selon le besoin
+        return { data: null as unknown as T, status: response.status }
+      } else {
+        throw new ApiError({
+          status: response.status,
+          message: `Réponse non JSON avec statut ${response.status}`,
+        })
+      }
+    }
 
     if (response.status === 422 && responseData.errors) {
       throw new ApiError(
@@ -65,11 +88,11 @@ export async function fetchJson<T>(
       throw new ApiError({
         status: response.status,
         message: responseData.message || `Erreur HTTP ${response.status}`,
+        details: responseData.errors,
       })
     }
 
     // Extraction intelligente de la donnée utile
-    // Si responseData.data est défini, on le retourne, sinon responseData (cas où la donnée est au premier niveau)
     const data: T =
       responseData.data !== undefined
         ? responseData.data

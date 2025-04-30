@@ -3,3 +3,10 @@ export type ErrorResponse = {
   message: string
   details?: unknown
 }
+
+export interface ValidationError<T> {
+  message: string
+  errors: {
+    [key: keyof T]: Array<string>
+  }
+}

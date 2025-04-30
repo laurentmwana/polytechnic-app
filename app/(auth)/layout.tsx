@@ -1,3 +1,4 @@
+import { AppLogoIcon } from '@/components/shared/logo'
 import Link from 'next/link'
 import { PropsWithChildren } from 'react'
 
@@ -9,11 +10,12 @@ const AuthLayout = ({ children }: PropsWithChildren) => {
           href="/"
           className="flex items-center gap-2 self-center font-medium"
         >
-          <div className="flex h-9 w-9 items-center justify-center">
-            PolyTechinique Application
-          </div>
+          <AppLogoIcon
+            width={80}
+            height={80}
+            className="flex tems-center justify-center"
+          />
         </Link>
-
         <div className="flex flex-col gap-6">{children}</div>
       </div>
     </div>

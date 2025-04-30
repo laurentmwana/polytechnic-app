@@ -12,9 +12,11 @@ import { Menu } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
-import { ThemeToggle } from '../themes/theme-toggle'
+import { ThemeToggle } from '../../src/provider/themes/theme-toggle'
 import { AvatarDropdown } from './avatar-user'
 import { NotificationButton } from './notification-button'
+import { AppLogoIcon } from './logo'
+import { webRoute } from '@/lib/route'
 
 export const NavbarBase = () => {
   const [open, setOpen] = useState(false)
@@ -23,9 +25,12 @@ export const NavbarBase = () => {
   const navItems = [
     { label: 'Accueil', href: '/' },
     { label: 'A propos', href: '/about' },
-    { label: 'Comment ça marche', href: '/how-it-works' },
-    { label: 'Problème 1', href: '/problem/knapsack' },
-    { label: 'Problème 2', href: '/problem/tsp' },
+    { label: 'Départments', href: '/department' },
+    { label: 'Filières', href: '/option' },
+    { label: 'Professeurs', href: '/professor' },
+    { label: 'Horaires', href: '/hor' },
+    { label: 'Délibération', href: '/deliberation' },
+    { label: 'Contact', href: '/contact-us' },
   ]
 
   const isActive = (href: string) => {
@@ -43,7 +48,9 @@ export const NavbarBase = () => {
     <nav className="bg-background/95 border-border sticky top-0 z-50 border-b backdrop-blur-sm">
       <div className="mx-auto px-5 max-w-6xl">
         <div className="flex items-center justify-between py-4">
-          <div className="flex items-center">PolyTechnique</div>
+          <Link href={webRoute('login')} className="flex items-center">
+            <AppLogoIcon />
+          </Link>
 
           {/* Desktop Menu */}
           <div className="hidden items-center space-x-1 lg:flex">
