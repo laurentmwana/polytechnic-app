@@ -1,0 +1,9 @@
+declare namespace NodeJS {
+  interface ProcessEnv {
+    NEXTAUTH_AUTH_SECRET: string
+    NEXTAUTH_AUTH_URL: string
+    API_ENTRY_POINT_URL: string
+    SESSION_SECRET: string
+    NODE_ENV: 'development' | 'production' | 'test'
+  }
+}
