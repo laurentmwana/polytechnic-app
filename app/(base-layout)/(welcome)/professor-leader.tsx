@@ -29,7 +29,7 @@ export const ProfessorLeaders = () => {
           responseData?.data.map((professor) => {
             return (
               <Card
-                className="p-2 shover:border-primary hover:shadow-md transition-all duration-300 overflow-hidden"
+                className="p-2 hover:border-primary hover:shadow-md transition-all duration-300 overflow-hidden"
                 key={professor.id}
               >
                 <div className="flex flex-col md:flex-row">
