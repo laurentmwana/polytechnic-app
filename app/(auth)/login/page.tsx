@@ -13,8 +13,11 @@ import { useState } from 'react'
 import { toast } from 'sonner'
 import { webRoute } from '@/lib/route'
 import { signIn } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 
 const LoginUser = () => {
+  const router = useRouter()
+
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   return (
@@ -46,6 +49,8 @@ const LoginUser = () => {
                   }
                 } else if (response?.ok) {
                   toast.success('Vous êtes connecté')
+
+                  router.push(webRoute('welcome'))
                 }
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
               } catch (error) {
