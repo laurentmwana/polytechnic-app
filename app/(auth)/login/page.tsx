@@ -55,12 +55,6 @@ const LoginUser = () => {
               }
             }}
           />
-          <div className="text-muted-foreground text-center text-sm mt-5">
-            Vous n&#39;avez pas de compte ?{' '}
-            <TextLink href="/register" tabIndex={5}>
-              Inscrivez-vous
-            </TextLink>
-          </div>
 
           <div className="text-muted-foreground text-center text-sm mt-3">
             Vous avez oublié votre mot de passe ?{' '}

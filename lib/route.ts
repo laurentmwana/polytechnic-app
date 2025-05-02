@@ -29,7 +29,7 @@ function resolveRoute<T extends Record<keyof T, string>>(
       queryParams[paramKey] = String(paramValue)
     }
   }
-  
+
   const missingParams = resolvedRoute.match(/\[([^\]]+)\]/g)
   if (missingParams) {
     throw new Error(
@@ -58,5 +58,7 @@ export const apiRoute = (
   key: keyof typeof API_ROUTES,
   params?: RouteParams
 ): string => {
-  return 'http://localhost:8000/api' + resolveRoute(API_ROUTES, key, params)
+  const baseUrl = process.env.NEXT_PUBLIC_API_ENTRY_POINT_URL
+  if (!baseUrl) throw new Error('API_ENTRY_POINT_URL is not defined')
+  return baseUrl + resolveRoute(API_ROUTES, key, params)
 }
