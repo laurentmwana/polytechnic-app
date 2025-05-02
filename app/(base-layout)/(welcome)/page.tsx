@@ -3,6 +3,8 @@ import { WelcomeHero } from './hero'
 import { OptionWelcome } from './option'
 import { Presentation } from './presentation'
 import { YourAdn } from './adn-section'
+import { FaqWelcome } from './faq'
+import { ProfessorLeaders } from './professor-leader'
 
 export default function Home() {
   return (
@@ -12,6 +14,8 @@ export default function Home() {
       <Presentation />
       <DepartmentWelcome />
       <OptionWelcome />
+      <ProfessorLeaders />
+      <FaqWelcome />
     </div>
   )
 }

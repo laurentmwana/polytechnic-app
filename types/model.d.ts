@@ -37,3 +37,14 @@ export interface Option {
   name: string
   description: string
 }
+
+export interface Professor {
+  id: number
+  name: string
+  firstname: string
+  image: string
+  grade: string
+  birth: string
+  gender: string
+  department: Department
+}

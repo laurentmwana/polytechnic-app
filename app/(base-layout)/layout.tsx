@@ -54,16 +54,6 @@ const BaseLayout = ({ children }: PropsWithChildren) => {
                       </a>
                     </li>
                   </ul>
-                  <div className="text-description mt-3 pl-2 text-start">
-                    <span>développé par </span>
-                    <a
-                      target="_blank"
-                      href="https://github.com/laurentmwana"
-                      className="text-slate-900 underline dark:text-gray-300"
-                    >
-                      Labeya
-                    </a>
-                  </div>
                 </div>
               </div>
             </div>

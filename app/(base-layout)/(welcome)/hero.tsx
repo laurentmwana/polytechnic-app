@@ -3,6 +3,7 @@
 import { Button } from '@/components/ui/button'
 import { motion } from 'framer-motion'
 import { Book } from 'lucide-react'
+import { Skeleton } from '@/components/ui/skeleton'
 
 function FloatingPaths({ position }: { position: number }) {
   const paths = Array.from({ length: 36 }, (_, i) => {
@@ -48,7 +49,7 @@ function FloatingPaths({ position }: { position: number }) {
             }}
             transition={{
               duration: 20 + Math.random() * 10,
-              repeat: Infinity,
+              repeat: Number.POSITIVE_INFINITY,
               ease: 'easeInOut',
             }}
           />
@@ -58,7 +59,11 @@ function FloatingPaths({ position }: { position: number }) {
   )
 }
 
-export const WelcomeHero = () => {
+export const WelcomeHero = ({ isLoading = false }) => {
+  if (isLoading) {
+    return <WelcomeHeroSkeleton />
+  }
+
   return (
     <div className="relative flex min-h-screen w-full items-center justify-center overflow-hidden">
       <div className="absolute inset-0">
@@ -107,6 +112,48 @@ export const WelcomeHero = () => {
             </Button>
           </div>
         </motion.div>
+      </div>
+    </div>
+  )
+}
+
+function SkeletonFloatingPaths() {
+  return (
+    <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-transparent via-accent/5 to-transparent opacity-30">
+      {/* Simplified representation of the animated paths */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-1/4 left-1/4 w-full h-full border-t border-accent/10 rounded-full transform -rotate-45"></div>
+        <div className="absolute top-1/3 left-1/3 w-full h-full border-t border-accent/10 rounded-full transform -rotate-12"></div>
+        <div className="absolute top-1/2 right-1/4 w-full h-full border-t border-accent/10 rounded-full transform rotate-45"></div>
+      </div>
+    </div>
+  )
+}
+
+export const WelcomeHeroSkeleton = () => {
+  return (
+    <div className="relative flex min-h-screen w-full items-center justify-center overflow-hidden">
+      <div className="absolute inset-0">
+        <SkeletonFloatingPaths />
+      </div>
+
+      <div className="relative z-10 container mx-auto max-w-4xl px-4 md:px-6">
+        <div className="mb-6 inline-flex items-center rounded-full bg-accent/20 px-4 py-2">
+          <Skeleton className="mr-2 h-5 w-5 rounded-full" />
+          <Skeleton className="h-4 w-40" />
+        </div>
+
+        <div className="max-w-4xl">
+          <Skeleton className="mb-6 h-12 w-full sm:h-14 md:h-16 max-w-2xl" />
+          <Skeleton className="mb-4 h-6 w-full max-w-2xl" />
+          <Skeleton className="mb-4 h-6 w-5/6 max-w-2xl" />
+          <Skeleton className="mb-8 h-6 w-4/6 max-w-2xl" />
+
+          <div className="flex flex-col gap-4 sm:flex-row">
+            <Skeleton className="h-14 w-full sm:w-40 rounded-md" />
+            <Skeleton className="h-14 w-full sm:w-40 rounded-md" />
+          </div>
+        </div>
       </div>
     </div>
   )
