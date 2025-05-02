@@ -33,5 +33,5 @@ export const API_ROUTES = {
 
   'professor.index': '/professor',
   'professor.show': '/professor/{id}',
-  'professor.leader': '/professor/leaders',
+  'professor.leader': '/professor/leader',
 }
