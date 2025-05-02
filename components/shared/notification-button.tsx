@@ -99,7 +99,7 @@ export const NotificationButton = () => {
           <div className="flex flex-col items-center justify-center p-6 text-center">
             <Bell className="h-10 w-10 text-muted-foreground/50 mb-2" />
             <p className="text-sm font-medium">Aucune notification</p>
-            <p className="text-xs text-muted-foreground mt-1">Vous n'avez pas de notifications pour le moment</p>
+            <p className="text-xs text-muted-foreground mt-1">Vous n&#39;avez pas de notifications pour le moment</p>
           </div>
         ) : (
           <div className="max-h-[300px] overflow-y-auto py-1">

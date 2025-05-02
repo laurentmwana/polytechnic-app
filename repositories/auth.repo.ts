@@ -2,7 +2,6 @@
 
 import {
   LoginUserSchemaInfer,
-  RegisterUserSchemaInfer,
   ResetPasswordSchemaInfer,
 } from '@/definitions/auth.schema'
 import { apiRoute } from '@/lib/route'
@@ -59,27 +58,6 @@ export const resetPasswordUser = async (
   values: ResetPasswordSchemaInfer & { token: string }
 ) => {
   const res = await fetch(apiRoute('reset-password'), {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-    },
-    body: JSON.stringify(values),
-  })
-
-  const json = await res.json()
-
-  if (!res.ok) {
-    throw new Error(
-      json.status || 'Erreur lors de la modification du mot de passe'
-    )
-  }
-
-  return json as { data: { email: string } }
-}
-
-export const registerUser = async (values: RegisterUserSchemaInfer) => {
-  const res = await fetch(apiRoute('register'), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
