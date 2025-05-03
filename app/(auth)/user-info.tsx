@@ -8,7 +8,7 @@ import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { TextLink } from '@/components/shared/text-link'
 import { Loader } from '@/components/ui/loader'
-import { logoutUser } from '@/repositories/auth.repo'
+import { logoutUser } from '@/repositories/auth'
 import { webRoute } from '@/lib/route'
 import type { UserMe } from '@/types/model'
 

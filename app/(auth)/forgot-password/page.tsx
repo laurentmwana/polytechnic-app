@@ -10,9 +10,9 @@ import {
 import { TextLink } from '@/components/shared/text-link'
 import { ForgotPasswordForm } from './forgot-form'
 import { useState } from 'react'
-import { ForgotPasswordSchemaInfer } from '@/definitions/auth.schema'
+import { ForgotPasswordSchemaInfer } from '@/definitions/auth'
 import { toast } from 'sonner'
-import { forgotPasswordUser } from '@/repositories/auth.repo'
+import { forgotPasswordUser } from '@/repositories/auth'
 
 const ForgotPassword = () => {
   const [processing, setProcessing] = useState<boolean>(false)

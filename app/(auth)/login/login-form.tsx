@@ -13,10 +13,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import {
-  LoginUserSchema,
-  LoginUserSchemaInfer,
-} from '@/definitions/auth.schema'
+import { LoginUserSchema, LoginUserSchemaInfer } from '@/definitions/auth'
 import { PasswordInput } from '@/components/ui/password-input'
 import { Loader } from '@/components/ui/loader'
 

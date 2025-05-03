@@ -16,7 +16,7 @@ import { Input } from '@/components/ui/input'
 import {
   ForgotPasswordSchema,
   ForgotPasswordSchemaInfer,
-} from '@/definitions/auth.schema'
+} from '@/definitions/auth'
 import { Loader } from '@/components/ui/loader'
 
 type ForgotPasswordFormProps = {

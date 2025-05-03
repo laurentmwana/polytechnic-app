@@ -24,7 +24,7 @@ import { Loader } from '@/components/ui/loader'
 import {
   ProfilePasswordFormSchema,
   ProfilePasswordFormSchemaInfer,
-} from '@/definitions/profile.schema'
+} from '@/definitions/profile'
 import { useState } from 'react'
 
 export const ProfileUpdatePasswordForm = () => {

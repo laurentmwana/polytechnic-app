@@ -3,7 +3,7 @@
 import {
   LoginUserSchemaInfer,
   ResetPasswordSchemaInfer,
-} from '@/definitions/auth.schema'
+} from '@/definitions/auth'
 import { apiRoute } from '@/lib/route'
 
 export const loginUser = async (body: LoginUserSchemaInfer) => {

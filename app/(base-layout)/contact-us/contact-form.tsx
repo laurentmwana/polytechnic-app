@@ -16,7 +16,7 @@ import { Loader } from '@/components/ui/loader'
 import {
   ContactUsFormSchemaInfer,
   ContactUsFormSchema,
-} from '@/definitions/contact.schema'
+} from '@/definitions/contact'
 import { useState } from 'react'
 import { MarkdownTextarea } from '@/components/ui/markdown-textarea'
 

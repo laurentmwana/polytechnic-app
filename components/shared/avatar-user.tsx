@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { User, Calendar, LogOut, Settings } from 'lucide-react'
+import { User, LogOut, Settings, Grid } from 'lucide-react'
 import { signOut, useSession } from 'next-auth/react'
 import { toast } from 'sonner'
 
@@ -17,6 +17,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { webRoute } from '@/lib/route'
+import { isAdmin } from '@/lib/role'
 
 export const AvatarDropdown = () => {
   const { data: session, status } = useSession()
@@ -39,7 +40,6 @@ export const AvatarDropdown = () => {
     }
   }
 
-  // Extraire les initiales du nom d'utilisateur
   const getInitials = () => {
     if (!session?.user?.name) return 'UN'
     return session.user.name
@@ -50,7 +50,6 @@ export const AvatarDropdown = () => {
       .substring(0, 2)
   }
 
-  // Afficher un skeleton loader pendant le chargement
   if (status === 'loading') {
     return <Skeleton className="h-9 w-9 rounded-full" />
   }
@@ -112,10 +111,20 @@ export const AvatarDropdown = () => {
             <span>Mon profil</span>
           </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem className="flex cursor-pointer items-center gap-2 rounded-md p-2 hover:bg-accent">
-          <Calendar className="h-4 w-4 text-muted-foreground" />
-          <span>Évènements</span>
-        </DropdownMenuItem>
+        {isAdmin(session?.user.roles) && (
+          <DropdownMenuItem
+            className="flex cursor-pointer items-center gap-2 rounded-md p-2 hover:bg-accent"
+            asChild
+          >
+            <Link
+              href={webRoute('dashboard')}
+              className="flex items-center gap-2"
+            >
+              <Grid className="h-4 w-4 text-muted-foreground" />
+              <span>Tableau de bord</span>
+            </Link>
+          </DropdownMenuItem>
+        )}
         <DropdownMenuItem className="flex cursor-pointer items-center gap-2 rounded-md p-2 hover:bg-accent">
           <Settings className="h-4 w-4 text-muted-foreground" />
           <span>Paramètres</span>

@@ -20,6 +20,9 @@ export const API_ROUTES = {
   'forgot-password': '/forgot-password',
   me: '/me',
 
+  'profile.edit': '/profile/edit',
+  'profile.password': '/profile/change-password',
+
   'faculty.index': '/faculty',
   'faculty.show': '/faculty/{id}',
 

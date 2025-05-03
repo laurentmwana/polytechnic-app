@@ -15,7 +15,7 @@ import {
 import {
   ResetPasswordSchema,
   ResetPasswordSchemaInfer,
-} from '@/definitions/auth.schema'
+} from '@/definitions/auth'
 import { PasswordInput } from '@/components/ui/password-input'
 import { Input } from '@/components/ui/input'
 import { Loader } from '@/components/ui/loader'

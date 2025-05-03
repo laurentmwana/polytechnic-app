@@ -10,10 +10,10 @@ import {
 import { ResetPasswordForm } from './reset-form'
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import { useState } from 'react'
-import { ResetPasswordSchemaInfer } from '@/definitions/auth.schema'
+import { ResetPasswordSchemaInfer } from '@/definitions/auth'
 import { toast } from 'sonner'
 import { webRoute } from '@/lib/route'
-import { resetPasswordUser } from '@/repositories/auth.repo'
+import { resetPasswordUser } from '@/repositories/auth'
 
 const ResetPassword = () => {
   const [processing, setProcessing] = useState<boolean>(false)
