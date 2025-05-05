@@ -4,42 +4,19 @@ import { Heading } from '@/components/shared/heading'
 import { ProfileInfoForm } from './info-form'
 import { ProfileUpdatePasswordForm } from './password-form'
 import { ProfileDeleteAccount } from './delete-account'
-import { useSession } from 'next-auth/react'
 import { ProfileSkeleton } from './profile-skeleton'
 import { UnverifiedEmail } from '@/components/shared/unverified-email'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { useEffect, useRef } from 'react'
+import { useSession } from 'next-auth/react'
 
 export default function MyProfile() {
-  const { data: session, status, update } = useSession()
-  // Use a ref to track if we've already updated the session
-  const hasUpdatedRef = useRef(false)
+  const session = useSession()
 
-  // Use useEffect with an empty dependency array to run only once when the component mounts
-  useEffect(() => {
-    // Only update if we have a session and haven't updated yet
-    if (status === 'authenticated' && !hasUpdatedRef.current) {
-      // Mark that we've started the update to prevent multiple calls
-      hasUpdatedRef.current = true
-
-      // Use a void function to handle the promise without blocking
-      const refreshSession = async () => {
-        try {
-          await update()
-        } catch (error) {
-          console.error('Failed to update session:', error)
-        }
-      }
-
-      refreshSession()
-    }
-  }, [status, update]) // Empty dependency array ensures this only runs once on mount
-
-  if (status === 'loading') {
+  if (session.status === 'loading') {
     return <ProfileSkeleton />
   }
 
-  if (!session) {
+  if (!session || !session.data?.user) {
     return (
       <div className="container py-12">
         <Alert>
@@ -51,21 +28,21 @@ export default function MyProfile() {
     )
   }
 
-  const user = session.user
+  const user = session.data.user
 
   return (
     <div className="container py-12">
       <Heading title="Mon profil" />
       <div className="space-y-7">
         <UnverifiedEmail user={user} />
+
         <ProfileInfoForm
           name={user.name ?? ''}
           email={user.email ?? ''}
           token={user.accessToken ?? ''}
-          update={update}
         />
 
-        <ProfileUpdatePasswordForm />
+        <ProfileUpdatePasswordForm token={user.accessToken ?? ''} />
 
         <ProfileDeleteAccount roles={user.roles} />
       </div>

@@ -10,14 +10,14 @@ export default async function middleware(req: NextRequest) {
 
   const token = await getToken({ req, secret })
 
-  if (token?.email && GUEST_ROUTES.includes(pathname)) {
+  if (token && GUEST_ROUTES.includes(pathname)) {
     return NextResponse.redirect(new URL(webRoute('welcome'), req.nextUrl))
   }
 
   if (!token && AUTH_ROUTES.includes(pathname)) {
     return NextResponse.redirect(new URL(webRoute('login'), req.nextUrl))
   }
-  
+
   return NextResponse.next()
 }
 

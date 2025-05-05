@@ -1,66 +1,12 @@
 import { loginUser } from '@/repositories/auth'
 import { findUserMe } from '@/repositories/user'
-import type { UserLogin } from '@/types/model'
-import type { NextAuthOptions } from 'next-auth'
+import { UserLogin, UserMe } from '@/types/model'
+import { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
-import type { JWT } from 'next-auth/jwt'
-
-// Function to fetch updated user data
-const getUser = async (token: string) => {
-  try {
-    const response = await findUserMe(token)
-
-    if (!response || response.status >= 400) {
-      return null
-    }
-
-    return {
-      id: String(response.data.id),
-      name: response.data.name,
-      email: response.data.email,
-      accessToken: token,
-      permissions: response.data.permissions,
-      roles: response.data.roles,
-      isEmailVerified: response.data.isEmailVerified,
-    }
-  } catch (error) {
-    console.error('Error fetching user data:', error)
-    return null
-  }
-}
-
-// Function to refresh user data in the token
-const refreshUserData = async (token: JWT): Promise<JWT> => {
-  if (!token.accessToken) return token
-
-  try {
-    const userData = await getUser(token.accessToken as string)
-
-    if (!userData) {
-      // If user data can't be fetched, the token might be invalid
-      return { ...token, error: 'RefreshAccessTokenError' }
-    }
-
-    // Update token with fresh user data
-    return {
-      ...token,
-      id: userData.id,
-      name: userData.name,
-      email: userData.email,
-      permissions: userData.permissions,
-      roles: userData.roles,
-      isEmailVerified: userData.isEmailVerified,
-    }
-  } catch (error) {
-    console.error('Error refreshing user data:', error)
-    return { ...token, error: 'RefreshAccessTokenError' }
-  }
-}
 
 export const authOptions: NextAuthOptions = {
   session: {
     strategy: 'jwt',
-    maxAge: 24 * 60 * 60, // 24 hours
   },
   providers: [
     CredentialsProvider({
@@ -106,39 +52,46 @@ export const authOptions: NextAuthOptions = {
             return null
           }
 
-          return getUser(auth.access_token)
+          const userResponse = await findUserMe(auth.access_token)
+
+          if (userResponse.status !== 200) {
+            return null
+          }
+
+          const dataUserResponse = (await userResponse.json()) as {
+            data: UserMe
+          }
+
+          return {
+            id: String(dataUserResponse.data.id),
+            name: dataUserResponse.data.name,
+            email: dataUserResponse.data.email,
+            accessToken: auth.access_token,
+            permissions: dataUserResponse.data.permissions,
+            roles: dataUserResponse.data.roles,
+            isEmailVerified: dataUserResponse.data.isEmailVerified,
+          }
         } catch (error) {
           console.error("Erreur d'authentification :", error)
           return null
         }
       },
     }),
+    
   ],
   callbacks: {
-    // Store JWT token and user info in the token
-    async jwt({ token, user, trigger }) {
-      // Initial sign in
+    // Stocker le token JWT et infos utilisateur dans le token
+    async jwt({ token, user }) {
       if (user) {
-        return {
-          ...token,
-          accessToken: user.accessToken,
-          permissions: user.permissions,
-          roles: user.roles,
-          id: user.id,
-          isEmailVerified: user.isEmailVerified,
-        }
+        token.accessToken = user.accessToken
+        token.permissions = user.permissions
+        token.roles = user.roles
+        token.id = user.id
+        token.isEmailVerified = user.isEmailVerified
       }
-
-      // Handle token refresh on each request
-      if (
-        trigger === 'update' ||
-        Date.now() > (token.iat || 0) * 1000 + 5 * 60 * 1000
-      ) {
-        return refreshUserData(token)
-      }
-
       return token
     },
+    // Transmettre les infos stockées dans le token à la session côté client
     async session({ session, token }) {
       if (token) {
         session.user = {
@@ -148,20 +101,14 @@ export const authOptions: NextAuthOptions = {
           accessToken: token.accessToken as string,
           permissions: token.permissions || [],
           roles: token.roles || [],
-          isEmailVerified: token.isEmailVerified as boolean,
-        }
-        if (token.error) {
-          session.error = token.error as string
+          isEmailVerified: token.isEmailVerified,
         }
       }
       return session
     },
   },
   pages: {
-    error: '/auth-error', // Custom error page
-    signIn: '/login',
+    error: '/auth-error',
   },
-  
   secret: process.env.NEXTAUTH_SECRET,
-  debug: process.env.NODE_ENV === 'development',
 }

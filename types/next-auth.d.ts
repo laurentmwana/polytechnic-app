@@ -1,5 +1,5 @@
-import type { DefaultSession } from 'next-auth'
-import type { UtilModel } from './model'
+import { DefaultSession } from 'next-auth'
+import { UtilModel } from './model'
 
 declare module 'next-auth' {
   interface Session {
@@ -12,8 +12,6 @@ declare module 'next-auth' {
       roles: UtilModel[]
       isEmailVerified: boolean
     } & DefaultSession['user']
-    // Add error property to handle session errors
-    error?: string
   }
 
   interface User {
@@ -29,16 +27,12 @@ declare module 'next-auth' {
 
 declare module 'next-auth/jwt' {
   interface JWT {
-    id?: string
-    name?: string
-    email?: string
-    accessToken?: string
-    permissions?: UtilModel[]
-    roles?: UtilModel[]
-    isEmailVerified?: boolean
-    // Add error property to handle token refresh errors
-    error?: string
-    // Add iat (issued at time) which is used in the refresh logic
-    iat?: number
+    id: string
+    name: string
+    email: string
+    accessToken: string
+    permissions: UtilModel[]
+    roles: UtilModel[]
+    isEmailVerified: boolean
   }
 }

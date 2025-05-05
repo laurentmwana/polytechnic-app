@@ -8,32 +8,67 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet'
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
+} from '@/components/ui/navigation-menu'
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion'
 import { Menu } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
-import { ThemeToggle } from '../../src/provider/themes/theme-toggle'
+import { ThemeToggle } from '../themes/theme-toggle'
 import { AvatarDropdown } from './avatar-user'
 import { NotificationButton } from './notification-button'
 import { AppLogoIcon } from './logo'
 import { webRoute } from '@/lib/route'
+import { cn } from '@/lib/utils'
+
+// Define the navigation item type with support for dropdown items
+type NavItem = {
+  label: string
+  href?: string
+  children?: NavItem[]
+}
 
 export const NavbarBase = () => {
   const [open, setOpen] = useState(false)
   const pathname = usePathname()
 
-  const navItems = [
+  // Navigation items with dropdown support
+  const navItems: NavItem[] = [
     { label: 'Accueil', href: '/' },
     { label: 'A propos', href: '/about' },
-    { label: 'Départments', href: '/department' },
-    { label: 'Filières', href: '/option' },
-    { label: 'Professeurs', href: '/professor' },
-    { label: 'Horaires', href: '/hor' },
-    { label: 'Délibération', href: '/deliberation' },
+    {
+      label: 'Académique',
+      children: [
+        { label: 'Départments', href: '/department' },
+        { label: 'Filières', href: '/option' },
+        { label: 'Professeurs', href: '/professor' },
+      ],
+    },
+    {
+      label: 'Gestion',
+      children: [
+        { label: 'Horaires', href: '/hor' },
+        { label: 'Délibération', href: '/deliberation' },
+      ],
+    },
     { label: 'Contact', href: '/contact-us' },
   ]
 
-  const isActive = (href: string) => {
+  const isActive = (href?: string) => {
+    if (!href) return false
     if (href === '/') {
       return pathname === '/'
     }
@@ -52,21 +87,65 @@ export const NavbarBase = () => {
             <AppLogoIcon />
           </Link>
 
-          {/* Desktop Menu */}
-          <div className="hidden items-center space-x-1 lg:flex">
-            {navItems.map((item) => (
-              <Link
-                key={item.label}
-                href={item.href}
-                className={`rounded-md px-3 py-2 text-sm font-medium transition-colors ${
-                  isActive(item.href)
-                    ? 'bg-accent text-accent-foreground font-semibold'
-                    : 'hover:bg-accent hover:text-accent-foreground'
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
+          {/* Desktop Menu with Dropdown Support */}
+          <div className="hidden lg:block">
+            <NavigationMenu>
+              <NavigationMenuList>
+                {navItems.map((item) => {
+                  // If the item has children, render a dropdown
+                  if (item.children) {
+                    return (
+                      <NavigationMenuItem key={item.label}>
+                        <NavigationMenuTrigger
+                          className={cn(
+                            isActive(item.href) &&
+                              'bg-accent text-accent-foreground font-semibold'
+                          )}
+                        >
+                          {item.label}
+                        </NavigationMenuTrigger>
+                        <NavigationMenuContent>
+                          <ul className="grid w-[200px] gap-1 p-2">
+                            {item.children.map((child) => (
+                              <li key={child.label}>
+                                <NavigationMenuLink asChild>
+                                  <Link
+                                    href={child.href || '#'}
+                                    className={cn(
+                                      'block select-none rounded-md p-2 text-sm leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
+                                      isActive(child.href) &&
+                                        'bg-accent text-accent-foreground font-semibold'
+                                    )}
+                                  >
+                                    {child.label}
+                                  </Link>
+                                </NavigationMenuLink>
+                              </li>
+                            ))}
+                          </ul>
+                        </NavigationMenuContent>
+                      </NavigationMenuItem>
+                    )
+                  }
+
+                  // If the item doesn't have children, render a simple link
+                  return (
+                    <NavigationMenuItem key={item.label}>
+                      <NavigationMenuLink
+                        href={item.href || '#'}
+                        className={cn(
+                          navigationMenuTriggerStyle(),
+                          isActive(item.href) &&
+                            'bg-accent text-accent-foreground font-semibold'
+                        )}
+                      >
+                        {item.label}
+                      </NavigationMenuLink>
+                    </NavigationMenuItem>
+                  )
+                })}
+              </NavigationMenuList>
+            </NavigationMenu>
           </div>
 
           {/* Right side items */}
@@ -85,25 +164,67 @@ export const NavbarBase = () => {
                   <span className="sr-only">Menu</span>
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-[250px] sm:w-[300px]">
+              <SheetContent
+                side="right"
+                className="w-[250px] sm:w-[300px] overflow-y-auto"
+              >
                 <SheetHeader>
                   <SheetTitle>Navigation</SheetTitle>
                 </SheetHeader>
-                <div className="mt-6 flex flex-col space-y-3">
-                  {navItems.map((item) => (
-                    <Link
-                      key={item.label}
-                      href={item.href}
-                      onClick={handleLinkClick}
-                      className={`rounded-md px-3 py-2.5 text-sm font-medium transition-colors ${
-                        isActive(item.href)
-                          ? 'bg-accent text-accent-foreground font-semibold'
-                          : 'hover:bg-accent hover:text-accent-foreground'
-                      }`}
-                    >
-                      {item.label}
-                    </Link>
-                  ))}
+                <div className="mt-6 flex flex-col">
+                  {navItems.map((item) => {
+                    // If the item has children, render an accordion in mobile view
+                    if (item.children) {
+                      return (
+                        <Accordion type="single" collapsible key={item.label}>
+                          <AccordionItem
+                            value={item.label}
+                            className="border-none"
+                          >
+                            <AccordionTrigger className="py-2.5 px-3 text-sm font-medium hover:bg-accent hover:text-accent-foreground hover:no-underline rounded-md">
+                              {item.label}
+                            </AccordionTrigger>
+                            <AccordionContent>
+                              <div className="flex flex-col space-y-1 pl-4">
+                                {item.children.map((child) => (
+                                  <Link
+                                    key={child.label}
+                                    href={child.href || '#'}
+                                    onClick={handleLinkClick}
+                                    className={cn(
+                                      'rounded-md px-3 py-2 text-sm font-medium transition-colors',
+                                      isActive(child.href)
+                                        ? 'bg-accent text-accent-foreground font-semibold'
+                                        : 'hover:bg-accent hover:text-accent-foreground'
+                                    )}
+                                  >
+                                    {child.label}
+                                  </Link>
+                                ))}
+                              </div>
+                            </AccordionContent>
+                          </AccordionItem>
+                        </Accordion>
+                      )
+                    }
+
+                    // If the item doesn't have children, render a simple link
+                    return (
+                      <Link
+                        key={item.label}
+                        href={item.href || '#'}
+                        onClick={handleLinkClick}
+                        className={cn(
+                          'rounded-md px-3 py-2.5 text-sm font-medium transition-colors',
+                          isActive(item.href)
+                            ? 'bg-accent text-accent-foreground font-semibold'
+                            : 'hover:bg-accent hover:text-accent-foreground'
+                        )}
+                      >
+                        {item.label}
+                      </Link>
+                    )
+                  })}
                 </div>
               </SheetContent>
             </Sheet>
