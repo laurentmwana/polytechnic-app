@@ -19,6 +19,8 @@ export function PasswordInput({ className, ...props }: PasswordInputProps) {
     <div className="relative">
       <Input
         type={showPassword ? 'text' : 'password'}
+        autoComplete="new-password"
+        spellCheck={false}
         className={cn('pr-10', className)}
         {...props}
       />

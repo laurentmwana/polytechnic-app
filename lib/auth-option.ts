@@ -1,6 +1,6 @@
-import { loginUser } from '@/repositories/auth.repo'
-import { findUserMe } from '@/repositories/user.repo'
-import { UserLogin } from '@/types/model'
+import { loginUser } from '@/repositories/auth'
+import { findUserMe } from '@/repositories/user'
+import { UserLogin, UserMe } from '@/types/model'
 import { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 
@@ -58,14 +58,18 @@ export const authOptions: NextAuthOptions = {
             return null
           }
 
+          const dataUserResponse = (await userResponse.json()) as {
+            data: UserMe
+          }
+
           return {
-            id: String(userResponse.data.id),
-            name: userResponse.data.name,
-            email: userResponse.data.email,
+            id: String(dataUserResponse.data.id),
+            name: dataUserResponse.data.name,
+            email: dataUserResponse.data.email,
             accessToken: auth.access_token,
-            permissions: userResponse.data.permissions,
-            roles: userResponse.data.roles,
-            isEmailVerified: userResponse.data.isEmailVerified,
+            permissions: dataUserResponse.data.permissions,
+            roles: dataUserResponse.data.roles,
+            isEmailVerified: dataUserResponse.data.isEmailVerified,
           }
         } catch (error) {
           console.error("Erreur d'authentification :", error)
@@ -73,6 +77,7 @@ export const authOptions: NextAuthOptions = {
         }
       },
     }),
+    
   ],
   callbacks: {
     // Stocker le token JWT et infos utilisateur dans le token
@@ -103,7 +108,7 @@ export const authOptions: NextAuthOptions = {
     },
   },
   pages: {
-    error: '/auth-error', // Page d’erreur personnalisée
+    error: '/auth-error',
   },
   secret: process.env.NEXTAUTH_SECRET,
 }

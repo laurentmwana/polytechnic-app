@@ -26,7 +26,7 @@ export const AvatarDropdown = () => {
   const handleLogout = async () => {
     try {
       setIsLoggingOut(true)
-      await signOut({ redirect: false })
+      await signOut({ redirect: true })
       toast.success('Déconnexion réussie', {
         description: 'Vous avez été déconnecté avec succès.',
       })

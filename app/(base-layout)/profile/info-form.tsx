@@ -23,13 +23,24 @@ import {
 } from '@/components/ui/card'
 import {
   ProfileEditFormSchema,
-  ProfileEditFormSchemaInfer,
-} from '@/definitions/profile.schema'
+  type ProfileEditFormSchemaInfer,
+} from '@/definitions/profile'
 import { useState } from 'react'
+import { editUserInfo } from '@/repositories/profile'
+import { toast } from 'sonner'
+import { FormErrorValidator } from '@/types/error'
 
-type ProfileInfoFormProps = { name: string; email: string }
+type ProfileInfoFormProps = {
+  name: string
+  email: string
+  token: string
+}
 
-export const ProfileInfoForm = ({ email, name }: ProfileInfoFormProps) => {
+export const ProfileInfoForm = ({
+  email,
+  name,
+  token,
+}: ProfileInfoFormProps) => {
   return (
     <Card>
       <CardHeader>
@@ -41,15 +52,20 @@ export const ProfileInfoForm = ({ email, name }: ProfileInfoFormProps) => {
 
       <CardContent>
         <div className="max-w-lg">
-          <ProfileEditForm email={email} name={name} />
+          <ProfileEditForm email={email} name={name} token={token} />
         </div>
       </CardContent>
     </Card>
   )
 }
 
-export const ProfileEditForm = ({ email, name }: ProfileInfoFormProps) => {
+export const ProfileEditForm = ({
+  email,
+  name,
+  token,
+}: ProfileInfoFormProps) => {
   const [processing, setProcessing] = useState<boolean>(false)
+  const [isUpdatingSession, setIsUpdatingSession] = useState<boolean>(false)
 
   const form = useForm<ProfileEditFormSchemaInfer>({
     resolver: zodResolver(ProfileEditFormSchema),
@@ -59,12 +75,55 @@ export const ProfileEditForm = ({ email, name }: ProfileInfoFormProps) => {
     },
   })
 
-  const onSubmit = (values: ProfileEditFormSchemaInfer) => {
+  const onSubmit = async (values: ProfileEditFormSchemaInfer) => {
     setProcessing(true)
 
-    console.log(values)
+    setIsUpdatingSession(true)
 
-    setProcessing(false)
+    try {
+      const response = await editUserInfo(values, token)
+
+      if (response.ok) {
+        toast.success('Message', {
+          description: 'Vos informations ont été editées',
+        })
+      }
+
+      if (response.status === 401) {
+        toast.error('Authentification', {
+          description: 'Votre token est expiré',
+        })
+      }
+
+      if (response.status === 422) {
+        const formErrors = (await response.json()) as FormErrorValidator<
+          ['email', 'name']
+        >
+
+        const fieldNames: (keyof ProfileEditFormSchemaInfer)[] = [
+          'email',
+          'name',
+        ]
+
+        form.clearErrors()
+
+        fieldNames.forEach((fieldName) => {
+          if (formErrors.errors[fieldName]?.length) {
+            form.setError(fieldName, {
+              type: 'server',
+              message: formErrors.errors[fieldName][0],
+            })
+          }
+        })
+      }
+    } catch (error: unknown) {
+      toast.error('Une problème est survenu', {
+        description: (error as { message: string }).message,
+      })
+    } finally {
+      setProcessing(false)
+      setIsUpdatingSession(false)
+    }
   }
 
   return (
@@ -98,8 +157,19 @@ export const ProfileEditForm = ({ email, name }: ProfileInfoFormProps) => {
           )}
         />
 
-        <Button variant="outline" size="sm" type="submit">
-          {processing ? <Loader /> : 'Mettre à jour'}
+        <Button
+          variant="outline"
+          size="sm"
+          type="submit"
+          disabled={processing || isUpdatingSession}
+        >
+          {processing ? (
+            <Loader />
+          ) : isUpdatingSession ? (
+            'Mise à jour de la session...'
+          ) : (
+            'Mettre à jour'
+          )}
         </Button>
       </form>
     </Form>

@@ -21,8 +21,7 @@ declare module 'next-auth' {
     accessToken: string
     permissions: UtilModel[]
     roles: UtilModel[]
-      isEmailVerified: boolean
-
+    isEmailVerified: boolean
   }
 }
 
@@ -34,7 +33,6 @@ declare module 'next-auth/jwt' {
     accessToken: string
     permissions: UtilModel[]
     roles: UtilModel[]
-      isEmailVerified: boolean
-
+    isEmailVerified: boolean
   }
 }

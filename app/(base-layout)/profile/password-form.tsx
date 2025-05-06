@@ -23,11 +23,21 @@ import { PasswordInput } from '@/components/ui/password-input'
 import { Loader } from '@/components/ui/loader'
 import {
   ProfilePasswordFormSchema,
-  ProfilePasswordFormSchemaInfer,
-} from '@/definitions/profile.schema'
+  type ProfilePasswordFormSchemaInfer,
+} from '@/definitions/profile'
 import { useState } from 'react'
+import { changePassword } from '@/repositories/profile'
+import { toast } from 'sonner'
+import type { FormErrorValidator } from '@/types/error'
+import { signOut } from 'next-auth/react'
 
-export const ProfileUpdatePasswordForm = () => {
+type ProfileUpdatePasswordFormProps = {
+  token: string
+}
+
+export const ProfileUpdatePasswordForm = ({
+  token,
+}: ProfileUpdatePasswordFormProps) => {
   return (
     <Card>
       <CardHeader>
@@ -40,15 +50,16 @@ export const ProfileUpdatePasswordForm = () => {
 
       <CardContent>
         <div className="max-w-lg">
-          <PasswordUpdateForm />
+          <PasswordUpdateForm token={token} />
         </div>
       </CardContent>
     </Card>
   )
 }
 
-const PasswordUpdateForm = () => {
+const PasswordUpdateForm = ({ token }: ProfileUpdatePasswordFormProps) => {
   const [processing, setProcessing] = useState<boolean>(false)
+  const [isUpdatingSession, setIsUpdatingSession] = useState<boolean>(false)
 
   const form = useForm<ProfilePasswordFormSchemaInfer>({
     resolver: zodResolver(ProfilePasswordFormSchema),
@@ -59,15 +70,75 @@ const PasswordUpdateForm = () => {
     },
   })
 
-  const handleSubmit = (values: ProfilePasswordFormSchemaInfer): void => {
+  const onSubmit = async (values: ProfilePasswordFormSchemaInfer) => {
     setProcessing(true)
-    console.log(values)
-    setProcessing(false)
+    setIsUpdatingSession(true)
+
+    try {
+      const response = await changePassword(values, token)
+
+      if (response.ok) {
+        toast.success('Message', {
+          description: 'Votre mot de passe a été modifié',
+        })
+
+        form.reset()
+
+        return
+      }
+
+      if (response.status === 401) {
+        toast.error('Authentification', {
+          description: 'Votre token est expiré',
+        })
+
+        await signOut({
+          redirect: true,
+        })
+      }
+
+      if (response.status === 422) {
+        const formErrors = (await response.json()) as FormErrorValidator<
+          ['password', 'current_password', 'password_confirmation']
+        >
+
+        const fieldNames: (keyof ProfilePasswordFormSchemaInfer)[] = [
+          'current_password',
+          'password',
+          'password_confirmation',
+        ]
+
+        // Réinitialiser les erreurs existantes
+        form.clearErrors()
+
+        // Définir les nouvelles erreurs pour chaque champ
+        fieldNames.forEach((fieldName) => {
+          if (formErrors.errors[fieldName]?.length) {
+            // Utiliser le premier message d'erreur du tableau pour ce champ
+            form.setError(fieldName, {
+              type: 'server',
+              message: formErrors.errors[fieldName][0],
+            })
+          }
+        })
+
+
+
+        
+      }
+    } catch (error: unknown) {
+      toast.error('Une problème est survenu', {
+        description: (error as { message: string }).message,
+      })
+    } finally {
+      setProcessing(false)
+      setIsUpdatingSession(false)
+    }
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
           name="current_password"
@@ -110,8 +181,19 @@ const PasswordUpdateForm = () => {
           )}
         />
 
-        <Button type="submit" size="sm" variant="outline">
-          {processing ? <Loader /> : 'Mettre à jour'}
+        <Button
+          variant="outline"
+          size="sm"
+          type="submit"
+          disabled={processing || isUpdatingSession}
+        >
+          {processing ? (
+            <Loader />
+          ) : isUpdatingSession ? (
+            'Mise à jour de la session...'
+          ) : (
+            'Mettre à jour'
+          )}
         </Button>
       </form>
     </Form>

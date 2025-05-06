@@ -1,9 +1,9 @@
 'use server'
 
-import {
+import type {
   LoginUserSchemaInfer,
   ResetPasswordSchemaInfer,
-} from '@/definitions/auth.schema'
+} from '@/definitions/auth'
 import { apiRoute } from '@/lib/route'
 
 export const loginUser = async (body: LoginUserSchemaInfer) => {
@@ -18,21 +18,13 @@ export const loginUser = async (body: LoginUserSchemaInfer) => {
 }
 
 export const logoutUser = async (token: string) => {
-  const res = await fetch(apiRoute('logout'), {
+  return await fetch(apiRoute('logout'), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
   })
-
-  if (!res.ok) {
-    throw new Error('Une erreur est survenue, merci de réessayer (:')
-  }
-
-  const data = (await res.json()) as { message: string }
-
-  return { data }
 }
 
 export const forgotPasswordUser = async (email: string) => {
@@ -75,4 +67,18 @@ export const resetPasswordUser = async (
   }
 
   return json as { data: { email: string } }
+}
+
+export const verifyEmail = async (token: string) => {
+  console.log(token)
+  const response = await fetch(apiRoute('verify-email'), {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  })
+
+  return response
 }

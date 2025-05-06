@@ -13,12 +13,10 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import {
-  LoginUserSchema,
-  LoginUserSchemaInfer,
-} from '@/definitions/auth.schema'
+import { LoginUserSchema, type LoginUserSchemaInfer } from '@/definitions/auth'
 import { PasswordInput } from '@/components/ui/password-input'
 import { Loader } from '@/components/ui/loader'
+import { useEffect } from 'react'
 
 type LoginUserFormProps = {
   onSubmit: (values: LoginUserSchemaInfer) => void
@@ -37,9 +35,30 @@ export const LoginUserForm = ({
     },
   })
 
+  // Surveiller les changements de isSubmitting pour réinitialiser le mot de passe
+  useEffect(() => {
+    // Si isSubmitting passe de true à false, cela signifie que la soumission est terminée
+    if (!isSubmitting) {
+      // Réinitialiser uniquement le champ de mot de passe
+      // tout en conservant les autres valeurs du formulaire
+      const currentValues = form.getValues()
+
+      form.setValue('email', currentValues.email, { shouldValidate: false })
+      form.setValue('password', '', { shouldValidate: false })
+
+      // Note: Nous ne validons pas après la réinitialisation pour éviter
+      // de déclencher des erreurs de validation
+    }
+  }, [isSubmitting, form])
+
+  const handleSubmit = async (values: LoginUserSchemaInfer) => {
+    // Appeler la fonction onSubmit fournie par le parent
+    await onSubmit(values)
+  }
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
         <FormField
           control={form.control}
           name="email"

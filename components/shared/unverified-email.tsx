@@ -1,18 +1,24 @@
 'use client'
 
-import { UserMe } from '@/types/model'
-import { Alert, AlertDescription } from '../ui/alert'
+import type { UserMe } from '@/types/model'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { webRoute } from '@/lib/route'
+import Link from 'next/link'
 
 export const UnverifiedEmail = ({ user }: { user?: UserMe }) => {
-  if (!user || !user.isEmailVerified) {
+  if (!user || user.isEmailVerified) {
     return null
   }
 
   return (
     <Alert>
-      <AlertDescription>
-        <strong>{user.name}</strong> votre adresse e-mail n&#39;est verifié,
-        cliquez sur le bouton ci-dessous pour envoyer un email de confirmation
+      <AlertTitle className="capitalize">{user.name}</AlertTitle>
+      <AlertDescription className="flex items-center gap-1 flex-wrap whitespace-nowrap">
+        Votre adresse e-mail n&apos;est pas vérifiée. Cliquez
+        <Link className="underline font-medium" href={webRoute('verify-email')}>
+          ici
+        </Link>
+        pour envoyer un email de confirmation.
       </AlertDescription>
     </Alert>
   )

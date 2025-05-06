@@ -1,10 +1,10 @@
 import type { Metadata } from 'next'
 import './globals.css'
-import { ThemeProvider } from '#/provider/themes/theme-provider'
-import { Inter } from 'next/font/google'
+import { ThemeProvider } from '@/components/themes/theme-provider'
 import { Toaster } from '@/components/ui/sonner'
-import { AuthProvider } from '#/provider/auth/auth-provider'
-import { ReactQueryProvider } from '@/src/provider/auth/react-query-provider'
+import { ReactQueryProvider } from '@/components/provider/react-query'
+import { SessionNextAuthProvider } from '@/components/provider/session-next'
+import { Inter } from 'next/font/google'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -28,10 +28,14 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <ReactQueryProvider>
-            <AuthProvider>
+            <SessionNextAuthProvider>
               <div>{children}</div>
-              <Toaster className="w-auto" position="top-center" />
-            </AuthProvider>
+              <Toaster
+                className="w-auto"
+                position="top-center"
+                closeButton={true}
+              />
+            </SessionNextAuthProvider>
           </ReactQueryProvider>
         </ThemeProvider>
       </body>

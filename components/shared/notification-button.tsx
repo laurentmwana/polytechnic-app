@@ -1,19 +1,19 @@
-"use client"
+'use client'
 
-import { useState } from "react"
-import { Bell, Clock, CheckCircle } from "lucide-react"
-import { useSession } from "next-auth/react"
+import { useState } from 'react'
+import { Bell, Clock, CheckCircle } from 'lucide-react'
+import { useSession } from 'next-auth/react'
 
-import { Button } from "@/components/ui/button"
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Skeleton } from "@/components/ui/skeleton"
-import { cn } from "@/lib/utils"
+} from '@/components/ui/dropdown-menu'
+import { Skeleton } from '@/components/ui/skeleton'
+import { cn } from '@/lib/utils'
 
 type Notification = {
   id: string
@@ -28,37 +28,39 @@ export const NotificationButton = () => {
   const [notificationCount, setNotificationCount] = useState(3)
   const [notifications, setNotifications] = useState<Notification[]>([
     {
-      id: "1",
-      title: "Nouvel événement ajouté",
-      time: "Il y a 5 min",
+      id: '1',
+      title: 'Nouvel événement ajouté',
+      time: 'Il y a 5 min',
       read: false,
     },
     {
-      id: "2",
-      title: "Rappel: Réunion à 14h",
-      time: "Il y a 30 min",
+      id: '2',
+      title: 'Rappel: Réunion à 14h',
+      time: 'Il y a 30 min',
       read: false,
     },
     {
-      id: "3",
-      title: "Mise à jour du système",
-      time: "Il y a 2 heures",
+      id: '3',
+      title: 'Mise à jour du système',
+      time: 'Il y a 2 heures',
       read: false,
     },
   ])
 
   // Afficher un skeleton loader pendant le chargement
-  if (status === "loading") {
+  if (status === 'loading') {
     return <Skeleton className="h-9 w-9 rounded-md" />
   }
 
   // Ne rien afficher si l'utilisateur n'est pas connecté
-  if (status === "unauthenticated") {
+  if (status === 'unauthenticated') {
     return null
   }
 
   const markAsRead = (id: string) => {
-    setNotifications((prev) => prev.map((notif) => (notif.id === id ? { ...notif, read: true } : notif)))
+    setNotifications((prev) =>
+      prev.map((notif) => (notif.id === id ? { ...notif, read: true } : notif))
+    )
     setNotificationCount((prev) => Math.max(0, prev - 1))
   }
 
@@ -88,7 +90,12 @@ export const NotificationButton = () => {
         <div className="flex items-center justify-between p-3 border-b">
           <p className="font-medium">Notifications</p>
           {notificationCount > 0 && (
-            <Button variant="ghost" size="sm" className="h-8 text-xs hover:bg-muted" onClick={markAllAsRead}>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 text-xs hover:bg-muted"
+              onClick={markAllAsRead}
+            >
               <CheckCircle className="mr-1 h-3 w-3" />
               Tout marquer comme lu
             </Button>
@@ -99,7 +106,9 @@ export const NotificationButton = () => {
           <div className="flex flex-col items-center justify-center p-6 text-center">
             <Bell className="h-10 w-10 text-muted-foreground/50 mb-2" />
             <p className="text-sm font-medium">Aucune notification</p>
-            <p className="text-xs text-muted-foreground mt-1">Vous n&#39;avez pas de notifications pour le moment</p>
+            <p className="text-xs text-muted-foreground mt-1">
+              Vous n&#39;avez pas de notifications pour le moment
+            </p>
           </div>
         ) : (
           <div className="max-h-[300px] overflow-y-auto py-1">
@@ -107,14 +116,23 @@ export const NotificationButton = () => {
               <DropdownMenuItem
                 key={notification.id}
                 className={cn(
-                  "flex cursor-pointer flex-col items-start gap-1 p-3 focus:bg-accent",
-                  notification.read ? "opacity-70" : "",
+                  'flex cursor-pointer flex-col items-start gap-1 p-3 focus:bg-accent',
+                  notification.read ? 'opacity-70' : ''
                 )}
                 onClick={() => markAsRead(notification.id)}
               >
                 <div className="flex w-full items-start justify-between gap-2">
-                  <p className={cn("text-sm", !notification.read && "font-medium")}>{notification.title}</p>
-                  {!notification.read && <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-destructive"></span>}
+                  <p
+                    className={cn(
+                      'text-sm',
+                      !notification.read && 'font-medium'
+                    )}
+                  >
+                    {notification.title}
+                  </p>
+                  {!notification.read && (
+                    <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-destructive"></span>
+                  )}
                 </div>
                 <div className="flex items-center text-xs text-muted-foreground">
                   <Clock className="mr-1 h-3 w-3" />
