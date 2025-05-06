@@ -28,7 +28,7 @@ import {
 import { useState } from 'react'
 import { editUserInfo } from '@/repositories/profile'
 import { toast } from 'sonner'
-import type { ValidationError } from '@/types/util'
+import { FormErrorValidator } from '@/types/error'
 
 type ProfileInfoFormProps = {
   name: string
@@ -52,11 +52,7 @@ export const ProfileInfoForm = ({
 
       <CardContent>
         <div className="max-w-lg">
-          <ProfileEditForm
-            email={email}
-            name={name}
-            token={token}
-          />
+          <ProfileEditForm email={email} name={name} token={token} />
         </div>
       </CardContent>
     </Card>
@@ -93,8 +89,6 @@ export const ProfileEditForm = ({
         })
       }
 
-      const data = await response.json()
-
       if (response.status === 401) {
         toast.error('Authentification', {
           description: 'Votre token est expiré',
@@ -102,10 +96,24 @@ export const ProfileEditForm = ({
       }
 
       if (response.status === 422) {
-        const validator = data as ValidationError
+        const formErrors = (await response.json()) as FormErrorValidator<
+          ['email', 'name']
+        >
 
-        toast.error('Validation', {
-          description: validator.message,
+        const fieldNames: (keyof ProfileEditFormSchemaInfer)[] = [
+          'email',
+          'name',
+        ]
+
+        form.clearErrors()
+
+        fieldNames.forEach((fieldName) => {
+          if (formErrors.errors[fieldName]?.length) {
+            form.setError(fieldName, {
+              type: 'server',
+              message: formErrors.errors[fieldName][0],
+            })
+          }
         })
       }
     } catch (error: unknown) {

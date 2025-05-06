@@ -102,7 +102,6 @@ const PasswordUpdateForm = ({ token }: ProfileUpdatePasswordFormProps) => {
           ['password', 'current_password', 'password_confirmation']
         >
 
-        // Traiter les erreurs de validation pour chaque champ
         const fieldNames: (keyof ProfilePasswordFormSchemaInfer)[] = [
           'current_password',
           'password',
@@ -122,6 +121,10 @@ const PasswordUpdateForm = ({ token }: ProfileUpdatePasswordFormProps) => {
             })
           }
         })
+
+
+
+        
       }
     } catch (error: unknown) {
       toast.error('Une problème est survenu', {

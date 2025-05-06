@@ -18,19 +18,13 @@ export const loginUser = async (body: LoginUserSchemaInfer) => {
 }
 
 export const logoutUser = async (token: string) => {
-  const res = await fetch(apiRoute('logout'), {
+  return await fetch(apiRoute('logout'), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
   })
-
-  if (!res.ok) {
-    throw new Error('Une erreur est survenue, merci de réessayer (:')
-  }
-
-  return (await res.json()) as { message: string }
 }
 
 export const forgotPasswordUser = async (email: string) => {
