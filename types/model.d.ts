@@ -1,3 +1,5 @@
+import { PaginationMeta } from './paginate'
+
 export interface UserLogin {
   expires_in: number
   access_token: string
@@ -30,12 +32,29 @@ export interface Department {
   id: number
   name: string
   description: string
+  faculty: Faculty
+  options: Option[]
+  created_at: string
+  updated_at: string
 }
 
 export interface Option {
   id: number
   name: string
   description: string
+  levels: Levels[]
+}
+
+export interface Level {
+  id: number
+  programme: Programme
+  option: Option
+}
+
+export interface Programme {
+  id: number
+  name: string
+  alias: string
 }
 
 export interface Professor {
@@ -47,4 +66,9 @@ export interface Professor {
   birth: string
   gender: string
   department: Department
+}
+
+export interface DepartmentMetaData {
+  data: Department[]
+  meta: PaginationMeta
 }

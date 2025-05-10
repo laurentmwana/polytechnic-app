@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { AUTH_ROUTES, GUEST_ROUTES } from './constants/granted'
-import { webRoute } from './lib/route'
+import { AUTH_ROUTES, GUEST_ROUTES } from '@/constants/granted'
+import { webRoute } from '@/lib/route'
 import { getToken } from 'next-auth/jwt'
 
 const secret = process.env.NEXTAUTH_SECRET

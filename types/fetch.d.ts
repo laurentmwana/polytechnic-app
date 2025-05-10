@@ -4,9 +4,17 @@ export type ErrorResponse = {
   details?: unknown
 }
 
-export interface ValidationError<T> {
-  message: string
-  errors: {
-    [key: keyof T]: Array<string>
-  }
+export type FetchOptions = {
+  method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
+  body?: Record<string, unknown>
+  headers?: Record<string, string>
+}
+
+export type ApiResponse<T> = {
+  data: T
+  status: number
+}
+
+export type ValidationError = {
+  [key: string]: string[]
 }

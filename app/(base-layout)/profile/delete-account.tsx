@@ -5,7 +5,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { isAdmin } from '@/lib/role'
-import { UtilModel } from '@/types/model'
+import { UtilModel } from '#/model'
 
 interface ProfileDeleteAccountProps {
   roles: UtilModel[]

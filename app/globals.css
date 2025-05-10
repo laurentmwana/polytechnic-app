@@ -160,7 +160,3 @@
 .text-description {
   @apply text-sm text-muted-foreground;
 }
-
-body {
-  font-family: 'Intet', sans-serif;
-}
