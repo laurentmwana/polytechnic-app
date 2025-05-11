@@ -1,5 +1,3 @@
-'use client'
-
 import { DepartmentWelcome } from '@/features/welcome/department'
 import { WelcomeHero } from '@/features/welcome/hero'
 import { OptionWelcome } from '@/features/welcome/option'
@@ -8,6 +6,7 @@ import { YourAdn } from '@/features/welcome/adn-section'
 import { FaqWelcome } from '@/features/welcome/faq'
 import { ProfessorLeaders } from '@/features/welcome/professor-leader'
 import { BaseLayout } from '@/layouts/base-layout'
+import { YearAcademicWelcome } from '@/features/welcome/year-academic'
 
 export default function HomePage() {
   return (
@@ -17,6 +16,7 @@ export default function HomePage() {
           <WelcomeHero />
           <YourAdn />
           <Presentation />
+          <YearAcademicWelcome />
           <DepartmentWelcome />
           <OptionWelcome />
           <ProfessorLeaders />

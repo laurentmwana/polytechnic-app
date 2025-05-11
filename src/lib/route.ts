@@ -13,6 +13,16 @@ export const ROUTES = {
   'department.show': '/department/:id',
   'option.index': '/option',
   'option.show': '/option/:id',
+
+  'level.index': '/level',
+  'level.show': '/level/:id',
+
+  'programme.index': '/programme',
+  'programme.show': '/programme/:id',
+
+  'year.index': '/year-academic',
+  'year.show': '/year-academic/:id',
+
   'deliberation.index': '/deliberation',
 
   '~department.index': '/admin/department',
@@ -47,6 +57,16 @@ export const API_ROUTES = {
   'professor.show': '/professor/:id',
   'professor.leader': '/professor/leader',
 
+  'level.index': '/level',
+  'level.show': '/level/:id',
+
+  'programme.index': '/programme',
+  'programme.show': '/programme/:id',
+
+  'year.index': '/year-academic',
+  'year.pending': '/pending/year-academic',
+  'year.show': '/year-academic/:id',
+
   '~department.index': '/admin/department',
   '~department.show': '/admin/department/:id',
   '~department.create': '/admin/department',
@@ -66,6 +86,16 @@ export const API_LOCAL_ROUTES = {
 
   'option.index': '/api/other/option',
   'option.show': '/api/other/option/:id',
+
+  'level.index': '/api/other/level',
+  'level.show': '/api/other/level/:id',
+
+  'programme.index': '/api/other/programme',
+  'programme.show': '/api/other/programme/:id',
+
+  'year.index': '/api/other/year-academic',
+  'year.pending': '/api/other/year-academic/pending',
+  'year.show': '/api/other/year-academic/:id',
 }
 
 type RouteParams = Record<string, string | number | boolean | null>

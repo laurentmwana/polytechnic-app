@@ -1,44 +1,44 @@
-import type { Level } from '#/model'
+import type { Programme } from '#/model'
 import { Heading } from '@/components/shared/heading'
 import { fetchJson } from '@/lib/fetch'
 import { apiLocalRoute, webRoute } from '@/lib/route'
 import { CustomBreadcrumbs } from '@/components/custom-breadcumbs'
-import { LevelDetails } from './level-details'
+import { ProgrammeDetails } from './programme-details'
 
-export default async function LevelShow({
+export default async function ProgrammeShow({
   params,
 }: {
   params: Promise<{ id: number }>
 }) {
   const { id } = await params
 
-  const response = await fetchJson<{ data: Level }>(
-    apiLocalRoute('level.show', { id })
+  const response = await fetchJson<{ data: Programme }>(
+    apiLocalRoute('programme.show', { id })
   )
 
-  const level = response.data
+  const programme = response.data
 
   return (
     <main className="container py-12">
-      <Heading title="En savoir plus sur une promotion" />
+      <Heading title="En savoir plus sur une Option" />
 
       <div className="mb-5">
         <CustomBreadcrumbs
           items={[
             {
-              href: webRoute('level.index'),
-              label: 'Promotions',
+              href: webRoute('programme.index'),
+              label: 'Programmes',
             },
             {
-              href: webRoute('level.show', { id }),
-              label: `Promotion #${id}`,
+              href: webRoute('programme.show', { id }),
+              label: `Programme #${id}`,
               isCurrent: true,
             },
           ]}
         />
       </div>
 
-      <LevelDetails level={level.data} />
+      <ProgrammeDetails programme={programme.data} />
     </main>
   )
 }

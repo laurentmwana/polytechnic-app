@@ -53,6 +53,8 @@ export const NavbarBase = () => {
       children: [
         { label: 'Départments', href: '/department' },
         { label: 'Filières', href: '/option' },
+        { label: 'Promotion', href: '/level' },
+        { label: 'Programme', href: '/programme' },
         { label: 'Année académique', href: '/year-academic' },
         { label: 'Professeurs', href: '/professor' },
       ],
