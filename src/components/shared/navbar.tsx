@@ -62,6 +62,7 @@ export const NavbarBase = () => {
       children: [
         { label: 'Horaires', href: '/hor' },
         { label: 'Délibération', href: '/deliberation' },
+        { label: 'Communiqué', href: '/news' },
       ],
     },
     { label: 'Contact', href: '/contact-us' },

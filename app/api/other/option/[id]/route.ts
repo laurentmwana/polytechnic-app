@@ -7,14 +7,14 @@ export const GET = async (
   { params }: { params: { id: string } }
 ) => {
   const response = await fetchJson(
-    apiRoute('department.show', {
+    apiRoute('option.show', {
       id: params.id,
     })
   )
 
   if (response.status !== 200) {
     throw new Error(
-      `Une erreur est survenue lors de la récupèration du départment #${params.id}, merci de réessayer`
+      `Une erreur est survenue lors de la récupèration de l'option #${params.id}, merci de réessayer`
     )
   }
 

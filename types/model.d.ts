@@ -72,3 +72,8 @@ export interface DepartmentMetaData {
   data: Department[]
   meta: PaginationMeta
 }
+
+export interface OptionMetaData {
+  data: Option[]
+  meta: PaginationMeta
+}

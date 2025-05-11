@@ -63,6 +63,9 @@ export const API_ROUTES = {
 export const API_LOCAL_ROUTES = {
   'department.index': '/api/other/department',
   'department.show': '/api/other/department/:id',
+
+  'option.index': '/api/other/option',
+  'option.show': '/api/other/option/:id',
 }
 
 type RouteParams = Record<string, string | number | boolean | null>

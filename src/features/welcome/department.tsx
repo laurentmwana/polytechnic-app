@@ -30,6 +30,7 @@ import {
 import Link from 'next/link'
 import { Skeleton } from '@/components/ui/skeleton'
 import { excerpt } from '@/lib/utils'
+import { EmptyDataFetch } from '@/components/no-data'
 
 const getIconByName = (name: string): React.ReactNode => {
   const nameLower = name.toLowerCase()
@@ -99,9 +100,7 @@ export const DepartmentWelcome = () => {
           })
         ) : (
           <div className="col-span-full text-center py-8">
-            <p className="text-muted-foreground">
-              Aucun département disponible pour le moment.
-            </p>
+            <EmptyDataFetch message="Aucun département disponible pour le moment." />
           </div>
         )}
       </div>

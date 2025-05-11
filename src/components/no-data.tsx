@@ -4,7 +4,7 @@ export const EmptyDataFetch = ({ message }: { message: string }) => {
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardDescription>{message}</CardDescription>
+        <CardDescription className="text-center">{message}</CardDescription>
       </CardHeader>
     </Card>
   )
