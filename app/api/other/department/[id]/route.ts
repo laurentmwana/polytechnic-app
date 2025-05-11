@@ -1,20 +1,16 @@
 import { fetchJson } from '@/lib/fetch'
 import { apiRoute } from '@/lib/route'
-import { NextRequest } from 'next/server'
 
-export const GET = async (
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) => {
+export async function GET(context: { params: { id: string } }) {
   const response = await fetchJson(
     apiRoute('department.show', {
-      id: params.id,
+      id: context.params.id,
     })
   )
 
   if (response.status !== 200) {
     throw new Error(
-      `Une erreur est survenue lors de la récupèration du départment #${params.id}, merci de réessayer`
+      `Une erreur est survenue lors de la récupèration du départment #${context.params.id}, merci de réessayer`
     )
   }
 

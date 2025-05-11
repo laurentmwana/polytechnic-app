@@ -4,7 +4,7 @@ import { apiRoute } from '@/lib/route'
 import { getServerSession } from 'next-auth/next'
 import { NextResponse } from 'next/server'
 
-export const GET = async ({ params }: { params: { id: string } }) => {
+export async function GET(context: { params: { id: string } }) {
   const session = await getServerSession(authOptions)
 
   if (!session) {
@@ -24,7 +24,7 @@ export const GET = async ({ params }: { params: { id: string } }) => {
   }
 
   const response = await fetchJson(
-    apiRoute('~option.show', { id: params.id }),
+    apiRoute('~option.show', { id: context.params.id }),
     {
       headers: {
         Authorization: `Bearer ${accessToken}`,

@@ -4,7 +4,7 @@ import { apiRoute } from '@/lib/route'
 import { getServerSession } from 'next-auth/next'
 import { NextResponse } from 'next/server'
 
-export const GET = async ({ params }: { params: { id: string } }) => {
+export async function GET(context: { params: { id: string } }) {
   const session = await getServerSession(authOptions)
 
   if (!session) {
@@ -24,7 +24,7 @@ export const GET = async ({ params }: { params: { id: string } }) => {
   }
 
   const response = await fetchJson(
-    apiRoute('~programme.show', { id: params.id }),
+    apiRoute('~programme.show', { id: context.params.id }),
     {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -34,7 +34,7 @@ export const GET = async ({ params }: { params: { id: string } }) => {
 
   if (response.status !== 200) {
     throw new Error(
-      `Une erreur est survenue lors de la récupération du programme #${params.id}, merci de réessayer`
+      `Une erreur est survenue lors de la récupération du programme #${context.params.id}, merci de réessayer`
     )
   }
 

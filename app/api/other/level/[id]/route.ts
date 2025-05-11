@@ -1,20 +1,18 @@
 import { fetchJson } from '@/lib/fetch'
 import { apiRoute } from '@/lib/route'
-import { NextRequest } from 'next/server'
 
 export const GET = async (
-  req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) => {
   const response = await fetchJson(
     apiRoute('level.show', {
-      id: params.id,
+      id: context.params.id,
     })
   )
 
   if (response.status !== 200) {
     throw new Error(
-      `Une erreur est survenue lors de la récupèration de la promotion #${params.id}, merci de réessayer`
+      `Une erreur est survenue lors de la récupèration de la promotion #${context.params.id}, merci de réessayer`
     )
   }
 

@@ -4,10 +4,10 @@ import { apiRoute } from '@/lib/route'
 import { getServerSession } from 'next-auth/next'
 import { NextRequest, NextResponse } from 'next/server'
 
-export const POST = async (
+export async function POST(
   req: NextRequest,
-  { params }: { params: { id: string } }
-) => {
+  context: { params: { id: string } }
+) {
   const session = await getServerSession(authOptions)
 
   if (!session) {
@@ -29,7 +29,7 @@ export const POST = async (
   const formData = await req.json()
 
   const response = await fetchJson(
-    apiRoute('~level.create', { id: params.id }),
+    apiRoute('~level.create', { id: context.params.id }),
     {
       method: 'POST',
       body: formData,

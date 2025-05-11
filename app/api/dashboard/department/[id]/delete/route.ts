@@ -4,10 +4,10 @@ import { apiRoute } from '@/lib/route'
 import { getServerSession } from 'next-auth/next'
 import { NextRequest, NextResponse } from 'next/server'
 
-export const DELETE = async (
+export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
-) => {
+  context: { params: { id: string } }
+) {
   const session = await getServerSession(authOptions)
 
   if (!session) {
@@ -26,13 +26,10 @@ export const DELETE = async (
     )
   }
 
-  const formData = await req.json()
-
   const response = await fetchJson(
-    apiRoute('~department.destroy', { id: params.id }),
+    apiRoute('~department.destroy', { id: context.params.id }),
     {
       method: 'DELETE',
-      body: formData,
       headers: {
         Accept: 'application/json',
         Authorization: `Bearer ${accessToken}`,
@@ -42,7 +39,7 @@ export const DELETE = async (
 
   if (response.status !== 200) {
     throw new Error(
-      `Une erreur est survenue lors de la suppression du programme #${params.id}, merci de réessayer`
+      `Une erreur est survenue lors de la suppression du département #${context.params.id}, merci de réessayer`
     )
   }
 
