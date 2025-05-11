@@ -3,16 +3,10 @@ import './globals.css'
 import { ThemeProvider } from '@/components/themes/theme-provider'
 import { Toaster } from '@/components/ui/sonner'
 import { SessionNextAuthProvider } from '@/components/auth-provider'
-import { Geist, Geist_Mono } from 'next/font/google'
 import { cn } from '@/lib/utils'
+import { Inter } from 'next/font/google'
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-})
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
+const inter = Inter({
   subsets: ['latin'],
 })
 
@@ -28,14 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr" className="h-full" suppressHydrationWarning>
-      <body
-        className={cn(
-          geistSans.variable,
-          geistMono.variable,
-          'antialiased',
-          'h-full'
-        )}
-      >
+      <body className={cn(inter.className, 'antialiased', 'h-full')}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

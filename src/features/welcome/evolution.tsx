@@ -65,12 +65,12 @@ export const EvolutionItem = ({
         initial={{ scale: 0.5, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 0.5, delay: delay + 0.2 }}
-        className="mb-4 text-primary-foreground"
+        className="mb-4"
       >
         {icon}
       </motion.div>
       <motion.h2
-        className="text-4xl font-bold text-primary-foreground mb-2 flex items-baseline"
+        className="text-4xl font-bold mb-2 flex items-baseline"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, delay: delay + 0.3 }}
