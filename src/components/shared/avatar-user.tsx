@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { User, LogOut, Settings, ListEnd } from 'lucide-react'
+import { User, LogOut, ListEnd } from 'lucide-react'
 import { signOut, useSession } from 'next-auth/react'
 import { toast } from 'sonner'
 
@@ -99,10 +99,6 @@ export const AvatarDropdown = () => {
             </Link>
           </DropdownMenuItem>
         )}
-        <DropdownMenuItem className="flex cursor-pointer items-center gap-2 rounded-md p-2 hover:bg-accent">
-          <Settings className="h-4 w-4 text-muted-foreground" />
-          <span>Paramètres</span>
-        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
           className="flex cursor-pointer items-center gap-2 rounded-md p-2 text-destructive hover:bg-destructive/10"
