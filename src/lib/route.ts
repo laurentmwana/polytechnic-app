@@ -39,6 +39,7 @@ export const API_ROUTES = {
   'forgot-password': '/forgot-password',
   'verify-email': '/email/verification-notification',
   'verify-opt': '/email/verify/:opt',
+  refresh: '/refresh',
   me: '/me',
 
   'profile.edit': '/profile/edit',
@@ -96,6 +97,9 @@ export const API_LOCAL_ROUTES = {
   'year.index': '/api/other/year-academic',
   'year.pending': '/api/other/year-academic/pending',
   'year.show': '/api/other/year-academic/:id',
+
+    'profile.edit': '/api/profile/edit',
+  'profile.password': '/api/profile/change-password',
 }
 
 type RouteParams = Record<string, string | number | boolean | null>

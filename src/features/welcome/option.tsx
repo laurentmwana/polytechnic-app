@@ -94,7 +94,7 @@ export const OptionWelcome = () => {
             onValueChange={setActiveTab}
             className="mb-8"
           >
-            <TabsList className="w-full max-w-3xl mx-auto flex flex-wrap h-auto p-1 mb-2">
+            <TabsList className="w-full max-w-3xl mx-auto flex flex-wrap h-auto p-1 mb-2 gap-y-3">
               <TabsTrigger value="all" className="flex-grow">
                 Toutes les filières
               </TabsTrigger>

@@ -36,13 +36,9 @@ export default function MyProfile() {
       <div className="space-y-7">
         <UnverifiedEmail user={user} />
 
-        <ProfileInfoForm
-          name={user.name ?? ''}
-          email={user.email ?? ''}
-          token={user.accessToken ?? ''}
-        />
+        <ProfileInfoForm name={user.name ?? ''} email={user.email ?? ''} />
 
-        <ProfileUpdatePasswordForm token={user.accessToken ?? ''} />
+        <ProfileUpdatePasswordForm />
 
         <ProfileDeleteAccount roles={user.roles} />
       </div>

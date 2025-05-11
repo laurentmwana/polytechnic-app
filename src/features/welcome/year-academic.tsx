@@ -13,17 +13,23 @@ export const YearAcademicWelcome = () => {
 
   const year = response.result
 
-  if (!year) return null
-
   return (
     <div className="container my-12">
-      <SectionPageTitle title="Année académique" />
+      <SectionPageTitle title="Année académique">
+        Une nouvelle année académique, une nouvelle aventure d’apprentissage et
+        de découvertes. Ensemble, construisons votre avenir, un semestre à la
+        fois.
+      </SectionPageTitle>
 
-        {response.isLoading ? (
-          <YearAcademicWelcomeSkeleton />
-        ) : (
-          <YearDetails year={year?.data} />
-        )}
+      {response.isLoading ? (
+        <YearAcademicWelcomeSkeleton />
+      ) : year ? (
+        <YearDetails year={year?.data} />
+      ) : (
+        <p className="text-sm text-muted-foreground">
+          Pas d&lsquo;année académique pour l&#39;instant
+        </p>
+      )}
     </div>
   )
 }

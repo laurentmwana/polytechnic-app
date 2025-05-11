@@ -26,18 +26,12 @@ import {
   type ProfilePasswordFormSchemaInfer,
 } from '@/definitions/profile'
 import { useState } from 'react'
-import { changePassword } from '@/repositories/profile'
+import { changePasswordProfile } from '@/actions/profile'
 import { toast } from 'sonner'
-import type { FormErrorValidator } from '@/types/error'
+import type { FormErrorValidator } from '#/error'
 import { signOut } from 'next-auth/react'
 
-type ProfileUpdatePasswordFormProps = {
-  token: string
-}
-
-export const ProfileUpdatePasswordForm = ({
-  token,
-}: ProfileUpdatePasswordFormProps) => {
+export const ProfileUpdatePasswordForm = () => {
   return (
     <Card>
       <CardHeader>
@@ -50,14 +44,14 @@ export const ProfileUpdatePasswordForm = ({
 
       <CardContent>
         <div className="max-w-lg">
-          <PasswordUpdateForm token={token} />
+          <PasswordUpdateForm />
         </div>
       </CardContent>
     </Card>
   )
 }
 
-const PasswordUpdateForm = ({ token }: ProfileUpdatePasswordFormProps) => {
+const PasswordUpdateForm = () => {
   const [processing, setProcessing] = useState<boolean>(false)
   const [isUpdatingSession, setIsUpdatingSession] = useState<boolean>(false)
 
@@ -75,7 +69,7 @@ const PasswordUpdateForm = ({ token }: ProfileUpdatePasswordFormProps) => {
     setIsUpdatingSession(true)
 
     try {
-      const response = await changePassword(values, token)
+      const response = await changePasswordProfile(values)
 
       if (response.ok) {
         toast.success('Message', {
@@ -108,10 +102,8 @@ const PasswordUpdateForm = ({ token }: ProfileUpdatePasswordFormProps) => {
           'password_confirmation',
         ]
 
-        // Réinitialiser les erreurs existantes
         form.clearErrors()
 
-        // Définir les nouvelles erreurs pour chaque champ
         fieldNames.forEach((fieldName) => {
           if (formErrors.errors[fieldName]?.length) {
             // Utiliser le premier message d'erreur du tableau pour ce champ
@@ -121,10 +113,6 @@ const PasswordUpdateForm = ({ token }: ProfileUpdatePasswordFormProps) => {
             })
           }
         })
-
-
-
-        
       }
     } catch (error: unknown) {
       toast.error('Une problème est survenu', {

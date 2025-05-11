@@ -26,21 +26,16 @@ import {
   type ProfileEditFormSchemaInfer,
 } from '@/definitions/profile'
 import { useState } from 'react'
-import { editUserInfo } from '@/repositories/profile'
+import { updateUserProfile } from '@/actions/profile'
 import { toast } from 'sonner'
-import { FormErrorValidator } from '@/types/error'
+import { FormErrorValidator } from '#/error'
 
 type ProfileInfoFormProps = {
   name: string
   email: string
-  token: string
 }
 
-export const ProfileInfoForm = ({
-  email,
-  name,
-  token,
-}: ProfileInfoFormProps) => {
+export const ProfileInfoForm = ({ email, name }: ProfileInfoFormProps) => {
   return (
     <Card>
       <CardHeader>
@@ -52,18 +47,14 @@ export const ProfileInfoForm = ({
 
       <CardContent>
         <div className="max-w-lg">
-          <ProfileEditForm email={email} name={name} token={token} />
+          <ProfileEditForm email={email} name={name}/>
         </div>
       </CardContent>
     </Card>
   )
 }
 
-export const ProfileEditForm = ({
-  email,
-  name,
-  token,
-}: ProfileInfoFormProps) => {
+export const ProfileEditForm = ({ email, name }: ProfileInfoFormProps) => {
   const [processing, setProcessing] = useState<boolean>(false)
   const [isUpdatingSession, setIsUpdatingSession] = useState<boolean>(false)
 
@@ -81,7 +72,7 @@ export const ProfileEditForm = ({
     setIsUpdatingSession(true)
 
     try {
-      const response = await editUserInfo(values, token)
+      const response = await updateUserProfile(values)
 
       if (response.ok) {
         toast.success('Message', {
