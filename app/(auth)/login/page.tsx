@@ -14,28 +14,13 @@ import { toast } from 'sonner'
 import { webRoute } from '@/lib/route'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { Skeleton } from '@/components/ui/skeleton'
+import { AuthLoader } from '@/features/auth/auth-loader'
 
 const LoginUser = () => {
   const router = useRouter()
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isRedirecting, setIsRedirecting] = useState(false)
-
-  // Skeleton component pour la redirection
-  const RedirectingSkeleton = () => (
-    <div className="space-y-4 py-4">
-      <div className="flex items-center justify-center mb-6">
-        <Skeleton className="h-12 w-3/4" />
-      </div>
-      <Skeleton className="h-10 w-full" />
-      <Skeleton className="h-10 w-full" />
-      <Skeleton className="h-10 w-full" />
-      <div className="flex justify-end mt-6">
-        <Skeleton className="h-10 w-24" />
-      </div>
-    </div>
-  )
 
   if (isRedirecting) {
     return (
@@ -46,7 +31,7 @@ const LoginUser = () => {
             <CardDescription>Redirection en cours...</CardDescription>
           </CardHeader>
           <CardContent className="px-10 py-8">
-            <RedirectingSkeleton />
+            <AuthLoader />
           </CardContent>
         </Card>
       </div>
@@ -73,7 +58,7 @@ const LoginUser = () => {
                 const response = await signIn('credentials', {
                   email: values.email,
                   password: values.password,
-                  redirect: false, // Changé à false pour gérer manuellement la redirection
+                  redirect: false,
                 })
 
                 if (response?.error) {

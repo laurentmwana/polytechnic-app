@@ -1,3 +1,5 @@
+import { PaginationMeta } from './paginate'
+
 export interface UserLogin {
   expires_in: number
   access_token: string
@@ -30,12 +32,54 @@ export interface Department {
   id: number
   name: string
   description: string
+  faculty: Faculty
+  options: Option[]
+  created_at: string
+  updated_at: string
 }
 
 export interface Option {
   id: number
   name: string
   description: string
+  levels: Levels[]
+  created_at: string
+  updated_at: string
+}
+
+export interface Level {
+  id: number
+  programme: Programme
+  option: Option
+  created_at: string
+  updated_at: string
+}
+
+export interface Programme {
+  id: number
+  name: string
+  alias: string
+  programme_group: string
+  created_at: string
+  updated_at: string
+}
+
+export interface Programme {
+  id: number
+  name: string
+  alias: string
+  created_at: string
+  updated_at: string
+}
+
+export interface Year {
+  id: number
+  name: string
+  start: string
+  end: string
+  is_closed: boolean
+  created_at: string
+  updated_at: string
 }
 
 export interface Professor {
@@ -47,4 +91,31 @@ export interface Professor {
   birth: string
   gender: string
   department: Department
+  created_at: string
+  updated_at: string
+}
+
+export interface DepartmentMetaData {
+  data: Department[]
+  meta: PaginationMeta
+}
+
+export interface OptionMetaData {
+  data: Option[]
+  meta: PaginationMeta
+}
+
+export interface LevelMetaData {
+  data: Level[]
+  meta: PaginationMeta
+}
+
+export interface ProgrammeMetaData {
+  data: Programme[]
+  meta: PaginationMeta
+}
+
+export interface YearMetaData {
+  data: Year[]
+  meta: PaginationMeta
 }

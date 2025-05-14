@@ -4,7 +4,7 @@ import { PropsWithChildren } from 'react'
 
 const AuthLayout = ({ children }: PropsWithChildren) => {
   return (
-    <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-8">
+    <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6">
       <div className="flex w-full max-w-md flex-col gap-6">
         <Link
           href="/"
