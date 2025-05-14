@@ -20,6 +20,9 @@ const items = [
 ]
 
 export default function Page() {
+  const onReset = () => {}
+  const onSearch = () => {}
+
   return (
     <>
       <BreadcrumbsHeader items={items} />
@@ -29,7 +32,11 @@ export default function Page() {
             <div className="relative min-h-[100vh] flex-1 overflow-hidden rounded-xl border p-5 md:min-h-min">
               <div>
                 <div className="mb-4 flex items-center gap-4 justify-between">
-                  <SearchInput lengthData={4} urlBack={webRoute('dashboard')} />
+                  <SearchInput
+                    lengthData={4}
+                    onReset={onReset}
+                    onSearch={onSearch}
+                  />
                   <Button size="sm" variant="secondary">
                     <Link href="">
                       <Plus size={15} />

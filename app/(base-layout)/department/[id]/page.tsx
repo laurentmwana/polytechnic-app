@@ -5,9 +5,7 @@ import { apiLocalRoute, webRoute } from '@/lib/route'
 import { DepartmentDetail } from './department-details'
 import { CustomBreadcrumbs } from '@/components/custom-breadcumbs'
 
-export default async function DepartmentShow({
-  params,
-}: {
+export default async function DepartmentShow({params}: {
   params: Promise<{ id: number }>
 }) {
   const { id } = await params
