@@ -16,7 +16,6 @@ import {
 } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Progress } from '@/components/ui/progress'
 import Link from 'next/link'
 import { webRoute } from '@/lib/route'
 import { Year } from '#/model'
@@ -27,31 +26,7 @@ interface YearDetailsProps {
 }
 
 export function YearDetails({ year }: YearDetailsProps) {
-  // Calculer la durée en mois
-  const getDuration = (start: string, end: string) => {
-    const startDate = new Date(start)
-    const endDate = new Date(end)
-    const diffMonths =
-      (endDate.getFullYear() - startDate.getFullYear()) * 12 +
-      endDate.getMonth() -
-      startDate.getMonth()
-    return `${diffMonths} mois`
-  }
-
-  const getProgressPercentage = () => {
-    const startDate = new Date(year.start)
-    const endDate = new Date(year.end)
-    const currentDate = new Date()
-
-    if (currentDate < startDate) return 0
-    if (currentDate > endDate) return 100
-
-    const totalDuration = endDate.getTime() - startDate.getTime()
-    const elapsedDuration = currentDate.getTime() - startDate.getTime()
-    return Math.round((elapsedDuration / totalDuration) * 100)
-  }
-
-  const progressPercentage = getProgressPercentage()
+ 
 
   return (
     <div className="space-y-8">
@@ -99,7 +74,7 @@ export function YearDetails({ year }: YearDetailsProps) {
                 </h4>
                 <div className="flex items-center gap-2">
                   <Calendar className="h-4 w-4 text-primary" />
-                  <p>{formatDate(year.start)}</p>
+                  <p>{year.start}</p>
                 </div>
               </div>
               <div className="border rounded-lg p-4">
@@ -108,24 +83,9 @@ export function YearDetails({ year }: YearDetailsProps) {
                 </h4>
                 <div className="flex items-center gap-2">
                   <Calendar className="h-4 w-4 text-primary" />
-                  <p>{formatDate(year.end)}</p>
+                  <p>{year.end}</p>
                 </div>
               </div>
-            </div>
-            <div className="mt-4 border rounded-lg p-4">
-              <h4 className="text-sm font-medium text-muted-foreground mb-2">
-                Durée totale
-              </h4>
-              <p className="mb-2">{getDuration(year.start, year.end)}</p>
-              {!year.is_closed && (
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span>Progression</span>
-                    <span>{progressPercentage}%</span>
-                  </div>
-                  <Progress value={progressPercentage} className="h-2" />
-                </div>
-              )}
             </div>
           </div>
 
