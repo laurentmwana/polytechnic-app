@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { User, LogOut, ListEnd } from 'lucide-react'
-import { signOut, useSession } from 'next-auth/react'
+import { signOut } from 'next-auth/react'
 import { toast } from 'sonner'
 
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
@@ -19,9 +19,10 @@ import Link from 'next/link'
 import { webRoute } from '@/lib/route'
 import { isAdmin } from '@/lib/role'
 import { getInitials } from '@/lib/utils'
+import { useMe } from '@/hooks/use-me'
 
 export const AvatarDropdown = () => {
-  const { data: session, status } = useSession()
+  const session = useMe()
 
   const [isLoggingOut, setIsLoggingOut] = useState(false)
 
@@ -41,11 +42,11 @@ export const AvatarDropdown = () => {
     }
   }
 
-  if (status === 'loading') {
+  if (session.isPending) {
     return <Skeleton className="h-9 w-9 rounded-full" />
   }
 
-  if (status === 'unauthenticated' || !session) {
+  if (!session.user) {
     return (
       <Button variant="outline" asChild>
         <Link href={webRoute('login')}>Se connecter</Link>

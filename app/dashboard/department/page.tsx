@@ -1,12 +1,27 @@
 'use client'
 
 import { DepartmentMetaData } from '#/model'
+import { TextLink } from '@/components/shared/text-link'
 import { BreadcrumbsHeader } from '@/components/sidebar/breadcrumb-header'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import { Pagination } from '@/components/ui/pagination'
 import { SearchInput } from '@/components/ui/search-input'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+  TableSkeleton,
+} from '@/components/ui/table'
 import { AdminLayout } from '@/layouts/admin-layout'
-import { fetchJson } from '@/lib/fetch'
+import { ago } from '@/lib/date-time'
 import { apiLocalRoute, webRoute } from '@/lib/route'
+import { excerpt } from '@/lib/utils'
+import { Eye, Pen } from 'lucide-react'
+import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
@@ -37,7 +52,7 @@ export default function Page() {
 
     const getDepartments = async () => {
       try {
-        const response = await fetchJson<DepartmentMetaData>(
+        const response = await fetch(
           apiLocalRoute('~department.index', { page, search })
         )
 
@@ -47,7 +62,9 @@ export default function Page() {
           )
         }
 
-        setDepartments(response.data)
+        const data = (await response.json()) as DepartmentMetaData
+
+        setDepartments(data)
       } catch (error) {
         console.error('Erreur lors de la récupération des départements:', error)
       } finally {
@@ -98,12 +115,77 @@ export default function Page() {
           )}
 
         {isLoading ? (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mt-8">
-            {/* loadiing */}
+          <div className="w-full mt-8">
+            <TableSkeleton className="w-full" />
           </div>
         ) : (
           <>
-            <></>
+            {departments && (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Nom</TableHead>
+                    <TableHead>Options</TableHead>
+                    <TableHead>Créer</TableHead>
+                    <TableHead className="lg:text-end">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+
+                <TableBody>
+                  {departments.data.map((department) => {
+                    return (
+                      <TableRow key={department.id}>
+                        <TableCell>
+                          <TextLink
+                            href={webRoute('~department.show', {
+                              id: department.id,
+                            })}
+                          >
+                            {excerpt(department.name, 40)}
+                          </TextLink>
+                        </TableCell>
+
+                        <TableCell>
+                          <Badge variant="secondary">
+                            {department.options.length}
+                          </Badge>
+                        </TableCell>
+
+                        <TableCell>
+                          <p className="text-xs text-muted-foreground">
+                            {ago(department.created_at)}
+                          </p>
+                        </TableCell>
+
+                        <TableCell>
+                          <div className="flex items-center gap-3 justify-end">
+                            <Button variant="secondary" size="sm" asChild>
+                              <Link
+                                href={webRoute('~department.edit', {
+                                  id: department.id,
+                                })}
+                              >
+                                <Pen />
+                              </Link>
+                            </Button>
+
+                            <Button variant="outline" size="sm" asChild>
+                              <Link
+                                href={webRoute('~department.show', {
+                                  id: department.id,
+                                })}
+                              >
+                                <Eye />
+                              </Link>
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    )
+                  })}
+                </TableBody>
+              </Table>
+            )}
 
             {departments && (
               <div className="mt-8">

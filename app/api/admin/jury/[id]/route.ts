@@ -2,11 +2,14 @@ import { authOptions } from '@/lib/auth-option'
 import { fetchJson } from '@/lib/fetch'
 import { apiRoute } from '@/lib/route'
 import { getServerSession } from 'next-auth/next'
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 
-export async function POST(
-  req: NextRequest,
+export async function GET(
+  request: Request,
+  context: { params: Promise<{ id: string }> }
 ) {
+  const id = (await context.params).id
+
   const session = await getServerSession(authOptions)
 
   if (!session) {
@@ -25,21 +28,15 @@ export async function POST(
     )
   }
 
-  const formData = await req.json()
-
-  const response = await fetchJson(apiRoute('~level.create'), {
-    method: 'POST',
-    body: formData,
+  const response = await fetchJson(apiRoute('~programme.show', { id }), {
     headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
       Authorization: `Bearer ${accessToken}`,
     },
   })
 
   if (response.status !== 200) {
     throw new Error(
-      "Une erreur est survenue lors de la création d'une option, merci de réessayer"
+      `Une erreur est survenue lors de la récupération du programme #${id}, merci de réessayer`
     )
   }
 

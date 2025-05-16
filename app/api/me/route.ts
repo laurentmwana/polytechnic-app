@@ -1,10 +1,11 @@
+import { UserMe } from '#/model'
 import { authOptions } from '@/lib/auth-option'
-import { fetchJson } from '@/lib/fetch'
 import { apiRoute } from '@/lib/route'
 import { getServerSession } from 'next-auth/next'
 import { NextRequest, NextResponse } from 'next/server'
 
-export const GET = async (req: NextRequest) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function GET(request: NextRequest) {
   const session = await getServerSession(authOptions)
 
   if (!session) {
@@ -23,25 +24,21 @@ export const GET = async (req: NextRequest) => {
     )
   }
 
-  const searchParams = req.nextUrl.searchParams
-
-  const page = searchParams.get('page') ?? '1'
-  const search = searchParams.get('search') ?? ''
-
-  const response = await fetchJson(
-    apiRoute('~level.index', { page, search }),
-    {
+  try {
+    const response = await fetch(apiRoute('me'), {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-    }
-  )
+    })
 
-  if (response.status !== 200) {
-    throw new Error(
-      'Une erreur est survenue lors de la récupèration de départements, merci de réessayer'
+    const user = (await response.json()) as { data: UserMe }
+
+    return NextResponse.json(user.data, { status: response.status })
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (e) {
+    return NextResponse.json(
+      { error: "Erreur lors de la récupération de l'utilisateur" },
+      { status: 500 }
     )
   }
-
-  return Response.json(response.data)
 }

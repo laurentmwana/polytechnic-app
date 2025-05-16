@@ -2,10 +2,10 @@ import { authOptions } from '@/lib/auth-option'
 import { fetchJson } from '@/lib/fetch'
 import { apiRoute } from '@/lib/route'
 import { getServerSession } from 'next-auth/next'
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 
-export async function GET(
-  request: Request,
+export async function DELETE(
+  req: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
   const id = (await context.params).id
@@ -28,15 +28,20 @@ export async function GET(
     )
   }
 
-  const response = await fetchJson(apiRoute('~level.show', { id }), {
+  const formData = await req.json()
+
+  const response = await fetchJson(apiRoute('~programme.destroy', { id }), {
+    method: 'DELETE',
+    body: formData,
     headers: {
+      Accept: 'application/json',
       Authorization: `Bearer ${accessToken}`,
     },
   })
 
   if (response.status !== 200) {
     throw new Error(
-      'Une erreur est survenue lors de la récupèration de départements, merci de réessayer'
+      `Une erreur est survenue lors de la suppression du programme #${id}, merci de réessayer`
     )
   }
 

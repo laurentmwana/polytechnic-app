@@ -14,7 +14,7 @@ export const Loader = ({
   strokeWidth = 2,
   color,
   className,
-  variant = 'pulse',
+  variant = 'dual-ring',
   ...props
 }: LoaderProps) => {
   const iconColor = color || 'currentColor'

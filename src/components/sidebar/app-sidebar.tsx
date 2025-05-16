@@ -18,25 +18,52 @@ import { webRoute } from '@/lib/route'
 
 const items = [
   {
-    title: "Edifice",
+    title: 'Edifice',
     items: [
-        {
-    title: 'Tableau de bord',
-    url: webRoute('dashboard'),
-    icon: LayoutDashboardIcon,
+      {
+        title: 'Tableau de bord',
+        url: webRoute('dashboard'),
+        icon: LayoutDashboardIcon,
+      },
+      {
+        title: 'Département',
+        url: webRoute('~department.index'),
+        icon: ListIcon,
+      },
+      {
+        title: 'Option',
+        url: webRoute('~option.index'),
+        icon: OptionIcon,
+      },
+    ],
   },
+
   {
-    title: 'Département',
-    url: webRoute('~department.index'),
-    icon: ListIcon,
+    title: 'Académique',
+    items: [
+      {
+        title: 'Etudiant',
+        url: webRoute('dashboard'),
+        icon: LayoutDashboardIcon,
+      },
+      {
+        title: 'Communiquer',
+        url: webRoute('~department.index'),
+        icon: ListIcon,
+      },
+      {
+        title: 'Délibération',
+        url: webRoute('~option.index'),
+        icon: OptionIcon,
+      },
+
+      {
+        title: 'Frais Académique',
+        url: webRoute('~option.index'),
+        icon: OptionIcon,
+      },
+    ],
   },
-  {
-    title: 'Option',
-    url: webRoute('~option.index'),
-    icon: OptionIcon,
-  },
-    ]
-  }
 ]
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {

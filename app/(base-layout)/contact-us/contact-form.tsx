@@ -18,7 +18,7 @@ import {
   ContactUsFormSchema,
 } from '@/definitions/contact'
 import { useState } from 'react'
-import { MarkdownTextarea } from '@/components/ui/markdown-textarea'
+import { Textarea } from '@/components/ui/textarea'
 
 export const ContactForm = () => {
   const [processing, setProcessing] = useState<boolean>(false)
@@ -91,12 +91,7 @@ export const ContactForm = () => {
             <FormItem>
               <FormLabel>Mesage</FormLabel>
               <FormControl>
-                <MarkdownTextarea
-                  onChange={(v) => {
-                    field.onChange(v)
-                  }}
-                  defaultValue={field.value || ''}
-                />
+                <Textarea {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

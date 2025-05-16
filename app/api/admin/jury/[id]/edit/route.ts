@@ -4,7 +4,12 @@ import { apiRoute } from '@/lib/route'
 import { getServerSession } from 'next-auth/next'
 import { NextRequest, NextResponse } from 'next/server'
 
-export async function POST(req: NextRequest) {
+export async function PUT(
+  req: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
+  const id = (await context.params).id
+
   const session = await getServerSession(authOptions)
 
   if (!session) {
@@ -25,8 +30,8 @@ export async function POST(req: NextRequest) {
 
   const formData = await req.json()
 
-  const response = await fetchJson(apiRoute('~option.create'), {
-    method: 'POST',
+  const response = await fetchJson(apiRoute('~programme.update', { id }), {
+    method: 'PUT',
     body: formData,
     headers: {
       Accept: 'application/json',
@@ -37,7 +42,7 @@ export async function POST(req: NextRequest) {
 
   if (response.status !== 200) {
     throw new Error(
-      "Une erreur est survenue lors de la création d'une option, merci de réessayer"
+      `Une erreur est survenue lors de la modification du programme #${id}, merci de réessayer`
     )
   }
 

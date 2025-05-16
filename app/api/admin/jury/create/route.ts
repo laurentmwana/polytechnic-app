@@ -4,12 +4,7 @@ import { apiRoute } from '@/lib/route'
 import { getServerSession } from 'next-auth/next'
 import { NextRequest, NextResponse } from 'next/server'
 
-export async function DELETE(
-  req: NextRequest,
-  context: { params: Promise<{ id: string }> }
-) {
-  const id = (await context.params).id
-
+export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions)
 
   if (!session) {
@@ -30,18 +25,19 @@ export async function DELETE(
 
   const formData = await req.json()
 
-  const response = await fetchJson(apiRoute('~option.destroy', { id }), {
-    method: 'DELETE',
+  const response = await fetchJson(apiRoute('~programme.create'), {
+    method: 'POST',
     body: formData,
     headers: {
       Accept: 'application/json',
+      'Content-Type': 'application/json',
       Authorization: `Bearer ${accessToken}`,
     },
   })
 
   if (response.status !== 200) {
     throw new Error(
-      `Une erreur est survenue lors de la suppression du programme #${id}, merci de réessayer`
+      "Une erreur est survenue lors de la création d'un programme, merci de réessayer"
     )
   }
 

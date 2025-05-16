@@ -68,6 +68,7 @@ export interface Programme {
   id: number
   name: string
   alias: string
+  programme_group: string
   created_at: string
   updated_at: string
 }

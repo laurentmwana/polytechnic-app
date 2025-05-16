@@ -70,7 +70,7 @@ export function YearDetails({ year }: YearDetailsProps) {
             <div className="grid md:grid-cols-2 gap-4">
               <div className="border rounded-lg p-4">
                 <h4 className="text-sm font-medium text-muted-foreground mb-1">
-                  Date de début
+                  Début
                 </h4>
                 <div className="flex items-center gap-2">
                   <Calendar className="h-4 w-4 text-primary" />
@@ -79,7 +79,7 @@ export function YearDetails({ year }: YearDetailsProps) {
               </div>
               <div className="border rounded-lg p-4">
                 <h4 className="text-sm font-medium text-muted-foreground mb-1">
-                  Date de fin
+                  Fin
                 </h4>
                 <div className="flex items-center gap-2">
                   <Calendar className="h-4 w-4 text-primary" />

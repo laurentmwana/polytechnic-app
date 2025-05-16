@@ -2,6 +2,7 @@
 
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 
 interface PaginationMeta {
   current_page: number
@@ -15,9 +16,10 @@ interface PaginationMeta {
 interface PaginationProps {
   meta: PaginationMeta
   onPage: (page: number) => void
+  className?: string
 }
 
-export function Pagination({ meta, onPage }: PaginationProps) {
+export function Pagination({ meta, onPage, className }: PaginationProps) {
   const { current_page, from, to, last_page, total } = meta
 
   if (total === 0) return null
@@ -73,35 +75,50 @@ export function Pagination({ meta, onPage }: PaginationProps) {
   }
 
   return (
-    <div className="flex flex-col items-center space-y-2 py-4">
-      <div className="flex items-center space-x-2">
+    <div
+      className={cn(
+        'flex flex-col lg:flex-row-reverse lg:justify-between items-center gap-3 py-6',
+        className
+      )}
+    >
+      <div className="flex items-center gap-1.5">
         <Button
           variant="outline"
           size="icon"
           onClick={handlePreviousPage}
           disabled={current_page === 1}
           aria-label="Page précédente"
+          className="h-9 w-9 rounded-md border-muted-foreground/20"
         >
           <ChevronLeft className="h-4 w-4" />
         </Button>
 
-        {getPageNumbers().map((page, index) =>
-          page === '...' ? (
-            <span key={`ellipsis-${index}`} className="px-2">
-              ...
-            </span>
-          ) : (
-            <Button
-              key={`page-${page}`}
-              variant={current_page === page ? 'default' : 'outline'}
-              size="icon"
-              onClick={() => onPage(page as number)}
-              className="w-9 h-9"
-            >
-              {page}
-            </Button>
-          )
-        )}
+        <div className="flex items-center gap-1.5">
+          {getPageNumbers().map((page, index) =>
+            page === '...' ? (
+              <span
+                key={`ellipsis-${index}`}
+                className="flex h-9 w-9 items-center justify-center text-sm text-muted-foreground"
+              >
+                &#8230;
+              </span>
+            ) : (
+              <Button
+                key={`page-${page}`}
+                variant={current_page === page ? 'default' : 'outline'}
+                onClick={() => onPage(page as number)}
+                className={cn(
+                  'h-9 w-9 rounded-md text-sm font-medium',
+                  current_page === page
+                    ? 'shadow-sm'
+                    : 'border-muted-foreground/20 hover:bg-muted'
+                )}
+              >
+                {page}
+              </Button>
+            )
+          )}
+        </div>
 
         <Button
           variant="outline"
@@ -109,14 +126,24 @@ export function Pagination({ meta, onPage }: PaginationProps) {
           onClick={handleNextPage}
           disabled={current_page === last_page}
           aria-label="Page suivante"
+          className="h-9 w-9 rounded-md border-muted-foreground/20"
         >
           <ChevronRight className="h-4 w-4" />
         </Button>
       </div>
 
-      <div className="text-sm text-muted-foreground">
-        Affichage de {from} à {to} sur {total} résultats
+      <div className="text-xs text-muted-foreground">
+        Affichage de <span className="font-medium">{from}</span> à{' '}
+        <span className="font-medium">{to}</span> sur{' '}
+        <span className="font-medium">{total}</span> résultats
       </div>
     </div>
   )
 }
+
+export const PaginationContent = () => null
+export const PaginationItem = () => null
+export const PaginationLink = () => null
+export const PaginationEllipsis = () => null
+export const PaginationPrevious = () => null
+export const PaginationNext = () => null
