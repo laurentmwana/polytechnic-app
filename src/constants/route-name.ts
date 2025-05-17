@@ -63,6 +63,9 @@ export const API_ROUTES = {
   'level.index': '/level',
   'level.show': '/level/:id',
 
+  'news.index': '/news',
+  'news.show': '/news/:id',
+
   'programme.index': '/programme',
   'programme.show': '/programme/:id',
 
@@ -93,6 +96,9 @@ export const API_ROUTES = {
   '~programme.create': '/admin/programme',
   '~programme.update': '/admin/programme/:id',
   '~programme.destroy': '/admin/programme/:id',
+
+  'notification.index': '/notification',
+  'notification.show': '/notification/:id',
 }
 
 export const API_LOCAL_ROUTES = {
@@ -116,6 +122,9 @@ export const API_LOCAL_ROUTES = {
   'profile.edit': '/api/profile/edit',
   'profile.password': '/api/profile/change-password',
 
+  'news.index': '/api/other/news',
+  'news.show': '/api/other/news/:id',
+
   '~level.index': '/api/admin/level',
   '~level.show': '/api/admin/level/:id',
   '~level.update': '/api/admin/level/:id/edit',
@@ -138,5 +147,7 @@ export const API_LOCAL_ROUTES = {
   '~department.show': '/api/admin/department/:id',
   '~department.update': '/api/admin/department/:id/edit',
   '~department.create': '/api/admin/department/create',
-  '~department.destroy': '/api/admin/department/:id/delete',
+
+  'notification.index': '/api/notification',
+  'notification.show': '/api/notification/:id',
 }

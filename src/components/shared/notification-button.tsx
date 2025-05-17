@@ -1,8 +1,6 @@
 'use client'
 
-import { useState } from 'react'
-import { Bell, Clock, CheckCircle } from 'lucide-react'
-import { useSession } from 'next-auth/react'
+import { Bell, Clock } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -13,61 +11,21 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Skeleton } from '@/components/ui/skeleton'
-import { cn } from '@/lib/utils'
-
-type Notification = {
-  id: string
-  title: string
-  time: string
-  read: boolean
-}
+import { useNotification } from '@/hooks/use-notification'
+import { ago } from '@/lib/date-time'
 
 export const NotificationButton = () => {
-  const { status } = useSession()
+  const { notifications, isPending } = useNotification()
 
-  const [notificationCount, setNotificationCount] = useState(3)
-  const [notifications, setNotifications] = useState<Notification[]>([
-    {
-      id: '1',
-      title: 'Nouvel événement ajouté',
-      time: 'Il y a 5 min',
-      read: false,
-    },
-    {
-      id: '2',
-      title: 'Rappel: Réunion à 14h',
-      time: 'Il y a 30 min',
-      read: false,
-    },
-    {
-      id: '3',
-      title: 'Mise à jour du système',
-      time: 'Il y a 2 heures',
-      read: false,
-    },
-  ])
-
-  // Afficher un skeleton loader pendant le chargement
-  if (status === 'loading') {
+  if (isPending) {
     return <Skeleton className="h-9 w-9 rounded-md" />
   }
 
-  // Ne rien afficher si l'utilisateur n'est pas connecté
-  if (status === 'unauthenticated') {
+  if (notifications.length === 0) {
     return null
   }
 
-  const markAsRead = (id: string) => {
-    setNotifications((prev) =>
-      prev.map((notif) => (notif.id === id ? { ...notif, read: true } : notif))
-    )
-    setNotificationCount((prev) => Math.max(0, prev - 1))
-  }
-
-  const markAllAsRead = () => {
-    setNotifications((prev) => prev.map((notif) => ({ ...notif, read: true })))
-    setNotificationCount(0)
-  }
+  const notificationCount = notifications.length
 
   return (
     <DropdownMenu>
@@ -89,17 +47,6 @@ export const NotificationButton = () => {
       <DropdownMenuContent align="end" className="w-80 p-0">
         <div className="flex items-center justify-between p-3 border-b">
           <p className="font-medium">Notifications</p>
-          {notificationCount > 0 && (
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 text-xs hover:bg-muted"
-              onClick={markAllAsRead}
-            >
-              <CheckCircle className="mr-1 h-3 w-3" />
-              Tout marquer comme lu
-            </Button>
-          )}
         </div>
 
         {notifications.length === 0 ? (
@@ -115,28 +62,14 @@ export const NotificationButton = () => {
             {notifications.map((notification) => (
               <DropdownMenuItem
                 key={notification.id}
-                className={cn(
-                  'flex cursor-pointer flex-col items-start gap-1 p-3 focus:bg-accent',
-                  notification.read ? 'opacity-70' : ''
-                )}
-                onClick={() => markAsRead(notification.id)}
+                className="flex cursor-pointer flex-col items-start gap-1 p-3 focus:bg-accent"
               >
                 <div className="flex w-full items-start justify-between gap-2">
-                  <p
-                    className={cn(
-                      'text-sm',
-                      !notification.read && 'font-medium'
-                    )}
-                  >
-                    {notification.title}
-                  </p>
-                  {!notification.read && (
-                    <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-destructive"></span>
-                  )}
+                  <p className="text-sm">{notification.title}</p>
                 </div>
                 <div className="flex items-center text-xs text-muted-foreground">
                   <Clock className="mr-1 h-3 w-3" />
-                  {notification.time}
+                  {ago(notification.created_at)}
                 </div>
               </DropdownMenuItem>
             ))}
