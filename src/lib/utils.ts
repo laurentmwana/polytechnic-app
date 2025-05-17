@@ -6,6 +6,8 @@ export const cn = (...inputs: ClassValue[]) => {
 }
 
 export const getInitials = (content: string) => {
+  if (!content) return null
+
   return content
     .split(' ')
     .map((part) => part[0])
@@ -18,10 +20,11 @@ export function excerpt(
   text: string,
   limit: number = 100,
   separator: string = '...'
-): string {
+): string | null {
   if (text.length <= limit) {
     return text
   }
+  if (!text) return null
 
   let truncated = text.substring(0, limit)
 
@@ -34,12 +37,11 @@ export function excerpt(
   return truncated + separator
 }
 
-
-export   const formatDate = (dateString: string) => {
-    const date = new Date(dateString)
-    return new Intl.DateTimeFormat('fr-FR', {
-      day: '2-digit',
-      month: 'long',
-      year: 'numeric',
-    }).format(date)
-  }
+export const formatDate = (dateString: string) => {
+  const date = new Date(dateString)
+  return new Intl.DateTimeFormat('fr-FR', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+  }).format(date)
+}

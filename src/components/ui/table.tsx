@@ -146,6 +146,53 @@ const TableCaption = React.forwardRef<
 ))
 TableCaption.displayName = 'TableCaption'
 
+interface TableSkeletonProps {
+  rows?: number
+  columns?: number
+  className?: string
+}
+
+function TableSkeleton({
+  rows = 5,
+  columns = 4,
+  className,
+}: TableSkeletonProps) {
+  return (
+    <Table className={className}>
+      <TableHeader>
+        <TableRow>
+          {Array.from({ length: columns }).map((_, index) => (
+            <TableHead key={index}>
+              <div className="h-4 w-full max-w-[120px] rounded-md bg-muted animate-pulse" />
+            </TableHead>
+          ))}
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {Array.from({ length: rows }).map((_, rowIndex) => (
+          <TableRow key={rowIndex}>
+            {Array.from({ length: columns }).map((_, colIndex) => (
+              <TableCell key={colIndex}>
+                <div
+                  className={cn(
+                    'h-4 rounded-md bg-muted animate-pulse',
+                    colIndex === 0 ? 'w-[80%]' : 'w-[70%]'
+                  )}
+                  style={{
+                    animationDelay: `${
+                      (rowIndex * columns + colIndex) * 0.05
+                    }s`,
+                  }}
+                />
+              </TableCell>
+            ))}
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  )
+}
+
 export {
   Table,
   TableHeader,
@@ -155,4 +202,5 @@ export {
   TableRow,
   TableCell,
   TableCaption,
+  TableSkeleton,
 }

@@ -16,7 +16,7 @@ export default function MyProfile() {
     return <ProfileSkeleton />
   }
 
-  if (!session || !session.data?.user) {
+  if (!session.data) {
     return (
       <div className="container py-12">
         <Alert>

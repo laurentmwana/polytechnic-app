@@ -18,7 +18,10 @@ import {
   ContactUsFormSchema,
 } from '@/definitions/contact'
 import { useState } from 'react'
-import { MarkdownTextarea } from '@/components/ui/markdown-textarea'
+import { Textarea } from '@/components/ui/textarea'
+import { fetchJson } from '@/lib/fetch'
+import { apiRoute } from '@/lib/route'
+import { toast } from 'sonner'
 
 export const ContactForm = () => {
   const [processing, setProcessing] = useState<boolean>(false)
@@ -33,9 +36,29 @@ export const ContactForm = () => {
     },
   })
 
-  const onSubmit = (values: ContactUsFormSchemaInfer) => {
+  const onSubmit = async (values: ContactUsFormSchemaInfer) => {
     setProcessing(true)
-    console.log(values)
+    const response = await fetchJson(apiRoute('contact.send'), {
+      method: 'POST',
+      body: values,
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+    })
+
+    if (response.status === 200) {
+      toast.success('Succès', {
+        description: 'Votre message a été envoyé avec succès.',
+      })
+
+      form.reset()
+    } else {
+      toast.error('Problème', {
+        description: 'Une erreur est survenue, merci de réessayer',
+      })
+    }
+
     setProcessing(false)
   }
 
@@ -91,12 +114,7 @@ export const ContactForm = () => {
             <FormItem>
               <FormLabel>Mesage</FormLabel>
               <FormControl>
-                <MarkdownTextarea
-                  onChange={(v) => {
-                    field.onChange(v)
-                  }}
-                  defaultValue={field.value || ''}
-                />
+                <Textarea {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

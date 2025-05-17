@@ -41,7 +41,7 @@ export const Presentation = () => {
           </svg>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8 p-8 md:p-12">
+        <div className="grid md:grid-cols-2 gap-8 p-4 lg:p-8 md:p-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -101,7 +101,7 @@ export const Presentation = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.4 }}
-          className="p-6 md:p-8 m-4 md:m-6 border-4 border-double border-primary/30 dark:border-gray-600 rounded-xl bg-slate-50/50 dark:bg-slate-900/50 backdrop-blur-sm"
+          className="p-4 md:p-8 m-4 md:m-6 border-4 border-double border-primary/30 dark:border-gray-600 rounded-xl bg-slate-50/50 dark:bg-slate-900/50 backdrop-blur-sm"
         >
           <Evolution />
         </motion.div>

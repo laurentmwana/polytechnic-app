@@ -21,7 +21,7 @@ import { isAdmin } from '@/lib/role'
 import { getInitials } from '@/lib/utils'
 
 export const AvatarDropdown = () => {
-  const { data: session, status } = useSession()
+  const session = useSession()
 
   const [isLoggingOut, setIsLoggingOut] = useState(false)
 
@@ -41,11 +41,11 @@ export const AvatarDropdown = () => {
     }
   }
 
-  if (status === 'loading') {
+  if (session.status === 'loading') {
     return <Skeleton className="h-9 w-9 rounded-full" />
   }
 
-  if (status === 'unauthenticated' || !session) {
+  if (!session.data) {
     return (
       <Button variant="outline" asChild>
         <Link href={webRoute('login')}>Se connecter</Link>
@@ -53,7 +53,7 @@ export const AvatarDropdown = () => {
     )
   }
 
-  const user = session.user
+  const user = session.data.user
 
   return (
     <DropdownMenu>

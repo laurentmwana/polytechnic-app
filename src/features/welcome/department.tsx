@@ -67,7 +67,7 @@ export const DepartmentWelcome = () => {
         compétences solide pour répondre aux défis actuels.
       </SectionPageTitle>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:justify-center">
         {response.isLoading ? (
           // Affichage des skeletons pendant le chargement
           Array.from({ length: 6 }).map((_, index) => (
@@ -139,17 +139,15 @@ export const DepartmentWelcomeItem = ({ dept }: { dept: Department }) => {
   return (
     <Card>
       <CardHeader className="pb-2">
-        <div className="flex items-start gap-3">
+        <div className="flex items-start gap-3 mb-2">
           <div className={`p-2 rounded-md border`}>
             {getIconByName(dept.name)}
           </div>
           <div>
             <CardTitle className="text-lg">{excerpt(dept.name, 80)}</CardTitle>
-            <CardDescription className="line-clamp-2 mt-1">
-              {dept.description}
-            </CardDescription>
           </div>
         </div>
+        <CardDescription className="mt-2">{dept.description}</CardDescription>
       </CardHeader>
       <CardContent className="h-full">
         <div className="flex flex-wrap gap-1.5 mb-2">

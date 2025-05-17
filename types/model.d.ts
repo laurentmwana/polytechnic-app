@@ -68,6 +68,7 @@ export interface Programme {
   id: number
   name: string
   alias: string
+  programme_group: string
   created_at: string
   updated_at: string
 }
@@ -95,6 +96,32 @@ export interface Professor {
   updated_at: string
 }
 
+export interface Deliberation {
+  id: number
+  title: string
+  description: string
+  created_at: string
+  updated_at: string
+}
+
+export interface News {
+  id: number
+  title: string
+  message: string
+  deliberation: Deliberation | null
+  start_at: string
+  created_at: string
+  updated_at: string
+}
+
+export interface Notification {
+  id: number
+  title: string
+  description: string
+  created_at: string
+  updated_at: string
+}
+
 export interface DepartmentMetaData {
   data: Department[]
   meta: PaginationMeta
@@ -117,5 +144,15 @@ export interface ProgrammeMetaData {
 
 export interface YearMetaData {
   data: Year[]
+  meta: PaginationMeta
+}
+
+export interface NotificationMetaData {
+  data: Notification[]
+  meta: PaginationMeta
+}
+
+export interface NewsMetaData {
+  data: News[]
   meta: PaginationMeta
 }
