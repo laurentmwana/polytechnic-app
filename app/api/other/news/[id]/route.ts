@@ -8,14 +8,14 @@ export async function GET(
   const id = (await context.params).id
 
   const response = await fetchJson(
-    apiRoute('option.show', {
+    apiRoute('news.show', {
       id,
     })
   )
 
   if (response.status !== 200) {
     throw new Error(
-      `Une erreur est survenue lors de la récupèration de l'option #${id}, merci de réessayer`
+      `Une erreur est survenue lors de la récupèration du newss #${id}, merci de réessayer`
     )
   }
 

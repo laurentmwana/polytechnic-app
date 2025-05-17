@@ -32,6 +32,9 @@ export const ROUTES = {
   '~option.index': '/dashboard/option',
   '~option.show': '/dashboard/option/:id',
   '~option.edit': '/dashboard/option/:id/edit',
+
+  'news.index': '/news',
+  'news.show': '/news/:id',
 }
 
 export const API_ROUTES = {
@@ -99,6 +102,8 @@ export const API_ROUTES = {
 
   'notification.index': '/notification',
   'notification.show': '/notification/:id',
+
+  'eva.index': '/evaluator',
 }
 
 export const API_LOCAL_ROUTES = {
@@ -150,4 +155,5 @@ export const API_LOCAL_ROUTES = {
 
   'notification.index': '/api/notification',
   'notification.show': '/api/notification/:id',
+  'eva.index': '/api/other/evaluator',
 }

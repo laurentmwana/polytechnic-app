@@ -13,19 +13,20 @@ import {
 import { Skeleton } from '@/components/ui/skeleton'
 import { useNotification } from '@/hooks/use-notification'
 import { ago } from '@/lib/date-time'
+import { apiLocalRoute } from '@/lib/route'
 
 export const NotificationButton = () => {
-  const { notifications, isPending } = useNotification()
+  const { notifications, isPending } = useNotification(
+    apiLocalRoute('notification.index', { limit: 4 })
+  )
 
   if (isPending) {
     return <Skeleton className="h-9 w-9 rounded-md" />
   }
 
-  if (notifications.length === 0) {
-    return null
-  }
+  console.log(notifications)
 
-  const notificationCount = notifications.length
+  const notificationCount = 0
 
   return (
     <DropdownMenu>
@@ -49,7 +50,7 @@ export const NotificationButton = () => {
           <p className="font-medium">Notifications</p>
         </div>
 
-        {notifications.length === 0 ? (
+        {notificationCount === 0 ? (
           <div className="flex flex-col items-center justify-center p-6 text-center">
             <Bell className="h-10 w-10 text-muted-foreground/50 mb-2" />
             <p className="text-sm font-medium">Aucune notification</p>

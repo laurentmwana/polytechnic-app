@@ -99,7 +99,7 @@ export interface Professor {
 export interface Deliberation {
   id: number
   title: string
-  message: string
+  description: string
   created_at: string
   updated_at: string
 }
@@ -107,9 +107,9 @@ export interface Deliberation {
 export interface News {
   id: number
   title: string
-  description: string
+  message: string
   deliberation: Deliberation | null
-  start: string
+  start_at: string
   created_at: string
   updated_at: string
 }
@@ -149,5 +149,10 @@ export interface YearMetaData {
 
 export interface NotificationMetaData {
   data: Notification[]
+  meta: PaginationMeta
+}
+
+export interface NewsMetaData {
+  data: News[]
   meta: PaginationMeta
 }

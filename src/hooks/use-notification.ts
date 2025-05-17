@@ -1,9 +1,8 @@
 import { Notification } from '#/model'
-import { apiLocalRoute } from '@/lib/route'
 import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 
-export const useNotification = () => {
+export const useNotification = (url: string) => {
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [isPending, setIsPending] = useState<boolean>(false)
 
@@ -13,9 +12,9 @@ export const useNotification = () => {
     const getNotifications = async () => {
       setIsPending(true)
       try {
-        const response = await fetch(
-          apiLocalRoute('notification.index', { limit: 4 })
-        )
+        const response = await fetch(url, {
+          headers: { Accept: 'application/json' },
+        })
 
         if (!response.ok) {
           setNotifications([])
@@ -36,7 +35,7 @@ export const useNotification = () => {
     } else {
       setNotifications([])
     }
-  }, [session.status])
+  }, [session.status, url])
 
   return {
     notifications,

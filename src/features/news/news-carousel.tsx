@@ -11,18 +11,18 @@ import {
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
-import { format } from 'date-fns'
-import { fr } from 'date-fns/locale'
 import type { CarouselApi } from '@/components/ui/carousel'
 import { News } from '#/model'
-
-
+import { ago } from '@/lib/date-time'
+import { Button } from '@/components/ui/button'
+import { Eye } from 'lucide-react'
+import Link from 'next/link'
+import { webRoute } from '@/lib/route'
 
 interface NewsCarouselProps {
   news?: News[]
@@ -76,16 +76,6 @@ export function NewsCarousel({
     }
   }, [api, isPaused])
 
-  // Formater la date
-  const formatDate = (dateString: string) => {
-    try {
-      return format(new Date(dateString), 'dd MMMM yyyy', { locale: fr })
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (error) {
-      return dateString
-    }
-  }
-
   return (
     <div
       className="w-full max-w-5xl mx-auto px-4 py-6"
@@ -115,15 +105,17 @@ export function NewsCarousel({
                       <CardTitle className="line-clamp-2">
                         {item.title}
                       </CardTitle>
-                      <CardDescription>
-                        Date de début: {formatDate(item.start)}
-                      </CardDescription>
                     </CardHeader>
                     <CardContent>
-                      <p className="line-clamp-4 text-sm">{item.description}</p>
+                      <p className="line-clamp-4 text-sm">{item.message}</p>
                     </CardContent>
-                    <CardFooter className="text-xs text-muted-foreground">
-                      <div>Mis à jour le {formatDate(item.updated_at)}</div>
+                    <CardFooter className="text-xs text-muted-foreground flex items-center justify-between">
+                      <p>{ago(item.created_at)}</p>
+                      <Button size="sm" variant="outline" asChild>
+                        <Link href={webRoute('news.show', { id: item.id })}>
+                          <Eye size={15} />
+                        </Link>
+                      </Button>
                     </CardFooter>
                   </Card>
                 </CarouselItem>

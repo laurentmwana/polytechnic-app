@@ -1,10 +1,10 @@
 'use client'
 
 import type React from 'react'
-import { SectionPageTitle } from '@/components/shared/section-page'
 import { useFetch } from '@/hooks/use-fetch'
 import { apiLocalRoute } from '@/lib/route'
 import type { News } from '#/model'
+import { NewsCarousel } from '../news/news-carousel'
 
 export const NewsWelcome = () => {
   const response = useFetch<{ data: News[] }>(
@@ -16,14 +16,6 @@ export const NewsWelcome = () => {
   }
 
   return (
-    <div className="container my-12">
-      <SectionPageTitle title="Dernier communiqué">
-        Nous regroupons plusieurs départements dynamiques, chacun dédié à un
-        domaine d&#39;expertise précis. Ensemble, ils forment un pôle de
-        compétences solide pour répondre aux défis actuels.
-      </SectionPageTitle>
-
-      <div></div>
-    </div>
+    <NewsCarousel news={response.result?.data} isLoading={response.isLoading} />
   )
 }

@@ -1,12 +1,19 @@
 'use client'
 
 import { SectionPageTitle } from '@/components/shared/section-page'
-import { Card } from '@/components/ui/card'
-import { Skeleton } from '@/components/ui/skeleton'
 import { useFetch } from '@/hooks/use-fetch'
 import { apiLocalRoute } from '@/lib/route'
 import type { Year } from '#/model'
 import { YearDetails } from '@/features/year/details'
+import { Calendar, Clock } from 'lucide-react'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+} from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
 
 export const YearAcademicWelcome = () => {
   const response = useFetch<{ data: Year }>(apiLocalRoute('year.pending'))
@@ -34,46 +41,107 @@ export const YearAcademicWelcome = () => {
   )
 }
 
-const YearAcademicWelcomeSkeleton = () => {
+export function YearAcademicWelcomeSkeleton() {
   return (
-    <>
-      {Array(4)
-        .fill(0)
-        .map((_, index) => (
-          <Card key={index} className="w-full overflow-hidden">
-            <div className="flex flex-col md:flex-row">
-              <div className="relative w-full md:w-1/3 h-60">
-                <Skeleton className="absolute inset-0" />
-                <div className="absolute bottom-0 left-0 right-0 p-3">
-                  <Skeleton className="h-5 w-20" />
+    <div className="space-y-8">
+      <Card>
+        <CardHeader className="pb-3">
+          <div className="flex items-center justify-between">
+            <div>
+              {/* Title skeleton */}
+              <div className="h-8 w-48 bg-gray-200 dark:bg-gray-700 rounded-md animate-pulse" />
+
+              <CardDescription className="mt-2 flex flex-wrap gap-2">
+                {/* Badge skeletons */}
+                <Badge
+                  variant="outline"
+                  className="bg-gray-200 dark:bg-gray-700 text-transparent animate-pulse"
+                >
+                  Placeholder
+                </Badge>
+                <Badge
+                  variant="outline"
+                  className="bg-gray-200 dark:bg-gray-700 text-transparent animate-pulse"
+                >
+                  Placeholder
+                </Badge>
+              </CardDescription>
+            </div>
+            <div className="flex gap-2">
+              {/* Button skeleton */}
+              <div className="h-9 w-36 bg-gray-200 dark:bg-gray-700 rounded-md animate-pulse" />
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div>
+            {/* Section title skeleton */}
+            <div className="flex items-center gap-2 mb-3">
+              <div className="h-5 w-5 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse" />
+              <div className="h-6 w-40 bg-gray-200 dark:bg-gray-700 rounded-md animate-pulse" />
+            </div>
+            <div className="grid md:grid-cols-2 gap-4">
+              {/* Start date skeleton */}
+              <div className="border rounded-lg p-4">
+                <div className="h-4 w-16 bg-gray-200 dark:bg-gray-700 rounded-md mb-1 animate-pulse" />
+                <div className="flex items-center gap-2">
+                  <Calendar className="h-4 w-4 text-gray-300 dark:text-gray-600" />
+                  <div className="h-5 w-24 bg-gray-200 dark:bg-gray-700 rounded-md animate-pulse" />
                 </div>
               </div>
-              <div className="flex-1 p-4">
-                <div className="pb-3">
-                  <Skeleton className="h-6 w-3/4 mb-2" />
-                </div>
-                <div className="space-y-3">
-                  <div className="flex items-center">
-                    <Skeleton className="h-4 w-4 mr-2 rounded-full" />
-                    <Skeleton className="h-4 w-24" />
-                  </div>
-                  <div className="flex items-center">
-                    <Skeleton className="h-4 w-4 mr-2 rounded-full" />
-                    <Skeleton className="h-4 w-32" />
-                  </div>
-                  <div className="flex items-center">
-                    <Skeleton className="h-4 w-4 mr-2 rounded-full" />
-                    <Skeleton className="h-4 w-40" />
-                  </div>
-                  <div className="flex items-center pt-2">
-                    <Skeleton className="h-4 w-4 mr-2 rounded-full" />
-                    <Skeleton className="h-4 w-28" />
-                  </div>
+              {/* End date skeleton */}
+              <div className="border rounded-lg p-4">
+                <div className="h-4 w-16 bg-gray-200 dark:bg-gray-700 rounded-md mb-1 animate-pulse" />
+                <div className="flex items-center gap-2">
+                  <Calendar className="h-4 w-4 text-gray-300 dark:text-gray-600" />
+                  <div className="h-5 w-24 bg-gray-200 dark:bg-gray-700 rounded-md animate-pulse" />
                 </div>
               </div>
             </div>
-          </Card>
-        ))}
-    </>
+          </div>
+
+          <div>
+            {/* Section title skeleton */}
+            <div className="flex items-center gap-2 mb-3">
+              <div className="h-5 w-5 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse" />
+              <div className="h-6 w-56 bg-gray-200 dark:bg-gray-700 rounded-md animate-pulse" />
+            </div>
+            <div className="grid md:grid-cols-2 gap-4">
+              {/* Status skeleton */}
+              <div className="border rounded-lg p-4">
+                <div className="h-4 w-16 bg-gray-200 dark:bg-gray-700 rounded-md mb-1 animate-pulse" />
+                <div className="flex items-center gap-2">
+                  <div className="h-4 w-4 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse" />
+                  <div className="h-5 w-28 bg-gray-200 dark:bg-gray-700 rounded-md animate-pulse" />
+                </div>
+              </div>
+              {/* Creation date skeleton */}
+              <div className="border rounded-lg p-4">
+                <div className="h-4 w-32 bg-gray-200 dark:bg-gray-700 rounded-md mb-1 animate-pulse" />
+                <div className="flex items-center gap-2">
+                  <Clock className="h-4 w-4 text-gray-300 dark:text-gray-600" />
+                  <div className="h-5 w-32 bg-gray-200 dark:bg-gray-700 rounded-md animate-pulse" />
+                </div>
+              </div>
+              {/* Last update skeleton */}
+              <div className="border rounded-lg p-4">
+                <div className="h-4 w-36 bg-gray-200 dark:bg-gray-700 rounded-md mb-1 animate-pulse" />
+                <div className="flex items-center gap-2">
+                  <Clock className="h-4 w-4 text-gray-300 dark:text-gray-600" />
+                  <div className="h-5 w-32 bg-gray-200 dark:bg-gray-700 rounded-md animate-pulse" />
+                </div>
+              </div>
+              <div className="border rounded-lg p-4">
+                <div className="h-4 w-24 bg-gray-200 dark:bg-gray-700 rounded-md mb-1 animate-pulse" />
+                <div className="h-5 w-16 bg-gray-200 dark:bg-gray-700 rounded-md animate-pulse" />
+              </div>
+            </div>
+          </div>
+        </CardContent>
+        <CardFooter className="border-t pt-6">
+          <div className="h-4 w-full bg-gray-200 dark:bg-gray-700 rounded-md animate-pulse" />
+        </CardFooter>
+      </Card>
+    </div>
   )
 }

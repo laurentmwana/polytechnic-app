@@ -17,6 +17,22 @@ export function PasswordInput({ className, ...props }: PasswordInputProps) {
 
   return (
     <div className="relative">
+      <style jsx global>{`
+        /* Hide default browser password reveal icon */
+        input::-ms-reveal,
+        input::-ms-clear,
+        input::-webkit-credentials-auto-fill-button,
+        input::-webkit-contacts-auto-fill-button,
+        input::-webkit-reveal {
+          display: none !important;
+          pointer-events: none;
+        }
+
+        /* For Safari */
+        input::-webkit-textfield-decoration-container {
+          visibility: hidden;
+        }
+      `}</style>
       <Input
         type={showPassword ? 'text' : 'password'}
         autoComplete="new-password"

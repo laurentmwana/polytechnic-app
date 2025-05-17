@@ -7,16 +7,16 @@ import { ProfileDeleteAccount } from './delete-account'
 import { ProfileSkeleton } from './profile-skeleton'
 import { UnverifiedEmail } from '@/components/shared/unverified-email'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { useMe } from '@/hooks/use-me'
+import { useSession } from 'next-auth/react'
 
 export default function MyProfile() {
-  const session = useMe()
+  const session = useSession()
 
-  if (session.isPending) {
+  if (session.status === 'loading') {
     return <ProfileSkeleton />
   }
 
-  if (!session.user) {
+  if (!session.data) {
     return (
       <div className="container py-12">
         <Alert>
@@ -28,7 +28,7 @@ export default function MyProfile() {
     )
   }
 
-  const user = session.user
+  const user = session.data.user
 
   return (
     <div className="container py-12">
