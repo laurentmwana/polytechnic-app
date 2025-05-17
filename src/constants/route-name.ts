@@ -38,6 +38,7 @@ export const ROUTES = {
 }
 
 export const API_ROUTES = {
+  'contact.send': '/contact/send',
   login: '/login',
   logout: '/logout',
   'reset-password': '/reset-password',
