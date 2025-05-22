@@ -1,4 +1,4 @@
-import { API_LOCAL_ROUTES, API_ROUTES, ROUTES } from "@/constants/route-name"
+import { API_LOCAL_ROUTES, API_ROUTES, ROUTES } from '@/constants/route-name'
 
 type RouteParams = Record<string, string | number | boolean | null>
 

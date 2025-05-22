@@ -1,6 +1,6 @@
 import { Skeleton } from '@/components/ui/skeleton'
 import { Heading } from '@/components/shared/heading'
-import { LevelLoader } from './level-loader'
+import { LevelLoader } from '@/features/level/level-loader'
 
 export default function Loading() {
   return (

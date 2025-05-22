@@ -6,7 +6,7 @@ import { YourAdn } from '@/features/welcome/adn-section'
 import { FaqWelcome } from '@/features/welcome/faq'
 import { BaseLayout } from '@/layouts/base-layout'
 import { YearAcademicWelcome } from '@/features/welcome/year-academic'
-import { NewsWelcome } from '@/features/welcome/news'
+import { DelibertionWelcome } from '@/features/welcome/deliberation'
 
 export default function HomePage() {
   return (
@@ -16,7 +16,7 @@ export default function HomePage() {
         <div className="space-y-16">
           <YourAdn />
           <Presentation />
-          <NewsWelcome />
+          <DelibertionWelcome />
           <YearAcademicWelcome />
           <DepartmentWelcome />
           <OptionWelcome />

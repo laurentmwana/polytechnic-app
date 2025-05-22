@@ -32,17 +32,15 @@ export function NewsCollection({ news }: NewsCollectionProps) {
             <CardHeader className="pb-2">
               <div className="flex justify-between items-start gap-2">
                 <CardTitle className="text-lg line-clamp-1">
-                  {item.title}
+                  {item.level.programme.name} {item.level.option.alias}
                 </CardTitle>
-                {item.deliberation && (
-                  <Badge
-                    variant="outline"
-                    className="bg-primary/10 text-primary shrink-0"
-                  >
-                    <FileText className="h-3 w-3 mr-1" />
-                    Délibération
-                  </Badge>
-                )}
+                <Badge
+                  variant="outline"
+                  className="bg-primary/10 text-primary shrink-0"
+                >
+                  <FileText className="h-3 w-3 mr-1" />
+                  Délibération
+                </Badge>
               </div>
               <CardDescription className="flex items-center gap-1 mt-1">
                 <Calendar className="h-3.5 w-3.5" />
@@ -51,12 +49,12 @@ export function NewsCollection({ news }: NewsCollectionProps) {
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground line-clamp-3">
-                {item.message}
+                {item.description}
               </p>
             </CardContent>
             <CardFooter className="pt-0">
               <Button variant="ghost" size="sm" className="ml-auto" asChild>
-                <Link href={webRoute('news.show', { id: item.id })}>
+                <Link href={webRoute('deliberation.show', { id: item.id })}>
                   Voir détails
                   <ChevronRight className="h-4 w-4 ml-1" />
                 </Link>

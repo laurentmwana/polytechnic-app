@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { AUTH_ROUTES, GUEST_ROUTES } from '@/constants/granted'
+import { ADMIN_ROUTES, AUTH_ROUTES, GUEST_ROUTES } from '@/constants/granted'
 import { webRoute } from '@/lib/route'
 import { getToken } from 'next-auth/jwt'
 
@@ -12,6 +12,10 @@ export default async function middleware(req: NextRequest) {
 
   if (token && GUEST_ROUTES.includes(pathname)) {
     return NextResponse.redirect(new URL(webRoute('welcome'), req.nextUrl))
+  }
+
+  if (token && ADMIN_ROUTES.includes(pathname)) {
+    throw new Error("Vous n'êtes pas autorisé à acceder à cette page")
   }
 
   if (!token && AUTH_ROUTES.includes(pathname)) {

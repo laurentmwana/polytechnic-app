@@ -29,7 +29,6 @@ import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import { ThemeToggle } from '../themes/theme-toggle'
 import { AvatarDropdown } from './avatar-user'
-import { NotificationButton } from './notification-button'
 import { AppLogoIcon } from './logo'
 import { webRoute } from '@/lib/route'
 import { cn } from '@/lib/utils'
@@ -62,9 +61,15 @@ export const NavbarBase = () => {
     {
       label: 'Gestion',
       children: [
-        { label: 'Horaires', href: '/hor' },
         { label: 'Délibération', href: '/deliberation' },
-        { label: 'Communiqué', href: '/news' },
+        { label: 'Mon coupon', href: '/my-deliberation' },
+      ],
+    },
+    {
+      label: 'Paiement',
+      children: [
+        { label: 'Laboratoire', href: '/laboratory-fees' },
+        { label: 'Académique', href: '/academic-fees' },
       ],
     },
     { label: 'Contact', href: '/contact-us' },
@@ -155,7 +160,6 @@ export const NavbarBase = () => {
           <div className="flex items-center space-x-4">
             <div className="flex items-center gap-4">
               <ThemeToggle />
-              <NotificationButton />
               <AvatarDropdown />
             </div>
 

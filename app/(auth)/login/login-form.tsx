@@ -58,11 +58,7 @@ export const LoginUserForm = ({
             <FormItem>
               <FormLabel>Adresse e-mail</FormLabel>
               <FormControl>
-                <Input
-                  type="email"
-                  {...field}
-                  value={field.value || ''}
-                />
+                <Input type="email" {...field} value={field.value || ''} />
               </FormControl>
               <FormDescription>
                 Utilisée pour vous connecter et recevoir les notifications.
@@ -79,10 +75,7 @@ export const LoginUserForm = ({
             <FormItem>
               <FormLabel>Mot de passe</FormLabel>
               <FormControl>
-                <PasswordInput
-                  {...field}
-                  value={field.value || ''}
-                />
+                <PasswordInput {...field} value={field.value || ''} />
               </FormControl>
               <FormDescription>
                 Doit contenir au moins 8 caractères pour des raisons de

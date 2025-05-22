@@ -1,6 +1,6 @@
 'use client'
 
-import type React from 'react'
+import { useState, useEffect } from 'react'
 import { SectionPageTitle } from '@/components/shared/section-page'
 import {
   Card,
@@ -12,8 +12,7 @@ import {
 } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { useFetch } from '@/hooks/use-fetch'
-import { apiLocalRoute, webRoute } from '@/lib/route'
+import { apiRoute, webRoute } from '@/lib/route'
 import type { Department } from '#/model'
 import {
   Building,
@@ -32,7 +31,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { excerpt } from '@/lib/utils'
 import { EmptyDataFetch } from '@/components/no-data'
 
-const getIconByName = (name: string): React.ReactNode => {
+const getIconByName = (name: string) => {
   const nameLower = name.toLowerCase()
 
   if (nameLower.includes('civil')) return <Building className="h-5 w-5" />
@@ -51,12 +50,47 @@ const getIconByName = (name: string): React.ReactNode => {
 }
 
 export const DepartmentWelcome = () => {
-  const response = useFetch<{ data: Department[] }>(
-    apiLocalRoute('department.index', { limit: 6 })
-  )
+  const [departments, setDepartments] = useState<Department[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-  if (response.error) {
-    throw new Error(response.error)
+  useEffect(() => {
+    const fetchDepartments = async () => {
+      try {
+        const response = await fetch(
+          apiRoute('department.index', { limit: 6 }),
+          {
+            method: 'GET',
+            headers: { Accept: 'application/json' },
+          }
+        )
+        if (!response.ok)
+          throw new Error('Erreur lors de la récupération des départements')
+        const data = await response.json()
+        setDepartments(data.data)
+        setError(null)
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Erreur inconnue')
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    fetchDepartments()
+  }, [])
+
+  if (error) {
+    console.error(error)
+    return (
+      <div className="container my-12">
+        <SectionPageTitle title="Nos Départements">
+          Nous regroupons plusieurs départements dynamiques, chacun dédié à un
+          domaine d&#39;expertise précis.
+        </SectionPageTitle>
+        <div className="col-span-full text-center py-8">
+          <EmptyDataFetch message="Erreur lors du chargement des départements." />
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -68,7 +102,7 @@ export const DepartmentWelcome = () => {
       </SectionPageTitle>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:justify-center">
-        {response.isLoading ? (
+        {isLoading ? (
           // Affichage des skeletons pendant le chargement
           Array.from({ length: 6 }).map((_, index) => (
             <Card key={index} className="border">
@@ -94,8 +128,8 @@ export const DepartmentWelcome = () => {
               </CardFooter>
             </Card>
           ))
-        ) : response.result && response.result.data.length > 0 ? (
-          response.result.data.map((dept) => {
+        ) : departments.length > 0 ? (
+          departments.map((dept) => {
             return <DepartmentWelcomeItem dept={dept} key={dept.id} />
           })
         ) : (
@@ -121,7 +155,7 @@ export const DepartmentWelcomeSkeleton = () => {
         </div>
       </CardHeader>
       <CardContent>
-        <div className="flex flex-wrap gap-1.5 mb-2">
+        <div className="flex flex-wrap gap=1.5 mb-2">
           <Skeleton className="h-5 w-16" />
           <Skeleton className="h-5 w-20" />
           <Skeleton className="h-5 w-14" />

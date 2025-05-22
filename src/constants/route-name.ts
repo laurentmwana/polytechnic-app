@@ -24,17 +24,33 @@ export const ROUTES = {
   'year.show': '/year-academic/:id',
 
   'deliberation.index': '/deliberation',
+  'deliberation.show': '/deliberation/:id',
 
-  '~department.index': '/dashboard/department',
-  '~department.show': '/dashboard/department/:id',
-  '~department.edit': '/dashboard/department/:id/edit',
+  'my-deliberation.index': '/my-deliberation',
+  'my-deliberation.show': '/my-deliberation/:id',
 
-  '~option.index': '/dashboard/option',
-  '~option.show': '/dashboard/option/:id',
-  '~option.edit': '/dashboard/option/:id/edit',
+  'laboratory-fees.index': '/laboratory-fees',
+  'laboratory-fees.show': '/laboratory-fees/:id',
+
+  'academic-fees.index': '/academic-fees',
+  'academic-fees.show': '/academic-fees/:id',
+
+  'professor.index': '/professor',
+  'professor.show': '/professor/:id',
+
+  '~department.index': '/admin/department',
+  '~department.show': '/admin/department/:id',
+  '~department.edit': '/admin/department/:id/edit',
+
+  '~option.index': '/admin/option',
+  '~option.create': '/admin/option/create',
+  '~option.show': '/admin/option/:id',
+  '~option.edit': '/admin/option/:id/edit',
 
   'news.index': '/news',
   'news.show': '/news/:id',
+
+  'student-info.index': '/student-info',
 }
 
 export const API_ROUTES = {
@@ -67,8 +83,8 @@ export const API_ROUTES = {
   'level.index': '/level',
   'level.show': '/level/:id',
 
-  'news.index': '/news',
-  'news.show': '/news/:id',
+  'deliberation.index': '/deliberation',
+  'deliberation.show': '/deliberation/:id',
 
   'programme.index': '/programme',
   'programme.show': '/programme/:id',
@@ -157,4 +173,6 @@ export const API_LOCAL_ROUTES = {
   'notification.index': '/api/notification',
   'notification.show': '/api/notification/:id',
   'eva.index': '/api/other/evaluator',
+
+  'department.simple': '/api/simple/department',
 }

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { ChevronRight, GraduationCap, School } from 'lucide-react'
 
@@ -23,17 +23,37 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { useFetch } from '@/hooks/use-fetch'
-import { apiLocalRoute, webRoute } from '@/lib/route'
+import { apiRoute, webRoute } from '@/lib/route'
 import { cn, excerpt } from '@/lib/utils'
 import { Option } from '#/model'
 
 export const OptionWelcome = () => {
   const [expandedOption, setExpandedOption] = useState<number | null>(null)
+  const [options, setOptions] = useState<Option[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-  const response = useFetch<{ data: Option[] }>(
-    apiLocalRoute('option.index', { limit: 10 })
-  )
+  useEffect(() => {
+    const fetchOptions = async () => {
+      try {
+        const response = await fetch(apiRoute('option.index', { limit: 10 }), {
+          method: 'GET',
+          headers: { Accept: 'application/json' },
+        })
+        if (!response.ok)
+          throw new Error('Erreur lors de la récupération des filières')
+        const data = await response.json()
+        setOptions((data as { data: Option[] }).data)
+        setError(null)
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (err) {
+        setError('Impossible de charger les filières')
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    fetchOptions()
+  }, [])
 
   const toggleExpand = (optionId: number) => {
     setExpandedOption(expandedOption === optionId ? null : optionId)
@@ -47,15 +67,16 @@ export const OptionWelcome = () => {
         aux aspirations des étudiants.
       </SectionPageTitle>
 
-      {response.isLoading ? (
+      {isLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <OptionWelcomeSkeleton />
         </div>
-      ) : response.result && response.result.data.length > 0 ? (
+      ) : error ? (
+        <EmptyDataFetch message={error} />
+      ) : options.length > 0 ? (
         <>
-          {/* Onglets de filtrage par programme */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {response.result.data.map((option) => (
+            {options.map((option) => (
               <Card
                 key={option.id}
                 className={cn(

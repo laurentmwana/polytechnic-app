@@ -69,7 +69,7 @@ export const authOptions: NextAuthOptions = {
             email: dataUserResponse.data.email,
             accessToken: auth.access_token,
             permissions: dataUserResponse.data.permissions,
-            roles: dataUserResponse.data.roles,
+            roles: dataUserResponse.data.role,
             isEmailVerified: dataUserResponse.data.isEmailVerified,
           }
         } catch (error) {
@@ -84,7 +84,7 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.accessToken = user.accessToken
         token.permissions = user.permissions
-        token.roles = user.roles
+        token.role = user.role
         token.id = user.id
         token.isEmailVerified = user.isEmailVerified
       }
@@ -98,7 +98,7 @@ export const authOptions: NextAuthOptions = {
           email: session.user?.email || '',
           accessToken: token.accessToken as string,
           permissions: token.permissions || [],
-          roles: token.roles || [],
+          roles: token.role || [],
           isEmailVerified: token.isEmailVerified,
         }
       }

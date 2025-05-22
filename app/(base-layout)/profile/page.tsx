@@ -40,7 +40,7 @@ export default function MyProfile() {
 
         <ProfileUpdatePasswordForm />
 
-        <ProfileDeleteAccount roles={user.roles} />
+        <ProfileDeleteAccount roles={user.role} />
       </div>
     </div>
   )
