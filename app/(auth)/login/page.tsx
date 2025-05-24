@@ -85,7 +85,7 @@ const LoginUser = () => {
             }}
           />
 
-          <div className="text-muted-foreground text-center text-sm mt-3">
+          <div className="text-muted-foreground text-center text-sm mt-6">
             Vous avez oublié votre mot de passe ?{' '}
             <TextLink href={webRoute('forgot-password')} tabIndex={5}>
               Réinitialiser

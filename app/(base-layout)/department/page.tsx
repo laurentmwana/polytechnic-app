@@ -2,7 +2,7 @@
 
 import { Heading } from '@/components/shared/heading'
 import { Pagination } from '@/components/ui/pagination'
-import { apiLocalRoute, webRoute } from '@/lib/route'
+import { apiRoute, webRoute } from '@/lib/route'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import type { DepartmentMetaData } from '#/model'
@@ -33,7 +33,7 @@ export default function DepartmentIndex() {
     const getDepartments = async () => {
       try {
         const response = await fetch(
-          apiLocalRoute('department.index', { page, search }),
+          apiRoute('department.index', { page, search }),
           { method: 'GET', headers: { Accept: 'application/json' } }
         )
 

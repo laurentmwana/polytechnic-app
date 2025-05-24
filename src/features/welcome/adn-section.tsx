@@ -33,7 +33,9 @@ export const YourAdn = () => {
   return (
     <div className="container my-12">
       <SectionPageTitle title="Notre ADN">
-Innovation, rigueur et engagement : ces valeurs nous animent au quotidien. Notre ADN repose sur l’excellence académique et l’ouverture sur le monde.
+        Innovation, rigueur et engagement : ces valeurs nous animent au
+        quotidien. Notre ADN repose sur l’excellence académique et l’ouverture
+        sur le monde.
       </SectionPageTitle>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

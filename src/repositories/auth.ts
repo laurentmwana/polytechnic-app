@@ -1,31 +1,7 @@
 'use server'
 
-import type {
-  LoginUserSchemaInfer,
-  ResetPasswordSchemaInfer,
-} from '@/definitions/auth'
+import type { ResetPasswordSchemaInfer } from '@/definitions/auth'
 import { apiRoute } from '@/lib/route'
-
-export const loginUser = async (body: LoginUserSchemaInfer) => {
-  return await fetch(apiRoute('login'), {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-    },
-    body: JSON.stringify(body),
-  })
-}
-
-export const logoutUser = async (token: string) => {
-  return await fetch(apiRoute('logout'), {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-  })
-}
 
 export const forgotPasswordUser = async (email: string) => {
   const res = await fetch(apiRoute('forgot-password'), {
