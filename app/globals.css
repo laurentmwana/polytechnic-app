@@ -1,30 +1,15 @@
-@import 'tailwindcss';
-@import 'tw-animate-css';
-
-@custom-variant dark (&:is(.dark *));
+@import "tailwindcss";
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
   --color-ring: var(--ring);
   --color-input: var(--input);
   --color-border: var(--border);
   --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
   --color-muted-foreground: var(--muted-foreground);
@@ -37,128 +22,142 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 2px);
   --radius-xl: calc(var(--radius) + 4px);
 }
 
 :root {
-  --background: hsl(246, 60%, 99%);
-  --foreground: hsl(246, 75%, 0%);
-  --muted: hsl(246, 6%, 90%);
-  --muted-foreground: hsl(246, 0%, 38%);
-  --popover: hsl(246, 60%, 99%);
-  --popover-foreground: hsl(246, 75%, 0%);
-  --card: hsl(246, 60%, 99%);
-  --card-foreground: hsl(246, 75%, 0%);
-  --border: hsl(246, 2%, 91%);
-  --input: hsl(246, 2%, 91%);
+  /* Couleurs de base - thème clair et simple */
+  --background: hsl(0, 0%, 100%);
+  --foreground: hsl(222, 84%, 5%);
+
+  /* Couleurs neutres */
+  --muted: hsl(210, 40%, 96%);
+  --muted-foreground: hsl(215, 16%, 47%);
+
+  /* Cartes et popovers */
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(222, 84%, 5%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(222, 84%, 5%);
+
+  /* Bordures et inputs */
+  --border: hsl(214, 32%, 91%);
+  --input: hsl(214, 32%, 91%);
+
+  /* Couleur primaire - Bleu Université de Kinshasa */
   --primary: hsl(246, 96%, 34%);
-  --primary-foreground: hsl(246, 96%, 94%);
-  --secondary: hsl(246, 9%, 81%);
-  --secondary-foreground: hsl(246, 9%, 21%);
-  --accent: hsl(246, 19%, 74%);
-  --accent-foreground: hsl(246, 19%, 14%);
-  --destructive: hsl(1, 98%, 43%);
-  --destructive-foreground: hsl(0, 0%, 100%);
+  --primary-foreground: hsl(0, 0%, 98%);
+
+  /* Couleurs secondaires */
+  --secondary: hsl(210, 40%, 96%);
+  --secondary-foreground: hsl(222, 47%, 11%);
+
+  /* Couleurs d'accent */
+  --accent: hsl(210, 40%, 96%);
+  --accent-foreground: hsl(222, 47%, 11%);
+
+  /* Couleurs destructives */
+  --destructive: hsl(0, 84%, 60%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+
+  /* Ring et radius */
   --ring: hsl(246, 96%, 34%);
-  --chart-1: hsl(246, 96%, 34%);
-  --chart-2: hsl(246, 9%, 81%);
-  --chart-3: hsl(246, 19%, 74%);
-  --chart-4: hsl(246, 9%, 84%);
-  --chart-5: hsl(246, 99%, 34%);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --radius: 0.5rem;
 }
 
 .dark {
-  --background: hsl(246, 41%, 0%);
-  --foreground: hsl(246, 20%, 97%);
-  --muted: hsl(246, 6%, 10%);
-  --muted-foreground: hsl(246, 0%, 62%);
-  --popover: hsl(246, 41%, 0%);
-  --popover-foreground: hsl(246, 20%, 97%);
-  --card: hsl(246, 41%, 0%);
-  --card-foreground: hsl(246, 20%, 97%);
-  --border: hsl(246, 2%, 12%);
-  --input: hsl(246, 2%, 12%);
+  /* Couleurs de base - thème sombre */
+  --background: hsl(222, 84%, 5%);
+  --foreground: hsl(210, 40%, 98%);
+
+  /* Couleurs neutres */
+  --muted: hsl(217, 33%, 17%);
+  --muted-foreground: hsl(215, 20%, 65%);
+
+  /* Cartes et popovers */
+  --card: hsl(222, 84%, 5%);
+  --card-foreground: hsl(210, 40%, 98%);
+  --popover: hsl(222, 84%, 5%);
+  --popover-foreground: hsl(210, 40%, 98%);
+
+  /* Bordures et inputs */
+  --border: hsl(217, 33%, 17%);
+  --input: hsl(217, 33%, 17%);
+
+  /* Couleur primaire - Bleu Université de Kinshasa (inchangée) */
   --primary: hsl(246, 96%, 34%);
-  --primary-foreground: hsl(246, 96%, 94%);
-  --secondary: hsl(246, 5%, 8%);
-  --secondary-foreground: hsl(246, 5%, 68%);
-  --accent: hsl(246, 12%, 15%);
-  --accent-foreground: hsl(246, 12%, 75%);
-  --destructive: hsl(1, 98%, 57%);
-  --destructive-foreground: hsl(0, 0%, 100%);
-  --ring: hsl(247, 22%, 31%);
-  --chart-1: hsl(246, 96%, 34%);
-  --chart-2: hsl(246, 5%, 8%);
-  --chart-3: hsl(246, 12%, 15%);
-  --chart-4: hsl(246, 5%, 11%);
-  --chart-5: hsl(246, 99%, 34%);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.439 0 0);
+  --primary-foreground: hsl(0, 0%, 98%);
+
+  /* Couleurs secondaires */
+  --secondary: hsl(217, 33%, 17%);
+  --secondary-foreground: hsl(210, 40%, 98%);
+
+  /* Couleurs d'accent */
+  --accent: hsl(217, 33%, 17%);
+  --accent-foreground: hsl(210, 40%, 98%);
+
+  /* Couleurs destructives */
+  --destructive: hsl(0, 63%, 31%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+
+  /* Ring */
+  --ring: hsl(246, 96%, 34%);
 }
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
 
-@layer components {
-  @media (max-width: 767px) {
-    [data-slot='table'] {
-      @apply border-0;
-    }
-
-    [data-slot='table-header'] {
-      @apply border-0 absolute w-px h-px p-0 -m-px overflow-hidden whitespace-nowrap;
-    }
-
-    [data-slot='table-row'] {
-      @apply block mb-4 border border-border rounded-lg p-2;
-    }
-
-    [data-slot='table-cell'] {
-      @apply block text-right p-2 relative border-b border-border;
-    }
-
-    [data-slot='table-cell']:last-child {
-      @apply border-b-0;
-    }
-
-    [data-slot='table-cell']::before {
-      @apply content-[attr(data-label)] float-left font-medium capitalize text-xs;
-    }
-  }
-}
-
+/* Classes utilitaires personnalisées */
 .container {
   @apply mx-auto max-w-6xl px-4 lg:px-6;
 }
 
 .container-card {
-  @apply p-5 border shadow-sm  rounded-md;
+  @apply p-6 border border-border shadow-sm rounded-lg bg-card;
 }
 
 .text-description {
-  @apply text-sm text-muted-foreground;
+  @apply text-sm text-muted-foreground leading-relaxed;
+}
+
+/* Styles pour les liens */
+.link {
+  @apply text-primary hover:text-primary/80 transition-colors;
+}
+
+/* Styles pour les boutons personnalisés */
+.btn-primary {
+  @apply bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md font-medium transition-colors;
+}
+
+.btn-secondary {
+  @apply bg-secondary text-secondary-foreground hover:bg-secondary/80 px-4 py-2 rounded-md font-medium transition-colors;
+}
+
+/* Styles pour les sections */
+.section {
+  @apply py-12 lg:py-16;
+}
+
+.section-header {
+  @apply text-center mb-8 lg:mb-12;
+}
+
+.section-title {
+  @apply text-3xl lg:text-4xl font-bold text-foreground mb-4;
+}
+
+.section-subtitle {
+  @apply text-lg text-muted-foreground max-w-2xl mx-auto;
 }

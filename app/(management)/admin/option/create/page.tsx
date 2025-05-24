@@ -9,7 +9,7 @@ const items = [
 
   {
     title: 'Options',
-    href: webRoute('~option.index'),P
+    href: webRoute('~option.index'),
   },
 
   {
@@ -19,7 +19,6 @@ const items = [
 ]
 
 export default function Page() {
-  const onSubmit = () => {}
 
   return (
     <>

@@ -120,6 +120,12 @@ export const API_ROUTES = {
   'notification.index': '/notification',
   'notification.show': '/notification/:id',
 
+  'laboratory-fees.index': '/laboratory-fees',
+  'laboratory-fees.show': '/laboratory-fees/:id',
+
+  'academic-fees.index': '/academic-fees',
+  'academic-fees.show': '/academic-fees/:id',
+
   'eva.index': '/evaluator',
 }
 

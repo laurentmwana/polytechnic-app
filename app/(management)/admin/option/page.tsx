@@ -7,8 +7,7 @@ import { Loader } from '@/components/ui/loader'
 import { Pagination } from '@/components/ui/pagination'
 import { SearchInput } from '@/components/ui/search-input'
 import { OptionTable } from '@/features/option/option-table'
-import { fetchJson } from '@/lib/fetch'
-import { apiLocalRoute, webRoute } from '@/lib/route'
+import { apiRoute, webRoute } from '@/lib/route'
 import { Plus } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -42,17 +41,19 @@ export default function Page() {
 
     const getOptions = async () => {
       try {
-        const response = await fetchJson<OptionMetaData>(
-          apiLocalRoute('~option.index', { page, search })
+        const response = await fetch(
+          apiRoute('~option.index', { page, search })
         )
 
-        if (response.status !== 200) {
+        if (!response.ok) {
           throw new Error(
             "Une erreur est survenue lors de l'affichage des options"
           )
         }
 
-        setOptions(response.data)
+        const data = (await response.json()) as OptionMetaData
+
+        setOptions(data)
       } catch (error) {
         console.error('Erreur lors de la récupération des départements:', error)
       } finally {

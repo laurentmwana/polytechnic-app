@@ -37,8 +37,8 @@ export function excerpt(
   return truncated + separator
 }
 
-export const formatDate = (dateString: string) => {
-  const date = new Date(dateString)
+export const formatDate = (dateString: string | null) => {
+  const date = new Date(dateString ? dateString : 'now')
   return new Intl.DateTimeFormat('fr-FR', {
     day: '2-digit',
     month: 'long',

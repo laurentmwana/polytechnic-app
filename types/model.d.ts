@@ -1,11 +1,5 @@
 import { PaginationMeta } from './paginate'
 
-export interface UserLogin {
-  expires_in: number
-  access_token: string
-  token_type: string
-}
-
 export interface UtilModel {
   id: number
   name: string
@@ -96,14 +90,6 @@ export interface Professor {
 
 export interface Deliberation {
   id: number
-  title: string
-  description: string
-  created_at: string
-  updated_at: string
-}
-
-export interface News {
-  id: number
   start_at: string
   description: string
   level: Level
@@ -112,10 +98,20 @@ export interface News {
   updated_at: string
 }
 
-export interface Notification {
+export interface LaboratoryFees {
   id: number
-  title: string
-  description: string
+  level: Level
+  year: Year
+  amount: number
+  created_at: string
+  updated_at: string
+}
+
+export interface AcademicFees {
+  id: number
+  level: Level
+  year: Year
+  amount: number
   created_at: string
   updated_at: string
 }
@@ -145,11 +141,6 @@ export interface YearMetaData {
   meta: PaginationMeta
 }
 
-export interface NotificationMetaData {
-  data: Notification[]
-  meta: PaginationMeta
-}
-
 export interface NewsMetaData {
   data: News[]
   meta: PaginationMeta
@@ -162,5 +153,15 @@ export interface ProfessorMetaData {
 
 export interface DeliberationMetaData {
   data: Deliberation[]
+  meta: PaginationMeta
+}
+
+export interface AcademicFeesMetaData {
+  data: AcademicFees[]
+  meta: PaginationMeta
+}
+
+export interface LaboratoryFeesMetaData {
+  data: LaboratoryFees[]
   meta: PaginationMeta
 }

@@ -11,13 +11,13 @@ import {
 } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { News } from '#/model'
+import { Deliberation } from '#/model'
 import { ago } from '@/lib/date-time'
 import Link from 'next/link'
 import { webRoute } from '@/lib/route'
 
 interface NewsCollectionProps {
-  news: News[]
+  news: Deliberation[]
 }
 
 export function NewsCollection({ news }: NewsCollectionProps) {

@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button'
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -60,9 +59,6 @@ export const LoginUserForm = ({
               <FormControl>
                 <Input type="email" {...field} value={field.value || ''} />
               </FormControl>
-              <FormDescription>
-                Utilisée pour vous connecter et recevoir les notifications.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -77,10 +73,6 @@ export const LoginUserForm = ({
               <FormControl>
                 <PasswordInput {...field} value={field.value || ''} />
               </FormControl>
-              <FormDescription>
-                Doit contenir au moins 8 caractères pour des raisons de
-                sécurité.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}

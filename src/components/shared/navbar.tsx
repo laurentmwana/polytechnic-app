@@ -32,6 +32,8 @@ import { AvatarDropdown } from './avatar-user'
 import { AppLogoIcon } from './logo'
 import { webRoute } from '@/lib/route'
 import { cn } from '@/lib/utils'
+import { useSession } from 'next-auth/react'
+import { isStudent } from '@/lib/role'
 
 type NavItem = {
   label: string
@@ -42,6 +44,7 @@ type NavItem = {
 export const NavbarBase = () => {
   const [open, setOpen] = useState(false)
   const pathname = usePathname()
+  const session = useSession()
 
   // Navigation items with dropdown support
   const navItems: NavItem[] = [
@@ -58,13 +61,7 @@ export const NavbarBase = () => {
         { label: 'Professeurs', href: '/professor' },
       ],
     },
-    {
-      label: 'Gestion',
-      children: [
-        { label: 'Délibération', href: '/deliberation' },
-        { label: 'Mon coupon', href: '/my-deliberation' },
-      ],
-    },
+    { label: 'Délibération', href: '/deliberation' },
     {
       label: 'Paiement',
       children: [
@@ -72,6 +69,18 @@ export const NavbarBase = () => {
         { label: 'Académique', href: '/academic-fees' },
       ],
     },
+    ...(session.status === 'authenticated' && isStudent(session.data.user.role)
+      ? [
+          {
+            label: 'Moi',
+            children: [
+              { label: 'Mon coupon', href: '/my-deliberation' },
+              { label: 'Laboratoire', href: '/payment/laboratory' },
+              { label: 'Académique', href: '/payment/academic' },
+            ],
+          },
+        ]
+      : []),
     { label: 'Contact', href: '/contact-us' },
   ]
 
@@ -135,7 +144,6 @@ export const NavbarBase = () => {
                       </NavigationMenuItem>
                     )
                   }
-
                   // If the item doesn't have children, render a simple link
                   return (
                     <NavigationMenuItem key={item.label}>
@@ -166,14 +174,14 @@ export const NavbarBase = () => {
             {/* Mobile Menu Sheet */}
             <Sheet open={open} onOpenChange={setOpen}>
               <SheetTrigger asChild className="lg:hidden">
-                <Button variant="ghost" size="icon">
+                <Button variant="secondary" size="icon">
                   <Menu size={24} />
                   <span className="sr-only">Menu</span>
                 </Button>
               </SheetTrigger>
               <SheetContent
                 side="right"
-                className="w-[250px] sm:w-[300px] overflow-y-auto"
+                className="w-[300px] sm:w-[350px] overflow-y-auto"
               >
                 <SheetHeader>
                   <SheetTitle>Navigation</SheetTitle>

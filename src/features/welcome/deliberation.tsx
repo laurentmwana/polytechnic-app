@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from 'react'
 import { apiRoute } from '@/lib/route'
-import type { News } from '#/model'
+import type { Deliberation } from '#/model'
 import { NewsCarousel } from '../news/news-carousel'
 
 export const DelibertionWelcome = () => {
-  const [news, setNews] = useState<News[]>([])
+  const [news, setNews] = useState<Deliberation[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 

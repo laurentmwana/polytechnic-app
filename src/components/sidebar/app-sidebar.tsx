@@ -15,6 +15,7 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar'
 import { webRoute } from '@/lib/route'
+import Link from 'next/link'
 
 const items = [
   {
@@ -55,9 +56,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               asChild
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
-              <a href={webRoute('dashboard')}>
+              <Link href={webRoute('dashboard')}>
                 <span className="text-base font-semibold">PolyTechnique</span>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
