@@ -3,7 +3,7 @@
 import { Heading } from '@/components/shared/heading'
 import { Pagination } from '@/components/ui/pagination'
 import { fetchJson } from '@/lib/fetch'
-import { apiLocalRoute, webRoute } from '@/lib/route'
+import { apiRoute, webRoute } from '@/lib/route'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { SearchInput } from '@/components/ui/search-input'
@@ -30,7 +30,7 @@ export default function YearIndex() {
     const getYears = async () => {
       try {
         const response = await fetchJson<YearMetaData>(
-          apiLocalRoute('year.index', { page, search })
+          apiRoute('year.index', { page, search })
         )
 
         if (response.status !== 200) {

@@ -19,17 +19,6 @@ interface YearCollectionProps {
 }
 
 export function YearCollection({ year }: YearCollectionProps) {
-  // Calculer la durée en mois
-  const getDuration = (start: string, end: string) => {
-    const startDate = new Date(start)
-    const endDate = new Date(end)
-    const diffMonths =
-      (endDate.getFullYear() - startDate.getFullYear()) * 12 +
-      endDate.getMonth() -
-      startDate.getMonth()
-    return `${diffMonths} mois`
-  }
-
   return (
     <Card
       className={`flex flex-col h-full ${
@@ -61,9 +50,6 @@ export function YearCollection({ year }: YearCollectionProps) {
             <div className="flex items-center gap-2">
               <Badge variant="secondary">{year.name}</Badge>
             </div>
-            <p className="text-sm text-muted-foreground mt-1">
-              Durée: {getDuration(year.start, year.end)}
-            </p>
           </div>
 
           <div>

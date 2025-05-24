@@ -75,9 +75,10 @@ export const NavbarBase = () => {
             label: 'Moi',
             children: [
               { label: 'Mon coupon', href: '/my-deliberation' },
-              { label: 'Mes cours', href: '/my-deliberation' },
-              { label: 'Laboratoire', href: '/paid-laboratory' },
-              { label: 'Académique', href: '/paid-academic' },
+              { label: 'Cours suivis', href: '/course-follow' },
+              { label: 'Mon dossier', href: '/my-folder' },
+              { label: 'Mes paiement labo', href: '/paid-laboratory' },
+              { label: 'Mes paiement académique', href: '/paid-academic' },
             ],
           },
         ]
