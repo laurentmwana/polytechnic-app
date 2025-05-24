@@ -1,11 +1,5 @@
 import { PaginationMeta } from './paginate'
 
-export interface UserLogin {
-  expires_in: number
-  access_token: string
-  token_type: string
-}
-
 export interface UtilModel {
   id: number
   name: string
@@ -17,9 +11,7 @@ export interface UserMe {
   email: string
   accessToken: string
   isEmailVerified: boolean
-  permissions: UtilModel[]
-  roles: UtilModel[]
-  isEmailVerified: boolean
+  role: string
 }
 
 export interface Faculty {
@@ -41,6 +33,7 @@ export interface Department {
 export interface Option {
   id: number
   name: string
+  alias: string
   description: string
   levels: Levels[]
   created_at: string
@@ -87,37 +80,38 @@ export interface Professor {
   id: number
   name: string
   firstname: string
-  image: string
-  grade: string
   birth: string
   gender: string
   department: Department
   created_at: string
   updated_at: string
+  courses: Course[]
 }
 
 export interface Deliberation {
   id: number
-  title: string
-  description: string
-  created_at: string
-  updated_at: string
-}
-
-export interface News {
-  id: number
-  title: string
-  message: string
-  deliberation: Deliberation | null
   start_at: string
+  description: string
+  level: Level
+  year: Year
   created_at: string
   updated_at: string
 }
 
-export interface Notification {
+export interface LaboratoryFees {
   id: number
-  title: string
-  description: string
+  level: Level
+  year: Year
+  amount: number
+  created_at: string
+  updated_at: string
+}
+
+export interface AcademicFees {
+  id: number
+  level: Level
+  year: Year
+  amount: number
   created_at: string
   updated_at: string
 }
@@ -147,12 +141,27 @@ export interface YearMetaData {
   meta: PaginationMeta
 }
 
-export interface NotificationMetaData {
-  data: Notification[]
+export interface NewsMetaData {
+  data: News[]
   meta: PaginationMeta
 }
 
-export interface NewsMetaData {
-  data: News[]
+export interface ProfessorMetaData {
+  data: Professor[]
+  meta: PaginationMeta
+}
+
+export interface DeliberationMetaData {
+  data: Deliberation[]
+  meta: PaginationMeta
+}
+
+export interface AcademicFeesMetaData {
+  data: AcademicFees[]
+  meta: PaginationMeta
+}
+
+export interface LaboratoryFeesMetaData {
+  data: LaboratoryFees[]
   meta: PaginationMeta
 }

@@ -5,19 +5,18 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { isAdmin } from '@/lib/role'
-import { UtilModel } from '#/model'
 
 interface ProfileDeleteAccountProps {
-  roles: UtilModel[]
+  role: string
 }
 
-export const ProfileDeleteAccount = ({ roles }: ProfileDeleteAccountProps) => {
+export const ProfileDeleteAccount = ({ role }: ProfileDeleteAccountProps) => {
   return (
     <Card>
       <CardHeader>
         <CardTitle className="mb-3">Suppression du compte</CardTitle>
         <CardDescription>
-          {isAdmin(roles)
+          {isAdmin(role)
             ? 'Vous ne pouvez pas supprimer ce compte car vous êtes administrateur.'
             : 'Vous ne pouvez pas supprimer votre compte, vous devez faire une demande à l’administrateur.'}
         </CardDescription>

@@ -1,9 +1,8 @@
 import type { Level } from '#/model'
 import { Heading } from '@/components/shared/heading'
-import { fetchJson } from '@/lib/fetch'
-import { apiLocalRoute, webRoute } from '@/lib/route'
+import { apiRoute, webRoute } from '@/lib/route'
 import { CustomBreadcrumbs } from '@/components/custom-breadcumbs'
-import { LevelDetails } from './level-details'
+import { LevelDetails } from '@/features/level/level-details'
 
 export default async function LevelShow({
   params,
@@ -12,11 +11,22 @@ export default async function LevelShow({
 }) {
   const { id } = await params
 
-  const response = await fetchJson<{ data: Level }>(
-    apiLocalRoute('level.show', { id })
-  )
+  const response = await fetch(apiRoute('level.show', { id }))
 
-  const level = response.data
+  if (!response.ok) {
+    throw new Error(`Erreur lors de la récupération de la prootion ${id}`)
+  }
+
+  const level = ((await response.json()) as { data: Level }).data
+
+  if (!level) {
+    return (
+      <main className="container py-12">
+        <Heading title="En savoir plus sur une promotion" />
+        <div className="text-center py-12">Aucune promotion trouvée</div>
+      </main>
+    )
+  }
 
   return (
     <main className="container py-12">
@@ -38,7 +48,7 @@ export default async function LevelShow({
         />
       </div>
 
-      <LevelDetails level={level.data} />
+      <LevelDetails level={level} />
     </main>
   )
 }

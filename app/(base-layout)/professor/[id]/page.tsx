@@ -1,9 +1,11 @@
-import { Heading } from '@/components/shared/heading'
+import { ProfessorInfoShow } from './professor-show'
 
-export default function ProfessorShow() {
-  return (
-    <div className="container py-12">
-      <Heading title="En savoir plus sur un professeur" />
-    </div>
-  )
+export default async function ProfessorShow({
+  params,
+}: {
+  params: Promise<{ id: string | number }>
+}) {
+  const { id } = await params
+
+  return <ProfessorInfoShow id={id} />
 }

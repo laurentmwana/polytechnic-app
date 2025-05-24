@@ -17,15 +17,16 @@ import {
 } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import type { CarouselApi } from '@/components/ui/carousel'
-import { News } from '#/model'
+import { Deliberation } from '#/model'
 import { ago } from '@/lib/date-time'
 import { Button } from '@/components/ui/button'
 import { Eye } from 'lucide-react'
 import Link from 'next/link'
 import { webRoute } from '@/lib/route'
+import { Badge } from '@/components/ui/badge'
 
 interface NewsCarouselProps {
-  news?: News[]
+  news?: Deliberation[]
   isLoading?: boolean
 }
 
@@ -102,17 +103,20 @@ export function NewsCarousel({
                 >
                   <Card className="h-full">
                     <CardHeader>
+                      <Badge variant="outline">{item.year.name}</Badge>
                       <CardTitle className="line-clamp-2">
-                        {item.title}
+                        {item.level.programme.name} {item.level.option.name}
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className="line-clamp-4 text-sm">{item.message}</p>
+                      <p className="line-clamp-4 text-sm">{item.description}</p>
                     </CardContent>
                     <CardFooter className="text-xs text-muted-foreground flex items-center justify-between">
                       <p>{ago(item.created_at)}</p>
                       <Button size="sm" variant="outline" asChild>
-                        <Link href={webRoute('news.show', { id: item.id })}>
+                        <Link
+                          href={webRoute('deliberation.show', { id: item.id })}
+                        >
                           <Eye size={15} />
                         </Link>
                       </Button>

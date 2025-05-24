@@ -1,8 +1,6 @@
 'use client'
 
 import { SectionPageTitle } from '@/components/shared/section-page'
-import { useFetch } from '@/hooks/use-fetch'
-import { apiLocalRoute } from '@/lib/route'
 import type { Year } from '#/model'
 import { YearDetails } from '@/features/year/details'
 import { Calendar, Clock } from 'lucide-react'
@@ -14,11 +12,45 @@ import {
   CardHeader,
 } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { useEffect, useState } from 'react'
+import { apiRoute } from '@/lib/route'
+import { EmptyDataFetch } from '@/components/no-data'
 
 export const YearAcademicWelcome = () => {
-  const response = useFetch<{ data: Year }>(apiLocalRoute('year.pending'))
+  const [year, setYear] = useState<Year | null>(null)
+  const [isPending, setIsPending] = useState<boolean>(false)
+  const [message, setMessage] = useState<string | null>(null)
 
-  const year = response.result
+  useEffect(() => {
+    const getYear = async () => {
+      setIsPending(true)
+      try {
+        const response = await fetch(apiRoute('year.pending'), {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+          },
+        })
+
+        const data = await response.json()
+
+        if (response.ok) {
+          setYear((data as { data: Year }).data)
+          setMessage(null)
+        } else {
+          const parseMessage = (data as { message: string }).message
+          setMessage(parseMessage)
+        }
+      } catch (error) {
+        setMessage("Erreur lors du chargement de l'année académique")
+        console.error(error)
+      } finally {
+        setIsPending(false)
+      }
+    }
+
+    getYear()
+  }, [])
 
   return (
     <div className="container my-12">
@@ -28,14 +60,14 @@ export const YearAcademicWelcome = () => {
         fois.
       </SectionPageTitle>
 
-      {response.isLoading ? (
+      {isPending ? (
         <YearAcademicWelcomeSkeleton />
       ) : year ? (
-        <YearDetails year={year?.data} />
+        <YearDetails year={year} />
       ) : (
-        <p className="text-sm text-muted-foreground">
-          Pas d&lsquo;année académique pour l&#39;instant
-        </p>
+        <EmptyDataFetch
+          message={message || 'Aucune année académique disponible'}
+        />
       )}
     </div>
   )
@@ -92,7 +124,7 @@ export function YearAcademicWelcomeSkeleton() {
               {/* End date skeleton */}
               <div className="border rounded-lg p-4">
                 <div className="h-4 w-16 bg-gray-200 dark:bg-gray-700 rounded-md mb-1 animate-pulse" />
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap=2">
                   <Calendar className="h-4 w-4 text-gray-300 dark:text-gray-600" />
                   <div className="h-5 w-24 bg-gray-200 dark:bg-gray-700 rounded-md animate-pulse" />
                 </div>
@@ -102,15 +134,15 @@ export function YearAcademicWelcomeSkeleton() {
 
           <div>
             {/* Section title skeleton */}
-            <div className="flex items-center gap-2 mb-3">
+            <div className="flex items-center gap=2 mb-3">
               <div className="h-5 w-5 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse" />
               <div className="h-6 w-56 bg-gray-200 dark:bg-gray-700 rounded-md animate-pulse" />
             </div>
-            <div className="grid md:grid-cols-2 gap-4">
+            <div className="grid md:grid-cols-2 gap=4">
               {/* Status skeleton */}
               <div className="border rounded-lg p-4">
                 <div className="h-4 w-16 bg-gray-200 dark:bg-gray-700 rounded-md mb-1 animate-pulse" />
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap=2">
                   <div className="h-4 w-4 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse" />
                   <div className="h-5 w-28 bg-gray-200 dark:bg-gray-700 rounded-md animate-pulse" />
                 </div>
@@ -118,15 +150,15 @@ export function YearAcademicWelcomeSkeleton() {
               {/* Creation date skeleton */}
               <div className="border rounded-lg p-4">
                 <div className="h-4 w-32 bg-gray-200 dark:bg-gray-700 rounded-md mb-1 animate-pulse" />
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap=2">
                   <Clock className="h-4 w-4 text-gray-300 dark:text-gray-600" />
-                  <div className="h-5 w-32 bg-gray-200 dark:bg-gray-700 rounded-md animate-pulse" />
+                  <div className="h-5 w-32 bg-gray=200 dark:bg-gray-700 rounded-md animate-pulse" />
                 </div>
               </div>
               {/* Last update skeleton */}
-              <div className="border rounded-lg p-4">
+              <div className="border rounded-lg p=4">
                 <div className="h-4 w-36 bg-gray-200 dark:bg-gray-700 rounded-md mb-1 animate-pulse" />
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap=2">
                   <Clock className="h-4 w-4 text-gray-300 dark:text-gray-600" />
                   <div className="h-5 w-32 bg-gray-200 dark:bg-gray-700 rounded-md animate-pulse" />
                 </div>

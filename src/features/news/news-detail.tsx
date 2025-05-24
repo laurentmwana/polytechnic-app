@@ -1,6 +1,6 @@
 'use client'
 
-import { Calendar, Clock, FileText, MessageSquare } from 'lucide-react'
+import { Calendar, Clock, MessageSquare } from 'lucide-react'
 import {
   Card,
   CardContent,
@@ -11,13 +11,12 @@ import {
 } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Separator } from '@/components/ui/separator'
 import { formatDate } from '@/lib/utils'
-import { News } from '#/model'
+import { Deliberation } from '#/model'
 import { ago } from '@/lib/date-time'
 
 interface NewsDetailProps {
-  news: News
+  news: Deliberation
   onBack?: () => void
 }
 
@@ -30,16 +29,11 @@ export function NewsDetail({ news, onBack }: NewsDetailProps) {
             <div>
               <div className="flex items-center gap-2">
                 <CardTitle className="text-2xl font-bold">
-                  {news.title}
+                  {news.level.programme.name} {news.level.option.name}
                 </CardTitle>
-                {news.deliberation && (
-                  <Badge
-                    variant="outline"
-                    className="bg-primary/10 text-primary"
-                  >
-                    Délibération
-                  </Badge>
-                )}
+                <Badge variant="outline" className="bg-primary/10 text-primary">
+                  Délibération
+                </Badge>
               </div>
               <CardDescription className="mt-2">
                 <div className="flex items-center gap-2">
@@ -60,40 +54,11 @@ export function NewsDetail({ news, onBack }: NewsDetailProps) {
             <div className="flex items.start_at gap-2">
               <MessageSquare className="h-5 w-5 text-primary mt-1" />
               <div>
-                <h3 className="text-lg font-medium mb-2">Message</h3>
-                <div className="whitespace-pre-wrap">{news.message}</div>
+                <h3 className="text-lg font-medium mb-2">Description</h3>
+                <div className="whitespace-pre-wrap">{news.description}</div>
               </div>
             </div>
           </div>
-
-          {news.deliberation && (
-            <>
-              <Separator />
-              <div className="flex items.start_at gap-2">
-                <FileText className="h-5 w-5 text-primary mt-1" />
-                <div>
-                  <h3 className="text-lg font-medium mb-2">
-                    Délibération associée
-                  </h3>
-                  <Card className="bg-muted/50">
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-lg">
-                        {news.deliberation.title}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-sm text-muted-foreground">
-                        {news.deliberation.description}
-                      </p>
-                    </CardContent>
-                    <CardFooter className="text-xs text-muted-foreground pt-0">
-                      Créée le {ago(news.deliberation.created_at)}
-                    </CardFooter>
-                  </Card>
-                </div>
-              </div>
-            </>
-          )}
         </CardContent>
         <CardFooter className="border-t pt-4 text-sm text-muted-foreground">
           <div className="flex flex-col sm:flex-row sm:justify-between w-full gap-2">

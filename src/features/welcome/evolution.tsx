@@ -1,11 +1,9 @@
 'use client'
 
-import type React from 'react'
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Users, Building, BookOpen, GraduationCap } from 'lucide-react'
-import { useFetch } from '@/hooks/use-fetch'
-import { apiLocalRoute } from '@/lib/route'
+import { apiRoute } from '@/lib/route'
 
 type EvaluatorModel = {
   departments: number
@@ -15,13 +13,31 @@ type EvaluatorModel = {
 }
 
 export const Evolution = () => {
-  const response = useFetch<{ data: EvaluatorModel }>(
-    apiLocalRoute('eva.index')
-  )
+  const [evaluator, setEvaluator] = useState<EvaluatorModel | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-  const evaluator = response.result?.data
+  useEffect(() => {
+    const fetchEvaluator = async () => {
+      try {
+        const response = await fetch(apiRoute('eva.index'), {
+          method: 'GET',
+          headers: { Accept: 'application/json' },
+        })
+        if (!response.ok)
+          throw new Error('Erreur lors de la récupération des statistiques')
+        const data = await response.json()
+        setEvaluator(data.data)
+        setError(null)
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Erreur inconnue')
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    fetchEvaluator()
+  }, [])
 
-  // Define fallback data in case API hasn't loaded yet
   const stats = [
     {
       count: evaluator?.students || 0,
@@ -31,7 +47,7 @@ export const Evolution = () => {
     },
     {
       count: evaluator?.professors || 0,
-      title: 'Facultés',
+      title: 'Professeurs',
       icon: <Building className="w-10 h-10" />,
       delay: 0.1,
     },
@@ -49,6 +65,12 @@ export const Evolution = () => {
     },
   ]
 
+  if (error) {
+    // Tu peux choisir de throw ou d'afficher une erreur dans l'UI
+    // Ici, on affiche les stats avec des valeurs à 0 et un message d'erreur dans la console
+    console.error(error)
+  }
+
   return (
     <div className="rounded-lg">
       <motion.div
@@ -59,7 +81,7 @@ export const Evolution = () => {
       >
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {stats.map((item, index) =>
-            response.isLoading ? (
+            isLoading ? (
               <EvolutionItemSkeleton key={index} delay={item.delay} />
             ) : (
               <EvolutionItem

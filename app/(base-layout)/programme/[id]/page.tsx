@@ -1,7 +1,6 @@
 import type { Programme } from '#/model'
 import { Heading } from '@/components/shared/heading'
-import { fetchJson } from '@/lib/fetch'
-import { apiLocalRoute, webRoute } from '@/lib/route'
+import { apiRoute, webRoute } from '@/lib/route'
 import { CustomBreadcrumbs } from '@/components/custom-breadcumbs'
 import { ProgrammeDetails } from './programme-details'
 
@@ -12,11 +11,13 @@ export default async function ProgrammeShow({
 }) {
   const { id } = await params
 
-  const response = await fetchJson<{ data: Programme }>(
-    apiLocalRoute('programme.show', { id })
-  )
+  const response = await fetch(apiRoute('programme.show', { id }))
 
-  const programme = response.data
+  if (!response.ok) {
+    throw new Error(`Erreur lors de la récupération du programme ${id}`)
+  }
+
+  const programme = ((await response.json()) as { data: Programme }).data
 
   return (
     <main className="container py-12">
@@ -38,7 +39,7 @@ export default async function ProgrammeShow({
         />
       </div>
 
-      <ProgrammeDetails programme={programme.data} />
+      <ProgrammeDetails programme={programme} />
     </main>
   )
 }

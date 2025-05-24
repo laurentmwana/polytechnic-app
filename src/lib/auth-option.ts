@@ -1,8 +1,7 @@
-import { loginUser } from '@/repositories/auth'
-import { findUserMe } from '@/repositories/user'
-import { UserLogin, UserMe } from '#/model'
 import { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
+import { apiRoute } from './route'
+import { UserMe } from '#/model'
 
 export const authOptions: NextAuthOptions = {
   session: {
@@ -26,52 +25,34 @@ export const authOptions: NextAuthOptions = {
         }
 
         try {
-          const response = await loginUser({
-            email: credentials.email,
-            password: credentials.password,
+          const response = await fetch(apiRoute('login'), {
+            body: JSON.stringify({
+              email: credentials.email,
+              password: credentials.password,
+            }),
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
           })
 
-          if (response.status === 401) {
-            return null
+          const data = await response.json()
+
+          if (response.ok) {
+            const user = (data as { data: UserMe }).data
+
+            return {
+              id: String(user.id),
+              name: user.name,
+              email: user.email,
+              accessToken: user.accessToken,
+              role: user.role,
+              isEmailVerified: user.isEmailVerified,
+            }
           }
 
-          if (response.status === 422) {
-            throw new Error('Erreur de validation')
-          }
-
-          if (response.status === 500) {
-            throw new Error('Erreur lier au serveur')
-          }
-
-          if (!response.ok) {
-            return null
-          }
-
-          const auth = (await response.json()) as UserLogin
-
-          if (!auth || !auth.access_token) {
-            return null
-          }
-
-          const userResponse = await findUserMe(auth.access_token)
-
-          if (userResponse.status !== 200) {
-            return null
-          }
-
-          const dataUserResponse = (await userResponse.json()) as {
-            data: UserMe
-          }
-
-          return {
-            id: String(dataUserResponse.data.id),
-            name: dataUserResponse.data.name,
-            email: dataUserResponse.data.email,
-            accessToken: auth.access_token,
-            permissions: dataUserResponse.data.permissions,
-            roles: dataUserResponse.data.roles,
-            isEmailVerified: dataUserResponse.data.isEmailVerified,
-          }
+          return null
         } catch (error) {
           console.error("Erreur d'authentification :", error)
           return null
@@ -83,8 +64,7 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.accessToken = user.accessToken
-        token.permissions = user.permissions
-        token.roles = user.roles
+        token.role = user.role
         token.id = user.id
         token.isEmailVerified = user.isEmailVerified
       }
@@ -97,8 +77,7 @@ export const authOptions: NextAuthOptions = {
           name: session.user?.name || '',
           email: session.user?.email || '',
           accessToken: token.accessToken as string,
-          permissions: token.permissions || [],
-          roles: token.roles || [],
+          role: token.role,
           isEmailVerified: token.isEmailVerified,
         }
       }

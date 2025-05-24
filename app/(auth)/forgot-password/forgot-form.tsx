@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button'
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -55,9 +54,6 @@ export const ForgotPasswordForm = ({
               <FormControl>
                 <Input type="email" {...field} />
               </FormControl>
-              <FormDescription>
-                Utilisée pour vous connecter et recevoir les notifications.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}

@@ -1,19 +1,18 @@
-import { UtilModel } from '#/model'
-
-enum SPATIE_ROLES {
-  ROLE_ADMIN = 'ROLE_ADMIN',
-  ROLE_STUDENT = 'ROLE_STUDENT',
-  ROLE_PROFESSOR = 'ROLE_PROFESSOR',
-  ROLE_PERSONAL_ACADEMIC = 'ROLE_PERSONAL_ACADEMIC',
-  ROLE_ANONYMOUS = 'ROLE_ANONYMOUS',
+enum ROLES {
+  ADMIN = 'administrateur',
+  STUDENT = 'étudiant',
+  DEFAULT = 'inconnu(e)',
 }
 
-export const isAdmin = (roles?: UtilModel[]): boolean => {
-  return roles
-    ? roles.some((role) => role.name == SPATIE_ROLES.ROLE_ADMIN)
-    : false
+export const isAdmin = (role?: string): boolean => {
+  return role ? role == ROLES.ADMIN : false
 }
 
-export const isStudent = (): boolean => {
-  return false
+export const isStudent = (role?: string): boolean => {
+  console.log(role)
+  return role ? role == ROLES.STUDENT : false
+}
+
+export const isAnonymous = (role?: string): boolean => {
+  return role ? role == ROLES.DEFAULT : false
 }

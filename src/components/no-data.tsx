@@ -1,11 +1,11 @@
-import { Card, CardDescription, CardHeader } from '@/components/ui/card'
+import { Alert, AlertDescription } from './ui/alert'
 
 export const EmptyDataFetch = ({ message }: { message: string }) => {
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardDescription className="text-center">{message}</CardDescription>
-      </CardHeader>
-    </Card>
+    <div className="max-w-xl mx-auto">
+      <Alert>
+        <AlertDescription className="text-center">{message}</AlertDescription>
+      </Alert>
+    </div>
   )
 }

@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button'
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -60,9 +59,6 @@ export const ResetPasswordForm = ({
               <FormControl>
                 <Input type="email" {...field} />
               </FormControl>
-              <FormDescription>
-                Utilisée pour vous connecter et recevoir les notifications.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -77,10 +73,6 @@ export const ResetPasswordForm = ({
               <FormControl>
                 <PasswordInput {...field} />
               </FormControl>
-              <FormDescription>
-                Doit contenir au moins 8 caractères pour des raisons de
-                sécurité.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -95,10 +87,6 @@ export const ResetPasswordForm = ({
               <FormControl>
                 <PasswordInput {...field} />
               </FormControl>
-              <FormDescription>
-                Doit contenir au moins 8 caractères pour des raisons de
-                sécurité.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}

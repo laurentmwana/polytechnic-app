@@ -17,7 +17,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { webRoute } from '@/lib/route'
-import { isAdmin } from '@/lib/role'
+import { isAdmin, isStudent } from '@/lib/role'
 import { getInitials } from '@/lib/utils'
 
 export const AvatarDropdown = () => {
@@ -58,7 +58,7 @@ export const AvatarDropdown = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative h-9 w-9 rounded-full p-0">
+        <Button variant="outline" className="relative h-9 w-9 rounded-full p-0">
           <Avatar className="h-9 w-9 cursor-pointer transition-opacity hover:opacity-80">
             <AvatarFallback className="bg-primary/10 text-primary">
               {getInitials(user.name)}
@@ -88,7 +88,7 @@ export const AvatarDropdown = () => {
             <span>Mon profil</span>
           </Link>
         </DropdownMenuItem>
-        {isAdmin(user.roles) && (
+        {isAdmin(user.role) && (
           <DropdownMenuItem asChild>
             <Link
               href={webRoute('dashboard')}
@@ -98,6 +98,19 @@ export const AvatarDropdown = () => {
               <span>Tableau de bord</span>
             </Link>
           </DropdownMenuItem>
+        )}
+        {isStudent(user.role) && (
+          <>
+            <DropdownMenuItem asChild>
+              <Link
+                href={webRoute('student-info.index')}
+                className="flex cursor-pointer items-center gap-2 rounded-md p-2 hover:bg-accent"
+              >
+                <ListEnd className="h-4 w-4 text-muted-foreground" />
+                <span>Mes informations</span>
+              </Link>
+            </DropdownMenuItem>
+          </>
         )}
         <DropdownMenuSeparator />
         <DropdownMenuItem

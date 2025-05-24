@@ -1,6 +1,6 @@
 import { Skeleton } from '@/components/ui/skeleton'
 import { Heading } from '@/components/shared/heading'
-import { OptionLoader } from './option-loader'
+import { OptionLoader } from '@/features/option/option-loader'
 
 export default function Loading() {
   return (

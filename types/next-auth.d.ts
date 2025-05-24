@@ -1,5 +1,4 @@
 import { DefaultSession } from 'next-auth'
-import { UtilModel } from './model'
 
 declare module 'next-auth' {
   interface Session {
@@ -8,8 +7,7 @@ declare module 'next-auth' {
       name: string
       email: string
       accessToken: string
-      permissions: UtilModel[]
-      roles: UtilModel[]
+      role: string
       isEmailVerified: boolean
     } & DefaultSession['user']
   }
@@ -19,8 +17,7 @@ declare module 'next-auth' {
     name: string
     email: string
     accessToken: string
-    permissions: UtilModel[]
-    roles: UtilModel[]
+    role: string
     isEmailVerified: boolean
   }
 }
@@ -31,8 +28,7 @@ declare module 'next-auth/jwt' {
     name: string
     email: string
     accessToken: string
-    permissions: UtilModel[]
-    roles: UtilModel[]
+    role: string
     isEmailVerified: boolean
   }
 }
