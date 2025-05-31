@@ -1,5 +1,13 @@
+<script>
+import { Toaster } from "@/components/ui/sonner";
+import "vue-sonner/style.css";
+</script>
+
 <template>
   <div class="h-full">
-    <NuxtPage />
+    <NuxtLayout>
+      <NuxtPage />
+      <Toaster />
+    </NuxtLayout>
   </div>
 </template>
