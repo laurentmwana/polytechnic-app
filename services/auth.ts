@@ -10,3 +10,14 @@ export const loginUser = async (body: { email: string; password: string }) => {
     },
   });
 };
+
+export const forgotPasswordUser = async (body: { email: string }) => {
+  return await fetch(getRouteApi("forgot"), {
+    method: "POST",
+    body: JSON.stringify(body),
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+  });
+};

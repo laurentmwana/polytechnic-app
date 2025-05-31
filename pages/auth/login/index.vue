@@ -7,6 +7,10 @@ import { createUserLocal } from "~/services/session";
 
 const router = useRouter();
 
+useHead({
+  title: "Se connecter - Polytechnic Application",
+});
+
 definePageMeta({
   layout: "auth",
   middleware: ["guest"],
@@ -49,11 +53,24 @@ const onSubmit = async (values: { email: string; password: string }) => {
 
 <template>
   <div v-if="redirecting">
-    <Card>
-      <CardHeader class="text-center">
-        <CardTitle class="text-xl font-semibold"> Connecion réussi </CardTitle>
-        <CardDescription> </CardDescription>
+    <Card className="rounded-xl">
+      <CardHeader className="px-10 pt-8 pb-0 text-center">
+        <CardTitle className="text-xl">Connexion réussie</CardTitle>
+        <CardDescription>Redirection en cours...</CardDescription>
       </CardHeader>
+      <CardContent className="px-10 py-8">
+        <div className="space-y-4 py-4">
+          <div className="flex items-center justify-center mb-6">
+            <Skeleton className="h-12 w-3/4" />
+          </div>
+          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-10 w-full" />
+          <div className="flex justify-end mt-6">
+            <Skeleton className="h-10 w-24" />
+          </div>
+        </div>
+      </CardContent>
     </Card>
   </div>
   <div class="space-y-4" v-else>
@@ -70,7 +87,7 @@ const onSubmit = async (values: { email: string; password: string }) => {
 
         <div class="text-muted-foreground text-center text-sm mt-6">
           Vous avez oublié votre mot de passe ?
-          <TextLink href="/forgot-password"> Réinitialiser </TextLink>
+          <TextLink href="/auth/forgot-password"> Réinitialiser </TextLink>
         </div>
       </CardContent>
     </Card>

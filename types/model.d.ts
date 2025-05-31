@@ -6,3 +6,8 @@ export interface AuthModel {
   isEmailVerified: boolean;
   token: string;
 }
+
+export interface ForgotPasswordModel {
+  message: string;
+  is_send: boolean;
+}
