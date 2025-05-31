@@ -55,21 +55,21 @@ const onSubmit = async (values: { email: string; password: string }) => {
 
 <template>
   <div v-if="redirecting">
-    <Card className="rounded-xl">
-      <CardHeader className="px-10 pt-8 pb-0 text-center">
-        <CardTitle className="text-xl">Connexion réussie</CardTitle>
+    <Card class="rounded-xl">
+      <CardHeader class="px-10 pt-8 pb-0 text-center">
+        <CardTitle class="text-xl">Connexion réussie</CardTitle>
         <CardDescription>Redirection en cours...</CardDescription>
       </CardHeader>
-      <CardContent className="px-10 py-8">
-        <div className="space-y-4 py-4">
-          <div className="flex items-center justify-center mb-6">
-            <Skeleton className="h-12 w-3/4" />
+      <CardContent class="px-10 py-8">
+        <div class="space-y-4 py-4">
+          <div class="flex items-center justify-center mb-6">
+            <Skeleton class="h-12 w-3/4" />
           </div>
-          <Skeleton className="h-10 w-full" />
-          <Skeleton className="h-10 w-full" />
-          <Skeleton className="h-10 w-full" />
-          <div className="flex justify-end mt-6">
-            <Skeleton className="h-10 w-24" />
+          <Skeleton class="h-10 w-full" />
+          <Skeleton class="h-10 w-full" />
+          <Skeleton class="h-10 w-full" />
+          <div class="flex justify-end mt-6">
+            <Skeleton class="h-10 w-24" />
           </div>
         </div>
       </CardContent>

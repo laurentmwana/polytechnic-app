@@ -9,10 +9,10 @@ export const useAuth = () => {
   const error = ref<string | null>(null);
 
   const initializeAuth = () => {
-    try {
-      isPending.value = true;
-      error.value = null;
+    isPending.value = true;
+    error.value = null;
 
+    try {
       const user = getUserLocal();
       session.value = user;
     } catch (err) {
@@ -24,10 +24,10 @@ export const useAuth = () => {
     }
   };
 
-  const user = computed(() => session.value || null);
-  const isAuthenticated = computed(() => !!session.value && !!user.value);
-  const isUserStudent = computed(() => isStudent(user.value?.roles));
-  const isUserAdmin = computed(() => isAdmin(user.value?.roles));
+  const user = computed(() => session.value);
+  const isAuthenticated = computed(() => !!session.value);
+  const isStudentUser = computed(() => isStudent(session.value?.roles));
+  const isAdminUser = computed(() => isAdmin(session.value?.roles));
 
   onMounted(() => {
     initializeAuth();
@@ -40,8 +40,8 @@ export const useAuth = () => {
 
     user,
     isAuthenticated,
-    isStudent: isUserStudent,
-    isAdmin: isUserAdmin,
+    isStudent: isStudentUser,
+    isAdmin: isAdminUser,
     initializeAuth,
   };
 };

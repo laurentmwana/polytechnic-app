@@ -9,10 +9,10 @@ const auth = useAuth();
 
 const isPending = ref<boolean>(auth.isPending.value);
 
-const onLogout = async () => {
+const onLogout = () => {
   isPending.value = true;
 
-  await deleteUserLocal();
+  deleteUserLocal();
 
   router.replace("/auth/login");
 
@@ -21,7 +21,7 @@ const onLogout = async () => {
 </script>
 
 <template>
-  <Skeleton v-if="isPending" className="h-9 w-9 rounded-full" />
+  <Skeleton v-if="isPending" class="h-9 w-9 rounded-full" />
   <div v-else>
     <DropdownMenu v-if="auth.session.value && auth.isAuthenticated">
       <DropdownMenuTrigger asChild>

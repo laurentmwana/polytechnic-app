@@ -1,11 +1,15 @@
 import { getUserLocal } from "~/services/session";
 
-const routes = ["/auth/login", "/auth/forgot-password"];
+const authRoutes = ["/auth/login", "/auth/forgot-password"];
 
 export default defineNuxtRouteMiddleware((to, from) => {
   const user = getUserLocal();
 
-  if (routes.includes(from.path) && user !== null) {
-    return navigateTo(to.path);
+  if (user && authRoutes.includes(to.path)) {
+    return navigateTo("/");
+  }
+
+  if (!user && !authRoutes.includes(to.path)) {
+    return navigateTo("/auth/login");
   }
 });
