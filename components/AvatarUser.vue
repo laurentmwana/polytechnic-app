@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ListEnd, LogOut, User2 } from "lucide-vue-next";
 import { deleteUserLocal } from "~/services/session";
 import { getInitials } from "../lib/utils";
 import { Skeleton } from "./ui/skeleton";
@@ -11,9 +12,9 @@ const isPending = ref<boolean>(auth.isPending.value);
 const onLogout = async () => {
   isPending.value = true;
 
-  deleteUserLocal();
+  await deleteUserLocal();
 
-  await router.replace("/auth/login");
+  router.replace("/auth/login");
 
   isPending.value = false;
 };
@@ -57,7 +58,7 @@ const onLogout = async () => {
           asChild
         >
           <NuxtLink href="/profile" class="flex items-center gap-2">
-            <User class="h-4 w-4 text-muted-foreground" />
+            <User2 class="h-4 w-4 text-muted-foreground" />
             <span>Mon profil</span>
           </NuxtLink>
         </DropdownMenuItem>
@@ -71,7 +72,7 @@ const onLogout = async () => {
           </NuxtLink>
         </DropdownMenuItem>
 
-        <DropdownMenuItem asChild>
+        <DropdownMenuItem v-if="auth.isStudent" asChild>
           <NuxtLink
             href="/informations"
             class="flex cursor-pointer items-center gap-2 rounded-md p-2 hover:bg-accent"

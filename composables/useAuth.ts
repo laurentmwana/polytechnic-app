@@ -1,6 +1,7 @@
+import type { AuthModel } from "@/types/model";
 import { computed, onMounted, readonly, ref } from "vue";
 import { getUserLocal } from "~/services/session";
-import type { AuthModel } from "../types/model";
+import { isAdmin, isStudent } from "../lib/role";
 
 export const useAuth = () => {
   const session = ref<AuthModel | null>(null);
@@ -25,8 +26,8 @@ export const useAuth = () => {
 
   const user = computed(() => session.value || null);
   const isAuthenticated = computed(() => !!session.value && !!user.value);
-  const isStudent = computed(() => user.value?.roles.includes("student"));
-  const isAdmin = computed(() => user.value?.roles.includes("admin"));
+  const isUserStudent = computed(() => isStudent(user.value?.roles));
+  const isUserAdmin = computed(() => isAdmin(user.value?.roles));
 
   onMounted(() => {
     initializeAuth();
@@ -37,11 +38,10 @@ export const useAuth = () => {
     isPending: readonly(isPending),
     error: readonly(error),
 
-    // Computed
     user,
     isAuthenticated,
-    isStudent,
-    isAdmin,
+    isStudent: isUserStudent,
+    isAdmin: isUserAdmin,
     initializeAuth,
   };
 };

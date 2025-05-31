@@ -1,11 +1,15 @@
-export const isStudent = () => {
-  return false;
+const ADMIN = "admin";
+const STUDENT = "student";
+const DISABLE = "disable";
+
+export const isStudent = (roles?: string[] | null) => {
+  return !roles ? false : roles.includes(STUDENT);
 };
 
-export const isAdmin = () => {
-  return false;
+export const isAdmin = (roles?: string[] | null) => {
+  return !roles ? false : roles.includes(ADMIN);
 };
 
-export const isStudentAccountDisable = () => {
-  return false;
+export const isStudentAccountDisable = (roles?: string[] | null) => {
+  return !roles ? false : roles.includes(DISABLE);
 };

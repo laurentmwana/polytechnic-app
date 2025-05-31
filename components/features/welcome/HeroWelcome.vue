@@ -33,7 +33,11 @@ import { Book } from "lucide-vue-next";
             class="rounded-md bg-primary px-8 py-6 text-lg font-medium text-white hover:bg-primary/80"
             asChild
           >
-            <NuxtLink href="/about">En savoir plus</NuxtLink>
+            <NuxtLink
+              class="rounded-md bg-primary px-8 py-6 text-lg font-medium text-primary dark:text-gray-600 hover:bg-primary/80"
+              href="/about"
+              >En savoir plus</NuxtLink
+            >
           </Button>
 
           <Button
