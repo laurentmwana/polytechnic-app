@@ -1,7 +1,7 @@
 const ROUTES_API = {
   login: "/login",
   forgot: "/forgot-password",
-  restes: "/reset-password",
+  "reset-password": "/reset-password",
 };
 
 type RouteParams = Record<string, string | number | boolean | null>;

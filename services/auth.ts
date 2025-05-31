@@ -21,3 +21,19 @@ export const forgotPasswordUser = async (body: { email: string }) => {
     },
   });
 };
+
+export const resetPasswordUser = async (body: {
+  email: string;
+  password: string;
+  password_confirmation: string;
+  token: string;
+}) => {
+  return await fetch(getRouteApi("reset-password"), {
+    method: "POST",
+    body: JSON.stringify(body),
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+  });
+};

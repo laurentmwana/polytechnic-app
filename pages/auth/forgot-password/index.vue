@@ -25,6 +25,8 @@ const message = ref<string | null>(null);
 const isSend = ref<boolean>(false);
 
 const onSubmit = async (values: { email: string }) => {
+  validator.value = null;
+
   const response = await forgotPasswordUser(values);
 
   const data = await response.json();

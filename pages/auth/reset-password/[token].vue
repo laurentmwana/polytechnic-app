@@ -1,30 +1,83 @@
 <script setup lang="ts">
+import ResetPasswordForm from "@/components/features/auth/ResetPasswordForm.vue";
+import { resetPasswordUser } from "@/services/auth";
+import type { ResetPasswordModel } from "@/types/model";
+import { ref } from "vue";
+import { useRoute } from "vue-router";
+import { toast } from "vue-sonner";
+
+useHead({
+  title: "Réinitialisation de mot de passe - Polytechnic Application",
+});
+
 definePageMeta({
   layout: "auth",
 });
+
+interface ResetPasswordValidatorErrorProps {
+  message: string;
+  errors: {
+    token?: string[];
+    password?: string[];
+    email?: string[];
+  };
+}
+
+const route = useRoute();
+const router = useRouter();
+
+const token = route.params.token as string;
+const email = route.query.email as string;
+
+const validator = ref<ResetPasswordValidatorErrorProps | null>(null);
+const redirecting = ref(false);
+
+const onSubmit = async (values: {
+  email: string;
+  password: string;
+  password_confirmation: string;
+}) => {
+  validator.value = null;
+
+  const response = await resetPasswordUser({ ...values, token });
+
+  const data = await response.json();
+
+  if (response.ok) {
+    redirecting.value = true;
+    const state = data as ResetPasswordModel;
+
+    toast("Message", {
+      description: state.message,
+    });
+
+    if (state.is_update) {
+      router.replace("/auth/login");
+    }
+
+    return true;
+  } else if (response.status === 422) {
+    validator.value = data as ResetPasswordValidatorErrorProps;
+  } else {
+    toast("Problème", {
+      description: (data as { message: string }).message,
+    });
+  }
+
+  return false;
+};
 </script>
 
 <template>
   <Card>
-    <CardHeader>
-      <CardTitle>Se connecter</CardTitle>
+    <CardHeader class="text-center">
+      <CardTitle>Réinitialisation du mot de passe</CardTitle>
       <CardDescription>
-        Connectez-vous à votre compte pour accéder à votre espace
+        Veuillez entrer votre nouveau mot de passe ci-dessous
       </CardDescription>
     </CardHeader>
     <CardContent>
-      <form class="space-y-6">
-        <div class="space-y-2">
-          <Label>Adresse e-mail</Label>
-          <Input type="email" />
-        </div>
-        <div class="space-y-2">
-          <Label>Mot de passe</Label>
-          <Input type="password" />
-        </div>
-
-        <Button class="w-full"> Se connecter </Button>
-      </form>
+      <ResetPasswordForm :onSubmit="onSubmit" :email="email" />
     </CardContent>
   </Card>
 </template>

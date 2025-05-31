@@ -28,6 +28,8 @@ const validator = ref<LoginValidatorErrorProps | null>(null);
 const redirecting = ref<boolean>(false);
 
 const onSubmit = async (values: { email: string; password: string }) => {
+  validator.value = null;
+
   const response = await loginUser(values);
 
   const data = await response.json();
@@ -38,7 +40,7 @@ const onSubmit = async (values: { email: string; password: string }) => {
 
     createUserLocal(user);
 
-    router.push("/");
+    router.replace("/");
   } else if (response.status == 422) {
     validator.value = data as LoginValidatorErrorProps;
   } else {

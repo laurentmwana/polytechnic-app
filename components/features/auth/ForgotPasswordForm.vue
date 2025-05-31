@@ -20,7 +20,6 @@ const props = defineProps<{
 }>();
 
 const isPending = ref(false);
-const isSend = ref(false);
 
 const formSchema = toTypedSchema(
   z.object({
@@ -62,7 +61,7 @@ const handleSubmit = form.handleSubmit(async (values) => {
       <template v-if="isPending">
         <Loader type="spinner" text="Chargement..." />
       </template>
-      <template v-else> Connexion </template>
+      <template v-else> Envoyer </template>
     </Button>
   </form>
 </template>

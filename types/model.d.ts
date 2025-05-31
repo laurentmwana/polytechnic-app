@@ -11,3 +11,8 @@ export interface ForgotPasswordModel {
   message: string;
   is_send: boolean;
 }
+
+export interface ResetPasswordModel {
+  message: string;
+  is_update: boolean;
+}
