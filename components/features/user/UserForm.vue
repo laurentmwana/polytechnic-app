@@ -44,6 +44,9 @@ const handleSubmit = form.handleSubmit(async (values) => {
 
   try {
     await props.onSubmit(values);
+
+    form.resetField("password", {value: ""})
+    form.resetField("password_confirmation", {value: ""})
   } catch (error) {
     toast.error("Une erreur est survenue, veuillez réessayer.");
     console.error(error);

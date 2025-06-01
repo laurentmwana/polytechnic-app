@@ -5,7 +5,7 @@ import { isAdmin, isStudent } from "../lib/role";
 
 export const useAuth = () => {
   const session = ref<AuthModel | null>(null);
-  const isPending = ref<boolean>(false);
+  const isPending = ref<boolean>(true);
   const error = ref<string | null>(null);
 
   const initializeAuth = () => {

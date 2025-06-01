@@ -44,22 +44,22 @@ const navItems = computed<NavItem[]>(() => [
   {
     label: "Académique",
     children: [
-      { label: "Départments", href: "/department" },
-      { label: "Filières", href: "/option" },
-      { label: "Promotion", href: "/level" },
-      { label: "Année académique", href: "/year-academic" },
-      { label: "Professeurs", href: "/professor" },
+      { label: "Départments", href: "#" },
+      { label: "Filières", href: "#" },
+      { label: "Promotion", href: "#" },
+      { label: "Année académique", href: "#" },
+      { label: "Professeurs", href: "#" },
     ],
   },
-  { label: "Délibération", href: "/deliberation" },
+  { label: "Délibération", href: "#" },
   {
     label: "Paiement",
     children: [
-      { label: "Laboratoire", href: "/laboratory-fees" },
-      { label: "Académique", href: "/academic-fees" },
+      { label: "Laboratoire", href: "#" },
+      { label: "Académique", href: "#" },
     ],
   },
-  { label: "Contact", href: "/contact" },
+  { label: "Contact", href: "#" },
 ]);
 
 const isActive = (href?: string): boolean => {

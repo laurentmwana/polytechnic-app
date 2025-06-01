@@ -7,21 +7,14 @@ import { Skeleton } from "./ui/skeleton";
 const router = useRouter();
 const auth = useAuth();
 
-const isPending = ref<boolean>(auth.isPending.value);
-
 const onLogout = () => {
-  isPending.value = true;
-
   deleteUserLocal();
-
   router.replace("/auth/login");
-
-  isPending.value = false;
 };
 </script>
 
 <template>
-  <Skeleton v-if="isPending" class="h-9 w-9 rounded-full" />
+  <Skeleton v-if="auth.isPending.value" class="h-9 w-9 rounded-full" />
   <div v-else>
     <DropdownMenu v-if="auth.session.value && auth.isAuthenticated">
       <DropdownMenuTrigger asChild>

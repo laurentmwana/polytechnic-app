@@ -3,6 +3,11 @@ const ROUTES_API = {
   forgot: "/forgot-password",
   "reset-password": "/reset-password",
 
+  // PROFILE
+
+  "profile.edit": "/profile/edit",
+  "profile.password": "/profile/change-password",
+
   // OTHER
 
   "&student": "/data-select/students",
