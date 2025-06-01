@@ -2,6 +2,19 @@ const ROUTES_API = {
   login: "/login",
   forgot: "/forgot-password",
   "reset-password": "/reset-password",
+
+  // OTHER
+
+  "&student": "/data-select/students",
+
+  // ADMIN
+
+  "~user.index": "/admin/user",
+  "~user.store": "/admin/user",
+  "~user.show": "/admin/user/:id",
+  "~user.update": "/admin/user/:id",
+  "~user.delete": "/admin/user/:id",
+  "~user.lock": "/admin/user/:id/lock",
 };
 
 type RouteParams = Record<string, string | number | boolean | null>;

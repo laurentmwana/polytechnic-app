@@ -2,6 +2,7 @@
 import ResetPasswordForm from "@/components/features/auth/ResetPasswordForm.vue";
 import { resetPasswordUser } from "@/services/auth";
 import type { ResetPasswordModel } from "@/types/model";
+import type { ValidatorErrorProps } from "@/types/util";
 import { ref } from "vue";
 import { useRoute } from "vue-router";
 import { toast } from "vue-sonner";
@@ -14,22 +15,13 @@ definePageMeta({
   layout: "auth",
 });
 
-interface ResetPasswordValidatorErrorProps {
-  message: string;
-  errors: {
-    token?: string[];
-    password?: string[];
-    email?: string[];
-  };
-}
-
 const route = useRoute();
 const router = useRouter();
 
-const token = route.params.token as string;
+const token = route.params.accessToken as string;
 const email = route.query.email as string;
 
-const validator = ref<ResetPasswordValidatorErrorProps | null>(null);
+const validator = ref<ValidatorErrorProps | null>(null);
 const redirecting = ref(false);
 
 const onSubmit = async (values: {
@@ -57,7 +49,7 @@ const onSubmit = async (values: {
 
     return true;
   } else if (response.status === 422) {
-    validator.value = data as ResetPasswordValidatorErrorProps;
+    validator.value = data as ValidatorErrorProps;
   } else {
     toast("Problème", {
       description: (data as { message: string }).message,

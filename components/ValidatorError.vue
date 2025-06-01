@@ -1,15 +1,8 @@
 <script setup lang="ts">
 import { defineProps } from "vue";
+import type { ValidatorErrorProps } from "../types/util";
 
-interface ValidatorErrorProps {
-  validator: {
-    errors: {
-      [key: string]: string[];
-    };
-    message: string;
-  } | null;
-}
-defineProps<ValidatorErrorProps>();
+defineProps<{ validator: ValidatorErrorProps | null }>();
 </script>
 <template>
   <div v-if="validator">

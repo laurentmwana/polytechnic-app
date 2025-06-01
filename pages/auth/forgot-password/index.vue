@@ -2,6 +2,7 @@
 import ForgotPasswordForm from "@/components/features/auth/ForgotPasswordForm.vue";
 import { forgotPasswordUser } from "@/services/auth";
 import type { ForgotPasswordModel } from "@/types/model";
+import type { ValidatorErrorProps } from "@/types/util";
 import { toast } from "vue-sonner";
 
 useHead({
@@ -12,14 +13,7 @@ definePageMeta({
   layout: "auth",
 });
 
-interface ForgotPasswordValidatorErrorProps {
-  message: string;
-  errors: {
-    email: string[];
-  };
-}
-
-const validator = ref<ForgotPasswordValidatorErrorProps | null>(null);
+const validator = ref<ValidatorErrorProps | null>(null);
 const redirecting = ref<boolean>(false);
 const message = ref<string | null>(null);
 const isSend = ref<boolean>(false);
@@ -46,7 +40,7 @@ const onSubmit = async (values: { email: string }) => {
 
     return true;
   } else if (response.status == 422) {
-    validator.value = data as ForgotPasswordValidatorErrorProps;
+    validator.value = data as ValidatorErrorProps;
   } else {
     toast("Problème", {
       description: (data as { message: string }).message,

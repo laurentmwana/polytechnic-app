@@ -2,6 +2,7 @@
 import LoginForm from "@/components/features/auth/LoginForm.vue";
 import { loginUser } from "@/services/auth";
 import type { AuthModel } from "@/types/model";
+import type { ValidatorErrorProps } from "@/types/util";
 import { toast } from "vue-sonner";
 import { createUserLocal } from "~/services/session";
 
@@ -16,15 +17,7 @@ definePageMeta({
   middleware: ["guest"],
 });
 
-interface LoginValidatorErrorProps {
-  message: string;
-  errors: {
-    email: string[];
-    password: string[];
-  };
-}
-
-const validator = ref<LoginValidatorErrorProps | null>(null);
+const validator = ref<ValidatorErrorProps | null>(null);
 const redirecting = ref<boolean>(false);
 
 const onSubmit = async (values: { email: string; password: string }) => {
@@ -42,7 +35,7 @@ const onSubmit = async (values: { email: string; password: string }) => {
 
     router.replace("/");
   } else if (response.status == 422) {
-    validator.value = data as LoginValidatorErrorProps;
+    validator.value = data as ValidatorErrorProps;
   } else {
     toast("Problème", {
       description: (data as { message: string }).message,

@@ -67,7 +67,9 @@ const items = [
 <template>
   <SidebarProvider>
     <Sidebar>
-      <SidebarHeader />
+      <SidebarHeader>
+        <h2 class="text-xl font-semibold text-center ps-2">Polytechnique</h2>
+      </SidebarHeader>
       <SidebarContent>
         <SidebarGroup v-for="item in items">
           <SidebarGroupLabel>
@@ -77,9 +79,9 @@ const items = [
             <SidebarMenu>
               <SidebarMenuItem v-for="c in item.children" :key="item.title">
                 <SidebarMenuButton asChild>
-                  <a :href="c.url">
+                  <NuxtLink :to="c.url">
                     <span>{{ c.title }}</span>
-                  </a>
+                  </NuxtLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>
@@ -90,31 +92,16 @@ const items = [
     </Sidebar>
     <SidebarInset>
       <header
-        class="flex sticky top-0 bg-background h-16 shrink-0 items-center gap-2 border-b px-4"
+        class="flex sticky top-0 bg-background h-12 shrink-0 items-center justify-between gap-2 border-b px-4"
       >
-        <SidebarTrigger class="-ml-1" />
-        <Separator orientation="vertical" class="mr-2 h-4" />
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem class="hidden md:block">
-              <BreadcrumbLink href="#">
-                Building Your Application
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator class="hidden md:block" />
-            <BreadcrumbItem>
-              <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-        <c />
+        <div class="flex items-center gap-2">
+          <SidebarTrigger class="-ml-1" />
+          <Separator orientation="vertical" />
+        </div>
+        <AvatarAdmin />
       </header>
       <div class="flex flex-1 flex-col gap-4 p-4">
-        <div
-          v-for="i in 24"
-          :key="i"
-          class="aspect-video h-12 w-full rounded-lg bg-muted/50"
-        />
+        <slot />
       </div>
     </SidebarInset>
   </SidebarProvider>

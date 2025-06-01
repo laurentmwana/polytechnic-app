@@ -4,7 +4,7 @@ export interface AuthModel {
   email: string;
   roles: string[];
   isEmailVerified: boolean;
-  token: string;
+  accessToken: string;
 }
 
 export interface ForgotPasswordModel {
@@ -15,4 +15,30 @@ export interface ForgotPasswordModel {
 export interface ResetPasswordModel {
   message: string;
   is_update: boolean;
+}
+
+export interface StudentModel {
+  id: number;
+  name: string;
+  firstname: string;
+  gender: string;
+  phone: string;
+  user: UserModel | null;
+  registration_token: string;
+  brth: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface UserModel {
+  id: number;
+  name: string;
+  firstname: string;
+  email: string;
+  gender: string;
+  roles: string[];
+  isEmailVerified: boolean;
+  student: StudentModel | null;
+  created_at: string;
+  updated_at: string;
 }

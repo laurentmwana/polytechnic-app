@@ -1,6 +1,6 @@
 const ADMIN = "admin";
 const STUDENT = "student";
-const DISABLE = "disable";
+const DISABLE = "lock";
 
 export const isStudent = (roles?: string[] | null) => {
   return !roles ? false : roles.includes(STUDENT);
