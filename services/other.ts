@@ -1,3 +1,4 @@
+import type { SchemaContactFormInfer } from "../definitions/other";
 import { getRouteApi } from "../lib/route";
 
 // DEPARTMENT
@@ -100,6 +101,18 @@ export const getShowYear = async (id: number) => {
   return await fetch(getRouteApi("*year.show", { id }), {
     headers: {
       Accept: "application/json",
+    },
+  });
+};
+
+// CONTACT US
+export const contactUs = async (values: SchemaContactFormInfer) => {
+  return await fetch(getRouteApi("&contact"), {
+    method: "POST",
+    body: JSON.stringify(values),
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
     },
   });
 };

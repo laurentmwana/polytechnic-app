@@ -23,11 +23,6 @@ definePageMeta({
   layout: "admin",
   middleware: ["admin"],
 });
-
-interface UserResponse {
-  data: UserModel;
-}
-
 const validator = ref<ValidatorErrorProps | null>(null);
 
 const auth = useAuth();

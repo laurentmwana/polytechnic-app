@@ -26,6 +26,7 @@ const ROUTES_API = {
   // OTHER
 
   "&student": "/data-select/students",
+  "&contact": "/contact",
 
   // ADMIN
 
