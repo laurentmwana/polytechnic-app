@@ -1,13 +1,9 @@
 import { deleteUserLocal, getUserLocal } from "~/services/session";
 
-function isStudentRoute(path: string): boolean {
-  return path.startsWith("/student");
-}
-
 export default defineNuxtRouteMiddleware((to) => {
   const user = getUserLocal();
 
-  if (!user && isStudentRoute(to.path)) {
+  if (!user) {
     return navigateTo("/auth/login");
   }
 

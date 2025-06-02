@@ -2,6 +2,10 @@
 useHead({
   title: "À propos - Polytechnic Application",
 });
+
+definePageMeta({
+  layouts: ["default"],
+});
 </script>
 
 <template>

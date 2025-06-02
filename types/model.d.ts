@@ -42,3 +42,42 @@ export interface UserModel {
   created_at: string;
   updated_at: string;
 }
+
+export interface YearModel {
+  id: number;
+  name: string;
+  start: number;
+  end: number;
+  is_closed: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface DepartmentModel {
+  id: number;
+  name: string;
+  alias: string;
+  options: OptionModel[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface OptionModel {
+  id: number;
+  name: string;
+  alias: string;
+  department: DepartmentModel;
+  levels: LevelModel[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface LevelModel {
+  id: number;
+  name: string;
+  alias: string;
+  option: OptionModel;
+  programme: string;
+  created_at: string;
+  updated_at: string;
+}

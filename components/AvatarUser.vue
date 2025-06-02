@@ -55,7 +55,7 @@ const onLogout = () => {
             <span>Mon profil</span>
           </NuxtLink>
         </DropdownMenuItem>
-        <DropdownMenuItem v-if="auth.isAdmin" asChild>
+        <DropdownMenuItem v-if="auth.isAdmin.value" asChild>
           <NuxtLink
             href="/dashboard"
             class="flex cursor-pointer items-center gap-2 rounded-md p-2 hover:bg-accent"
@@ -65,7 +65,7 @@ const onLogout = () => {
           </NuxtLink>
         </DropdownMenuItem>
 
-        <DropdownMenuItem v-if="auth.isStudent" asChild>
+        <DropdownMenuItem v-if="auth.isStudent.value" asChild>
           <NuxtLink
             href="/informations"
             class="flex cursor-pointer items-center gap-2 rounded-md p-2 hover:bg-accent"

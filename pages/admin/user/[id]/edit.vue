@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import UserForm from "@/components/features/user/UserForm.vue";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -14,7 +13,7 @@ import { deleteUserLocal } from "@/services/session";
 import { editUser, getItemUsers } from "@/services/user";
 import type { UserModel } from "@/types/model";
 import type { StateActionModel, ValidatorErrorProps } from "@/types/util";
-import { ArrowLeft, User } from "lucide-vue-next";
+import { User } from "lucide-vue-next";
 import { toast } from "vue-sonner";
 
 useHead({
@@ -83,10 +82,6 @@ const fetchUser = async () => {
   }
 };
 
-const goBack = () => {
-  router.push("/admin/user");
-};
-
 const onSubmit = async (values: SchemaUserFormInfer) => {
   try {
     isEdit.value = true;
@@ -147,12 +142,7 @@ onMounted(() => {
 <template>
   <div class="space-y-6">
     <!-- Header avec bouton retour -->
-    <div class="flex items-center gap-4">
-      <Button variant="ghost" size="sm" @click="goBack">
-        <ArrowLeft class="h-4 w-4 mr-2" />
-        Retour à la liste
-      </Button>
-    </div>
+    <GoBack back="/admin/user" />
 
     <!-- Loader -->
     <LoaderContainer v-if="isLoading" :isCard="true" />

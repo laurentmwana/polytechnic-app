@@ -3,6 +3,21 @@ const ROUTES_API = {
   forgot: "/forgot-password",
   "reset-password": "/reset-password",
 
+  // OTHER
+
+  "*year.current": "/current/year",
+  "*year.index": "/years",
+  "*year.show": "/year/:id",
+
+  "*department.index": "/departments",
+  "*department.show": "/department/:id",
+
+  "*option.index": "/options",
+  "*option.show": "/option/:id",
+
+  "*level.index": "/levels",
+  "*level.show": "/level/:id",
+
   // PROFILE
 
   "profile.edit": "/profile/edit",

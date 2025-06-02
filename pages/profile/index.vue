@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { toast } from "vue-sonner";
-import UserProfileInfoForm from "../components/features/user/UserProfileInfoForm.vue";
-import UserProfilePasswordForm from "../components/features/user/UserProfilePasswordForm.vue";
+import UserProfileInfoForm from "@/components/features/user/UserProfileInfoForm.vue";
+import UserProfilePasswordForm from "@/components/features/user/UserProfilePasswordForm.vue";
 import type {
   SchemaProfileInfoInfer,
   SchemaProfilePasswordInfer,
-} from "../definitions/profile";
-import { changePasswordUser, editProfileUser } from "../services/profile";
-import { deleteUserLocal } from "../services/session";
-import type { ValidatorErrorProps } from "../types/util";
+} from "@/definitions/profile";
+import { changePasswordUser, editProfileUser } from "@/services/profile";
+import { deleteUserLocal } from "@/services/session";
+import type { ValidatorErrorProps } from "@/types/util";
+import { toast } from "vue-sonner";
 
 useHead({
   title: "Mon profil - Polytechnic Application",
@@ -16,6 +16,7 @@ useHead({
 
 definePageMeta({
   middleware: ["auth"],
+  layouts: ["default"],
 });
 
 const router = useRouter();

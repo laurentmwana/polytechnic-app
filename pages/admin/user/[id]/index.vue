@@ -15,7 +15,6 @@ import { deleteUserLocal } from "@/services/session";
 import { getItemUsers } from "@/services/user"; // Supposons qu'il existe une fonction pour récupérer un utilisateur par ID
 import type { UserModel } from "@/types/model";
 import {
-  ArrowLeft,
   Calendar,
   Edit,
   Mail,
@@ -90,10 +89,6 @@ const fetchUser = async () => {
   }
 };
 
-const goBack = () => {
-  router.push("/admin/user");
-};
-
 const getRoleLabels = (roles: string[]) => {
   const roleMap: Record<string, string> = {
     admin: "Administrateur",
@@ -113,12 +108,7 @@ onMounted(() => {
 <template>
   <div class="space-y-6">
     <!-- Header avec bouton retour -->
-    <div class="flex items-center gap-4">
-      <Button variant="ghost" size="sm" @click="goBack">
-        <ArrowLeft class="h-4 w-4 mr-2" />
-        Retour à la liste
-      </Button>
-    </div>
+    <GoBack back="/admin/user" />
 
     <!-- Loader -->
     <LoaderContainer v-if="isLoading" :isCard="true" />

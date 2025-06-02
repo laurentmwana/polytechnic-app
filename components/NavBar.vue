@@ -44,14 +44,14 @@ const navItems = computed<NavItem[]>(() => [
   {
     label: "Académique",
     children: [
-      { label: "Départments", href: "#" },
-      { label: "Filières", href: "#" },
-      { label: "Promotion", href: "#" },
-      { label: "Année académique", href: "#" },
+      { label: "Départments", href: "/department" },
+      { label: "Filières", href: "/option" },
+      { label: "Promotion", href: "/level" },
+      { label: "Année académique", href: "/year-academic" },
       { label: "Professeurs", href: "#" },
+      { label: "Délibération", href: "#" },
     ],
   },
-  { label: "Délibération", href: "#" },
   {
     label: "Paiement",
     children: [
@@ -59,7 +59,36 @@ const navItems = computed<NavItem[]>(() => [
       { label: "Académique", href: "#" },
     ],
   },
-  { label: "Contact", href: "#" },
+  ...(auth.isAuthenticated && auth.isStudent.value
+    ? [
+        {
+          label: "Mon Espace",
+          children: [
+            {
+              label: "Mes cours",
+              href: "#",
+            },
+            {
+              label: "Laboratoire",
+              href: "#",
+            },
+            {
+              label: "Frais Académiques",
+              href: "#",
+            },
+            {
+              label: "Mon coupon",
+              href: "#",
+            },
+            {
+              label: "Mon dossier",
+              href: "#",
+            },
+          ],
+        },
+      ]
+    : []),
+  { label: "Contact", href: "/contact" },
 ]);
 
 const isActive = (href?: string): boolean => {
