@@ -48,6 +48,11 @@ const ROUTES_API = {
   "~student.update": "/admin/student/:id",
   "~student.delete": "/admin/student/:id",
 
+  // YEAR
+  "~year.index": "/admin/year-academic",
+  "~year.close": "/admin/year-academic/:id/closed",
+  "~year.show": "/admin/year-academic/:id",
+
   "~dashboard": "/dashboard",
 };
 

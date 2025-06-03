@@ -9,6 +9,8 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 
+const route = useRoute();
+
 const items = [
   {
     title: "Application",
@@ -39,7 +41,7 @@ const items = [
     children: [
       {
         title: "Année académique",
-        url: "#",
+        url: "/admin/year-academic",
       },
       {
         title: "Délibération",
@@ -62,6 +64,14 @@ const items = [
     ],
   },
 ];
+
+const isActive = (href?: string): boolean => {
+  if (!href) return false;
+  if (href === "/") {
+    return route.path === "/";
+  }
+  return route.path.startsWith(href);
+};
 </script>
 
 <template>
@@ -78,7 +88,10 @@ const items = [
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem v-for="c in item.children" :key="item.title">
-                <SidebarMenuButton asChild>
+                <SidebarMenuButton
+                  :class="isActive(c.url) ? 'bg-accent' : ''"
+                  asChild
+                >
                   <NuxtLink :to="c.url">
                     <span>{{ c.title }}</span>
                   </NuxtLink>
