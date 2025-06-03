@@ -32,18 +32,19 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="container my-12" v-if="isPending">
-    <YearLoader />
-  </div>
-  <div class="container my-12" v-if="year !== null">
-    <div class="section-header">
-      <h2 class="section-title">Année académique</h2>
-      <p class="section-subtitle">
-        Une nouvelle année académique, une nouvelle aventure d’apprentissage et
-        de découvertes. Ensemble, construisons votre avenir, un semestre à la
-        fois.
-      </p>
+  <div class="container my-12">
+    <YearLoader v-if="isPending" />
+
+    <div v-if="year !== null">
+      <div class="section-header">
+        <h2 class="section-title">Année académique</h2>
+        <p class="section-subtitle">
+          Une nouvelle année académique, une nouvelle aventure d’apprentissage
+          et de découvertes. Ensemble, construisons votre avenir, un semestre à
+          la fois.
+        </p>
+      </div>
+      <YearDetails :year="year" />
     </div>
-    <YearDetails :year="year" />
   </div>
 </template>

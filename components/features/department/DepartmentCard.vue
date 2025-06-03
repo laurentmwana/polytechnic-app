@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { excerpt } from "@/lib/utils";
 import type { DepartmentModel } from "@/types/model";
+import { ChevronRight } from "lucide-vue-next";
 
 interface DepartmentCardProps {
   department: DepartmentModel;

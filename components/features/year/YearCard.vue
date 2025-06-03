@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ago } from "@/lib/date-time";
 import type { YearModel } from "@/types/model";
+
 import {
   ArrowRight,
   Calendar,

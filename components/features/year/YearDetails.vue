@@ -26,7 +26,7 @@ const props = defineProps<YearDetailsProps>();
             <CardTitle class="text-2xl font-bold">{{
               props.year.name
             }}</CardTitle>
-            <CardDescription class="mt-2 flex flex-wrap gap-2">
+            <div class="mt-2 flex flex-wrap gap-2">
               <Badge variant="outline">Année #{{ props.year.id }}</Badge>
               <Badge
                 v-if="props.year.is_closed"
@@ -43,7 +43,7 @@ const props = defineProps<YearDetailsProps>();
               >
                 Active
               </Badge>
-            </CardDescription>
+            </div>
           </div>
         </div>
       </CardHeader>
