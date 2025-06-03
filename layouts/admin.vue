@@ -53,7 +53,7 @@ const items = [
     children: [
       {
         title: "Etudiant",
-        url: "#",
+        url: "/admin/student",
       },
       {
         title: "Utilisateur",

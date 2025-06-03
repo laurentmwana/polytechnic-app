@@ -26,9 +26,13 @@ const ROUTES_API = {
   // OTHER
 
   "&student": "/data-select/students",
+  "&level": "/data-select/levels",
+  "&year": "/data-select/year-academic",
   "&contact": "/contact",
 
   // ADMIN
+
+  // USER
 
   "~user.index": "/admin/user",
   "~user.store": "/admin/user",
@@ -36,6 +40,14 @@ const ROUTES_API = {
   "~user.update": "/admin/user/:id",
   "~user.delete": "/admin/user/:id",
   "~user.lock": "/admin/user/:id/lock",
+
+  // STUDENT
+  "~student.index": "/admin/student",
+  "~student.store": "/admin/student",
+  "~student.show": "/admin/student/:id",
+  "~student.update": "/admin/student/:id",
+  "~student.delete": "/admin/student/:id",
+
   "~dashboard": "/dashboard",
 };
 
