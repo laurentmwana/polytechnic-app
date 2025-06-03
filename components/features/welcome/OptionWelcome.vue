@@ -32,8 +32,8 @@ const fetchOptions = async () => {
   }
 };
 
-onMounted(() => {
-  fetchOptions();
+onMounted(async () => {
+  await fetchOptions();
 });
 </script>
 

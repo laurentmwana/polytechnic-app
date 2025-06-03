@@ -11,7 +11,6 @@ import {
 import { useAuth } from "@/composables/useAuth";
 import { ago } from "@/lib/date-time";
 import { isStudentAccountDisable } from "@/lib/role";
-import { deleteUserLocal } from "@/services/session";
 import { getItemUsers } from "@/services/user"; // Supposons qu'il existe une fonction pour récupérer un utilisateur par ID
 import type { UserModel } from "@/types/model";
 import {
@@ -69,11 +68,10 @@ const fetchUser = async () => {
     if (response.ok) {
       user.value = (data as UserResponse).data;
     } else if (response.status == 401) {
-      deleteUserLocal();
-      router.push("/auth/login");
       toast.warning("Session", {
-        description: "Votre session a expirée, merci de vous reconnecter",
+        description: "Votre session a expiré, merci de vous reconnecter",
       });
+      auth.logout();
     } else {
       toast.error("Erreur", {
         description:

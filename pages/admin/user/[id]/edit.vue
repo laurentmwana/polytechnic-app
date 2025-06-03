@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/card";
 import { useAuth } from "@/composables/useAuth";
 import type { SchemaUserFormInfer } from "@/definitions/user";
-import { deleteUserLocal } from "@/services/session";
 import { editUser, getItemUsers } from "@/services/user";
 import type { UserModel } from "@/types/model";
 import type { StateActionModel, ValidatorErrorProps } from "@/types/util";
@@ -62,11 +61,10 @@ const fetchUser = async () => {
     if (response.ok) {
       user.value = (data as UserResponse).data;
     } else if (response.status == 401) {
-      deleteUserLocal();
-      router.push("/auth/login");
       toast.warning("Session", {
-        description: "Votre session a expirée, merci de vous reconnecter",
+        description: "Votre session a expiré, merci de vous reconnecter",
       });
+      auth.logout();
     } else {
       toast.error("Erreur", {
         description:
@@ -114,11 +112,10 @@ const onSubmit = async (values: SchemaUserFormInfer) => {
     } else if (response.status === 422) {
       validator.value = data as ValidatorErrorProps;
     } else if (response.status == 401) {
-      deleteUserLocal();
-      router.push("/auth/login");
       toast.warning("Session", {
-        description: "Votre session a expirée, merci de vous reconnecter",
+        description: "Votre session a expiré, merci de vous reconnecter",
       });
+      auth.logout();
     } else {
       toast.error("Erreur", {
         description:

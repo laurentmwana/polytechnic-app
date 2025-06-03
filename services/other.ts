@@ -116,3 +116,14 @@ export const contactUs = async (values: SchemaContactFormInfer) => {
     },
   });
 };
+
+// DASHBOARD
+
+export const getDashboard = async (token: string) => {
+  return await fetch(getRouteApi("~dashboard"), {
+    headers: {
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};

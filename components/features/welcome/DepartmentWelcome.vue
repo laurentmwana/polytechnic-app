@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { getDepartmentLimit } from "@/services/other";
 import type { DepartmentModel } from "@/types/model";
-import { toast } from "vue-sonner";
 import DepartmentCard from "../department/DepartmentCard.vue";
 import DepartmentLoader from "../department/DepartmentLoader.vue";
 
@@ -18,15 +17,10 @@ const fetchDepartments = async () => {
     if (response.ok) {
       departments.value = (data as { data: DepartmentModel[] }).data;
     } else {
-      toast.error("Erreur", {
-        description:
-          (data as { message: string }).message || "Une erreur est survenue",
-      });
+      departments.value = [];
     }
   } catch (error) {
-    toast.error("Erreur", {
-      description: `Impossible de récupèrer les départments`,
-    });
+    console.error("Impossible de récupèrer les départments");
   } finally {
     isPending.value = false;
   }

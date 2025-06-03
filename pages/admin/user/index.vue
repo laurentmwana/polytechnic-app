@@ -28,7 +28,6 @@ import {
 import { useAuth } from "@/composables/useAuth";
 import { ago } from "@/lib/date-time";
 import { isStudentAccountDisable } from "@/lib/role";
-import { deleteUserLocal } from "@/services/session";
 import {
   deleteUser,
   getCollectionUsers,
@@ -88,11 +87,10 @@ const fetchUsers = async () => {
     if (response.ok) {
       users.value = data as UserCollectionProps;
     } else if (response.status == 401) {
-      deleteUserLocal();
-      router.push("/auth/login");
-      toast.warning("Session", {
+          toast.warning("Session", {
         description: "Votre session a expiré, merci de vous reconnecter",
       });
+      auth.logout()
     } else {
       toast.error("Erreur", {
         description:
@@ -145,11 +143,9 @@ const onLockAndUnLock = async (userId: number) => {
         });
       }
     } else if (response.status == 401) {
-      deleteUserLocal();
-      router.push("/auth/login");
-      toast.warning("Session", {
+          toast.warning("Session", {
         description: "Votre session a expiré, merci de vous reconnecter",
-      });
+      });auth.logout()
     } else {
       toast.error("Erreur", {
         description:
@@ -194,11 +190,9 @@ const onDeleteUser = async (userId: number) => {
         });
       }
     } else if (response.status == 401) {
-      deleteUserLocal();
-      router.push("/auth/login");
-      toast.warning("Session", {
+          toast.warning("Session", {
         description: "Votre session a expiré, merci de vous reconnecter",
-      });
+      });auth.logout()
     } else {
       toast.error("Erreur", {
         description:

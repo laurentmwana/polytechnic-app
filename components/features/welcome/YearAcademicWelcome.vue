@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { getCurrentYear } from "@/services/other";
 import type { YearModel } from "@/types/model";
-import { toast } from "vue-sonner";
 import YearDetails from "../year/YearDetails.vue";
 import YearLoader from "../year/YearLoader.vue";
 
@@ -18,22 +17,17 @@ const fetchYear = async () => {
     if (response.ok) {
       year.value = (data as { data: YearModel | null }).data;
     } else {
-      toast.error("Erreur", {
-        description:
-          (data as { message: string }).message || "Une erreur est survenue",
-      });
+      year.value = null;
     }
   } catch (error) {
-    toast.error("Erreur", {
-      description: `Impossible de récupèrer l'année académique en cours`,
-    });
+    console.error("Impossible de récupèrer l'année académique actuelle", error);
   } finally {
     isPending.value = false;
   }
 };
 
-onMounted(() => {
-  fetchYear();
+onMounted(async () => {
+  await fetchYear();
 });
 </script>
 

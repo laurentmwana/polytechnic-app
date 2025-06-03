@@ -36,6 +36,7 @@ const ROUTES_API = {
   "~user.update": "/admin/user/:id",
   "~user.delete": "/admin/user/:id",
   "~user.lock": "/admin/user/:id/lock",
+  "~dashboard": "/dashboard",
 };
 
 type RouteParams = Record<string, string | number | boolean | null>;
