@@ -184,7 +184,7 @@ onMounted(async () => {
           <DropdownMenuContent align="end">
             <DropdownMenuItem>
               <NuxtLink
-                :to="`/admin/student/excell`"
+                :to="`/admin/student/create/excel`"
                 class="flex items-center gap-2"
               >
                 <File class="mr-2 h-4 w-4" />

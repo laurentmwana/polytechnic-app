@@ -62,3 +62,18 @@ export const deleteStudent = async (token: string, userId: number) => {
     },
   });
 };
+
+export const createStudentExcell = async (
+  token: string,
+  values: SchemaStuden
+) => {
+  return await fetch(getRouteApi("~student.excel"), {
+    method: "POST",
+    body: JSON.stringify(values),
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};

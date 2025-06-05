@@ -44,6 +44,7 @@ const ROUTES_API = {
   // STUDENT
   "~student.index": "/admin/student",
   "~student.store": "/admin/student",
+  "~student.excel": "/admin/student/create-with-excel",
   "~student.show": "/admin/student/:id",
   "~student.update": "/admin/student/:id",
   "~student.delete": "/admin/student/:id",

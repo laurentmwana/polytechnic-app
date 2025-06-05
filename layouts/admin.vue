@@ -47,6 +47,28 @@ const items = [
         title: "Délibération",
         url: "#",
       },
+      {
+        title: "Juries",
+        url: "#",
+      },
+      {
+        title: "Cours",
+        url: "#",
+      },
+      {
+        title: "Professeurs",
+        url: "#",
+      },
+    ],
+  },
+
+  {
+    title: "Publication",
+    children: [
+      {
+        title: "Résultats",
+        url: "#",
+      },
     ],
   },
 

@@ -339,8 +339,9 @@ const props = withDefaults(
   }>(),
   {
     statistic: null,
-    title: "Statistiques des événements",
-    description: "Comparaison entre l'année courante et l'année précédente",
+    title: "Statistiques des paiements",
+    description:
+      "Comparaison entre les paiements de  l'année courante et l'année précédente",
     isPending: true,
   }
 );
