@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import StudentForm from "@/components/features/student/StudentForm.vue";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/composables/useAuth";
-import type { SchemaStudentFormInfer } from "@/definitions/student";
-import { editStudent, getItemStudent } from "@/services/student";
-import type { StudentModel } from "@/types/model";
+import type { SchemaCourseFormInfer } from "@/definitions/course";
+import { editCourse, getItemCourse } from "@/services/course";
+import type { CourseModel } from "@/types/model";
 import type { StateActionModel, ValidatorErrorProps } from "@/types/util";
 import { User } from "lucide-vue-next";
 import { toast } from "vue-sonner";
+import CourseForm from "../../../../components/features/course/CourseForm.vue";
 
 useHead({
-  title: "Edition d'un étudiant - Polytechnic Application",
+  title: "Edition d'une cours - Polytechnic Application",
 });
 
 definePageMeta({
@@ -18,30 +18,29 @@ definePageMeta({
   middleware: ["admin"],
 });
 
-interface ModelDataResponse {
-  data: StudentModel;
+interface ModelResponse {
+  data: CourseModel;
 }
 
 const auth = useAuth();
 const route = useRoute();
 const router = useRouter();
 
-const student = ref<StudentModel | null>(null);
+const course = ref<CourseModel | null>(null);
 const isLoading = ref<boolean>(true);
 const isEdit = ref<boolean>(false);
 const validator = ref<ValidatorErrorProps | null>(null);
 
-const studenttId = parseInt(route.params.id as string);
+const courseId = parseInt(route.params.id as string);
 
-if (!studenttId || isNaN(studenttId)) {
+if (!courseId || isNaN(courseId)) {
   throw createError({
     statusCode: 400,
-    statusMessage:
-      "L'ID de l'étudiant est requis et doit être un nombre valide",
+    statusMessage: "L'ID de le cours est requis et doit être un nombre valide",
   });
 }
 
-const fetchStudent = async () => {
+const fetchCourse = async () => {
   try {
     isLoading.value = true;
 
@@ -49,14 +48,14 @@ const fetchStudent = async () => {
       throw new Error("utilisateurnon authentifié");
     }
 
-    const response = await getItemStudent(
+    const response = await getItemCourse(
       auth.session.value.accessToken,
-      studenttId
+      courseId
     );
     const data = await response.json();
 
     if (response.ok) {
-      student.value = (data as ModelDataResponse).data;
+      course.value = (data as ModelResponse).data;
     } else if (response.status == 401) {
       toast.warning("Session", {
         description: "Votre session a expiré, merci de vous reconnecter",
@@ -70,14 +69,14 @@ const fetchStudent = async () => {
     }
   } catch (error) {
     toast.error("Erreur", {
-      description: "Impossible de charger l'étudiant",
+      description: "Impossible de charger le cours",
     });
   } finally {
     isLoading.value = false;
   }
 };
 
-const onSubmit = async (values: SchemaStudentFormInfer) => {
+const onSubmit = async (values: SchemaCourseFormInfer) => {
   try {
     isEdit.value = true;
     validator.value = null;
@@ -86,9 +85,9 @@ const onSubmit = async (values: SchemaStudentFormInfer) => {
       throw new Error("Utilisateur non authentifié");
     }
 
-    const response = await editStudent(
+    const response = await editCourse(
       auth.session.value.accessToken,
-      studenttId,
+      courseId,
       values
     );
     const data = await response.json();
@@ -97,10 +96,10 @@ const onSubmit = async (values: SchemaStudentFormInfer) => {
       const state = (data as StateActionModel).state;
       if (state) {
         toast.success("Edition", {
-          description: `les informations de l'étudiant ${studenttId} ont été modifiées`,
+          description: `les informations du cours ${courseId} ont été modifiées`,
         });
 
-        router.push("/admin/student");
+        router.push("/admin/course");
       } else {
         toast.error("Edition", {
           description: `Nous n'avons pas pu effectuer cette action`,
@@ -121,7 +120,7 @@ const onSubmit = async (values: SchemaStudentFormInfer) => {
     }
   } catch (error) {
     toast.error("Erreur", {
-      description: `Impossible d'editer l'étudiant #${student.value?.id}`,
+      description: `Impossible d'editer le cours #${courseId}`,
     });
   } finally {
     isEdit.value = false;
@@ -129,25 +128,25 @@ const onSubmit = async (values: SchemaStudentFormInfer) => {
 };
 
 onMounted(async () => {
-  await fetchStudent();
+  await fetchCourse();
 });
 </script>
 
 <template>
   <div class="space-y-6">
     <!-- Header avec bouton retour -->
-    <GoBack back="/admin/student" />
+    <GoBack back="/admin/course" />
 
     <!-- Loader -->
     <LoaderContainer v-if="isLoading" :isCard="true" />
 
     <!-- Utilisateur non trouvé -->
-    <Card v-else-if="!student">
+    <Card v-else-if="!course">
       <CardContent class="text-center py-12">
         <User class="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-        <p class="text-lg font-medium mb-2">Etudiant non trouvé</p>
+        <p class="text-lg font-medium mb-2">Cours non trouvé</p>
         <p class="text-muted-foreground">
-          L'étudiant avec l'ID {{ studenttId }} n'existe pas.
+          Le cours avec l'ID {{ courseId }} n'existe pas.
         </p>
       </CardContent>
     </Card>
@@ -156,13 +155,13 @@ onMounted(async () => {
       <Card>
         <CardHeader>
           <CardTitle class="flex items-center gap-2">
-            Editer l'étudiant #{{ student.id }}
+            Editer le cours #{{ course.id }}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div class="max-w-2xl space-y-5">
             <ValidatorError :validator="validator" />
-            <StudentForm :student="student" :onSubmit="onSubmit" />
+            <CourseForm :course="course" :onSubmit="onSubmit" />
           </div>
         </CardContent>
       </Card>

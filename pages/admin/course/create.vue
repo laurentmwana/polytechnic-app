@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import StudentExcelForm from "@/components/features/student/StudentExcelForm.vue";
+import CourseForm from "@/components/features/course/CourseForm.vue";
 import {
   Card,
   CardContent,
@@ -8,14 +8,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useAuth } from "@/composables/useAuth";
-import type { SchemaStudentExcelFormInfer } from "@/definitions/student";
-import { createStudentExcell } from "@/services/student";
-import type { UserModel } from "@/types/model";
+import type { SchemaCourseFormInfer } from "@/definitions/course";
+import { createCourse } from "@/services/course";
 import type { StateActionModel, ValidatorErrorProps } from "@/types/util";
 import { toast } from "vue-sonner";
 
 useHead({
-  title: "Création d'étudiants par fichier excel - Polytechnic Application",
+  title: "Création d'cours - Polytechnic Application",
 });
 
 definePageMeta({
@@ -27,32 +26,28 @@ const validator = ref<ValidatorErrorProps | null>(null);
 const auth = useAuth();
 const router = useRouter();
 
-const user = ref<UserModel | null>(null);
 const isLoading = ref<boolean>(true);
 
-const onSubmit = async (values: SchemaStudentExcelFormInfer) => {
+const onSubmit = async (values: SchemaCourseFormInfer) => {
   try {
     isLoading.value = true;
     validator.value = null;
 
     if (!auth.session.value?.accessToken) {
-      throw new Error("utilisateur non authentifié");
+      throw new Error("utilisateurnon authentifié");
     }
 
-    const response = await createStudentExcell(
-      auth.session.value.accessToken,
-      values
-    );
+    const response = await createCourse(auth.session.value.accessToken, values);
     const data = await response.json();
 
     if (response.ok) {
       const state = (data as StateActionModel).state;
       if (state) {
         toast.success("Création", {
-          description: `Un étudiant a été créé`,
+          description: `Un cours a été créé`,
         });
 
-        router.push("/admin/user");
+        router.push("/admin/course");
       } else {
         toast.error("Création", {
           description: `Nous n'avons pas pu effectuer cette action`,
@@ -73,7 +68,7 @@ const onSubmit = async (values: SchemaStudentExcelFormInfer) => {
     }
   } catch (error) {
     toast.error("Erreur", {
-      description: `Impossible d'editer l'étudiant #${user.value?.id}`,
+      description: "Impossible de créer un cours, merci de réessayer (:",
     });
   }
 };
@@ -87,14 +82,14 @@ const onSubmit = async (values: SchemaStudentExcelFormInfer) => {
       <Card>
         <CardHeader>
           <CardTitle class="flex items-center gap-2">
-            Création d'étudiants par fichier Excel
+            Création d'un cours
           </CardTitle>
           <CardDescription> </CardDescription>
         </CardHeader>
         <CardContent>
           <div class="max-w-2xl space-y-4">
             <ValidatorError :validator="validator" />
-            <StudentExcelForm :onSubmit="onSubmit" />
+            <CourseForm :onSubmit="onSubmit" />
           </div>
         </CardContent>
       </Card>

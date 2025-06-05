@@ -24,7 +24,7 @@ definePageMeta({
   middleware: ["admin"],
 });
 
-interface UserResponse {
+interface ModelDataResponse {
   data: UserModel;
 }
 
@@ -59,7 +59,7 @@ const fetchUser = async () => {
     const data = await response.json();
 
     if (response.ok) {
-      user.value = (data as UserResponse).data;
+      user.value = (data as ModelDataResponse).data;
     } else if (response.status == 401) {
       toast.warning("Session", {
         description: "Votre session a expiré, merci de vous reconnecter",

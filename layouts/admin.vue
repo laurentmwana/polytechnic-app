@@ -53,10 +53,14 @@ const items = [
       },
       {
         title: "Cours",
-        url: "#",
+        url: "/admin/course",
       },
       {
         title: "Professeurs",
+        url: "/admin/teacher",
+      },
+      {
+        title: "Promotions",
         url: "#",
       },
     ],

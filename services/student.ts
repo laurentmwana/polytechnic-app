@@ -1,4 +1,7 @@
-import type { SchemaStudentFormInfer } from "../definitions/student";
+import type {
+  SchemaStudentExcelFormInfer,
+  SchemaStudentFormInfer,
+} from "../definitions/student";
 import { getRouteApi } from "../lib/route";
 
 export const getCollectionStudents = async (token: string, page: number) => {
@@ -65,7 +68,7 @@ export const deleteStudent = async (token: string, userId: number) => {
 
 export const createStudentExcell = async (
   token: string,
-  values: SchemaStuden
+  values: SchemaStudentExcelFormInfer
 ) => {
   return await fetch(getRouteApi("~student.excel"), {
     method: "POST",

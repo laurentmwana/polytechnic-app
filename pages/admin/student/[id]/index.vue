@@ -32,7 +32,7 @@ definePageMeta({
   middleware: ["admin"],
 });
 
-interface UserResponse {
+interface ModelDataResponse {
   data: StudentModel;
 }
 
@@ -58,7 +58,7 @@ const fetchStudent = async () => {
     isLoading.value = true;
 
     if (!auth.session.value?.accessToken) {
-      throw new Error("étudiant non authentifié");
+      throw new Error("utilisateurnon authentifié");
     }
 
     const response = await getItemStudent(
@@ -68,7 +68,7 @@ const fetchStudent = async () => {
     const data = await response.json();
 
     if (response.ok) {
-      student.value = (data as UserResponse).data;
+      student.value = (data as ModelDataResponse).data;
     } else if (response.status == 401) {
       toast.warning("Session", {
         description: "Votre session a expiré, merci de vous reconnecter",

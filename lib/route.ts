@@ -28,6 +28,10 @@ const ROUTES_API = {
   "&student": "/data-select/students",
   "&level": "/data-select/levels",
   "&year": "/data-select/year-academic",
+  "&teacher": "/data-select/teachers",
+  "&course": "/data-select/courses",
+  "&department": "/data-select/departments",
+  "&option": "/data-select/options",
   "&contact": "/contact",
 
   // ADMIN
@@ -48,6 +52,20 @@ const ROUTES_API = {
   "~student.show": "/admin/student/:id",
   "~student.update": "/admin/student/:id",
   "~student.delete": "/admin/student/:id",
+
+  // COURSE
+  "~course.index": "/admin/course",
+  "~course.store": "/admin/course",
+  "~course.show": "/admin/course/:id",
+  "~course.update": "/admin/course/:id",
+  "~course.delete": "/admin/course/:id",
+
+  // TEACHER
+  "~teacher.index": "/admin/teacher",
+  "~teacher.store": "/admin/teacher",
+  "~teacher.show": "/admin/teacher/:id",
+  "~teacher.update": "/admin/teacher/:id",
+  "~teacher.delete": "/admin/teacher/:id",
 
   // YEAR
   "~year.index": "/admin/year-academic",

@@ -91,3 +91,25 @@ export interface LevelModel {
   created_at: string;
   updated_at: string;
 }
+
+export interface CourseModel {
+  id: number;
+  name: string;
+  code: string;
+  credits: number;
+  level: LevelModel;
+  teacher: TeacherModel;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface TeacherModel {
+  id: number;
+  name: string;
+  firstname: string;
+  phone: string;
+  gender: string;
+  department: DepartmentModel;
+  created_at: string;
+  updated_at: string;
+}

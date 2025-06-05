@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import StudentForm from "@/components/features/student/StudentForm.vue";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/composables/useAuth";
-import type { SchemaStudentFormInfer } from "@/definitions/student";
-import { editStudent, getItemStudent } from "@/services/student";
-import type { StudentModel } from "@/types/model";
+import type { SchemaTeacherFormInfer } from "@/definitions/teacher";
+import { editTeacher, getItemTeacher } from "@/services/teacher";
+import type { TeacherModel } from "@/types/model";
 import type { StateActionModel, ValidatorErrorProps } from "@/types/util";
 import { User } from "lucide-vue-next";
 import { toast } from "vue-sonner";
+import TeacherForm from "../../../../components/features/teacher/TeacherForm.vue";
 
 useHead({
-  title: "Edition d'un étudiant - Polytechnic Application",
+  title: "Edition d'un professeur - Polytechnic Application",
 });
 
 definePageMeta({
@@ -19,44 +19,44 @@ definePageMeta({
 });
 
 interface ModelDataResponse {
-  data: StudentModel;
+  data: TeacherModel;
 }
 
 const auth = useAuth();
 const route = useRoute();
 const router = useRouter();
 
-const student = ref<StudentModel | null>(null);
+const teacher = ref<TeacherModel | null>(null);
 const isLoading = ref<boolean>(true);
 const isEdit = ref<boolean>(false);
 const validator = ref<ValidatorErrorProps | null>(null);
 
-const studenttId = parseInt(route.params.id as string);
+const teacherId = parseInt(route.params.id as string);
 
-if (!studenttId || isNaN(studenttId)) {
+if (!teacherId || isNaN(teacherId)) {
   throw createError({
     statusCode: 400,
     statusMessage:
-      "L'ID de l'étudiant est requis et doit être un nombre valide",
+      "le ID du professeur est requis et doit être un nombre valide",
   });
 }
 
-const fetchStudent = async () => {
+const fetchTeacher = async () => {
   try {
     isLoading.value = true;
 
     if (!auth.session.value?.accessToken) {
-      throw new Error("utilisateurnon authentifié");
+      throw new Error("utilisateur non authentifié");
     }
 
-    const response = await getItemStudent(
+    const response = await getItemTeacher(
       auth.session.value.accessToken,
-      studenttId
+      teacherId
     );
     const data = await response.json();
 
     if (response.ok) {
-      student.value = (data as ModelDataResponse).data;
+      teacher.value = (data as ModelDataResponse).data;
     } else if (response.status == 401) {
       toast.warning("Session", {
         description: "Votre session a expiré, merci de vous reconnecter",
@@ -70,14 +70,14 @@ const fetchStudent = async () => {
     }
   } catch (error) {
     toast.error("Erreur", {
-      description: "Impossible de charger l'étudiant",
+      description: "Impossible de charger le professeur",
     });
   } finally {
     isLoading.value = false;
   }
 };
 
-const onSubmit = async (values: SchemaStudentFormInfer) => {
+const onSubmit = async (values: SchemaTeacherFormInfer) => {
   try {
     isEdit.value = true;
     validator.value = null;
@@ -86,9 +86,9 @@ const onSubmit = async (values: SchemaStudentFormInfer) => {
       throw new Error("Utilisateur non authentifié");
     }
 
-    const response = await editStudent(
+    const response = await editTeacher(
       auth.session.value.accessToken,
-      studenttId,
+      teacherId,
       values
     );
     const data = await response.json();
@@ -97,10 +97,10 @@ const onSubmit = async (values: SchemaStudentFormInfer) => {
       const state = (data as StateActionModel).state;
       if (state) {
         toast.success("Edition", {
-          description: `les informations de l'étudiant ${studenttId} ont été modifiées`,
+          description: `les informations du professeur ${teacherId} ont été modifiées`,
         });
 
-        router.push("/admin/student");
+        router.push("/admin/teachergit ");
       } else {
         toast.error("Edition", {
           description: `Nous n'avons pas pu effectuer cette action`,
@@ -121,7 +121,7 @@ const onSubmit = async (values: SchemaStudentFormInfer) => {
     }
   } catch (error) {
     toast.error("Erreur", {
-      description: `Impossible d'editer l'étudiant #${student.value?.id}`,
+      description: `Impossible d'editer le professeur #${teacher.value?.id}`,
     });
   } finally {
     isEdit.value = false;
@@ -129,25 +129,24 @@ const onSubmit = async (values: SchemaStudentFormInfer) => {
 };
 
 onMounted(async () => {
-  await fetchStudent();
+  await fetchTeacher();
 });
 </script>
 
 <template>
   <div class="space-y-6">
     <!-- Header avec bouton retour -->
-    <GoBack back="/admin/student" />
+    <GoBack back="/admin/teacher" />
 
     <!-- Loader -->
     <LoaderContainer v-if="isLoading" :isCard="true" />
 
-    <!-- Utilisateur non trouvé -->
-    <Card v-else-if="!student">
+    <Card v-else-if="!teacher">
       <CardContent class="text-center py-12">
         <User class="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-        <p class="text-lg font-medium mb-2">Etudiant non trouvé</p>
+        <p class="text-lg font-medium mb-2">Professur non trouvé</p>
         <p class="text-muted-foreground">
-          L'étudiant avec l'ID {{ studenttId }} n'existe pas.
+          le professeur avec le ID {{ teacherId }} n'existe pas.
         </p>
       </CardContent>
     </Card>
@@ -156,13 +155,13 @@ onMounted(async () => {
       <Card>
         <CardHeader>
           <CardTitle class="flex items-center gap-2">
-            Editer l'étudiant #{{ student.id }}
+            Editer le professeur #{{ teacher.id }}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div class="max-w-2xl space-y-5">
             <ValidatorError :validator="validator" />
-            <StudentForm :student="student" :onSubmit="onSubmit" />
+            <TeacherForm :teacher="teacher" :onSubmit="onSubmit" />
           </div>
         </CardContent>
       </Card>

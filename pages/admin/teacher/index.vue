@@ -27,15 +27,15 @@ import {
 import { useAuth } from "@/composables/useAuth";
 import { ago } from "@/lib/date-time";
 import { excerpt } from "@/lib/utils";
-import { deleteStudent, getCollectionStudents } from "@/services/student";
-import type { StudentModel } from "@/types/model";
+import { deleteTeacher, getCollectionTeachers } from "@/services/teacher";
+import type { TeacherModel } from "@/types/model";
 import type { PaginatedResponse } from "@/types/paginate";
 import type { StateActionModel } from "@/types/util";
-import { Edit, Eye, File, MoreHorizontal, Plus, Trash2 } from "lucide-vue-next";
+import { Edit, Eye, MoreHorizontal, Trash2 } from "lucide-vue-next";
 import { toast } from "vue-sonner";
 
 useHead({
-  title: "Gestion des étudiants - Polytechnic Application",
+  title: "Gestion des professeurs - Polytechnic Application",
 });
 
 definePageMeta({
@@ -43,7 +43,7 @@ definePageMeta({
   middleware: ["admin"],
 });
 
-type ModelCollectionProps = PaginatedResponse<StudentModel[]>;
+type ModelCollectionProps = PaginatedResponse<TeacherModel[]>;
 
 const auth = useAuth();
 const router = useRouter();
@@ -53,12 +53,12 @@ const numberPage = ref<number>(
   route.query.page ? parseInt(route.query.page as string) : 1
 );
 
-const students = ref<ModelCollectionProps | null>(null);
+const teachers = ref<ModelCollectionProps | null>(null);
 const isLoading = ref<boolean>(true);
-const showModalLockStudentId = ref<number | null>(null);
-const showModalDeleteStudentId = ref<number | null>(null);
+const showModalLockteacherId = ref<number | null>(null);
+const showModalDeleteTeacherId = ref<number | null>(null);
 
-const fetchStudents = async () => {
+const fetchTeachers = async () => {
   try {
     isLoading.value = true;
 
@@ -66,14 +66,14 @@ const fetchStudents = async () => {
       throw new Error("utilisateur non authentifié");
     }
 
-    const response = await getCollectionStudents(
+    const response = await getCollectionTeachers(
       auth.session.value.accessToken,
       numberPage.value
     );
     const data = await response.json();
 
     if (response.ok) {
-      students.value = data as ModelCollectionProps;
+      teachers.value = data as ModelCollectionProps;
     } else if (response.status == 401) {
       toast.warning("Session", {
         description: "Votre session a expiré, merci de vous reconnecter",
@@ -87,7 +87,7 @@ const fetchStudents = async () => {
     }
   } catch (error) {
     toast.error("Erreur", {
-      description: "Impossible de charger les étudiants",
+      description: "Impossible de charger les professeurs",
     });
   } finally {
     isLoading.value = false;
@@ -96,11 +96,11 @@ const fetchStudents = async () => {
 
 const onPage = async (page: number) => {
   numberPage.value = page;
-  await router.push(`/admin/student?page=${page}`);
-  await fetchStudents();
+  await router.push(`/admin/teacher?page=${page}`);
+  await fetchTeachers();
 };
 
-const onDeleteStudent = async (studentId: number) => {
+const onDeleteTeacher = async (teacherId: number) => {
   try {
     isLoading.value = true;
 
@@ -108,9 +108,9 @@ const onDeleteStudent = async (studentId: number) => {
       throw new Error("Utilisateur non authentifié");
     }
 
-    const response = await deleteStudent(
+    const response = await deleteTeacher(
       auth.session.value.accessToken,
-      studentId
+      teacherId
     );
     const data = await response.json();
 
@@ -119,15 +119,15 @@ const onDeleteStudent = async (studentId: number) => {
 
       if (state) {
         toast("Suppression", {
-          description: `L'étudiant #${studentId} a été supprimé`,
+          description: `le professeur #${teacherId} a été supprimé`,
         });
 
-        router.replace("/admin/user?page=1");
+        router.replace("/admin/teacher?page=1");
 
-        await fetchStudents();
+        await fetchTeachers();
       } else {
         toast.error("Suppression échouée", {
-          description: `Nous n'avons pas pu modifier supprimer  l'étudiant #${studentId}`,
+          description: `Nous n'avons pas pu modifier supprimer  le professeur #${teacherId}`,
         });
       }
     } else if (response.status == 401) {
@@ -143,10 +143,10 @@ const onDeleteStudent = async (studentId: number) => {
     }
   } catch (error) {
     toast.error("Erreur", {
-      description: `Impossible de changer le statut de l'étudiant #${studentId}`,
+      description: `Impossible de changer le statut de le professeur #${teacherId}`,
     });
   } finally {
-    showModalLockStudentId.value = null;
+    showModalLockteacherId.value = null;
     isLoading.value = false;
   }
 };
@@ -157,13 +157,13 @@ watch(
     const pageNumber = newPage ? parseInt(newPage as string) : 1;
     if (pageNumber !== numberPage.value) {
       numberPage.value = pageNumber;
-      fetchStudents();
+      fetchTeachers();
     }
   }
 );
 
 onMounted(async () => {
-  await fetchStudents();
+  await fetchTeachers();
 });
 </script>
 
@@ -172,48 +172,28 @@ onMounted(async () => {
     <CardHeader>
       <div class="flex items-center gap-4 justify-between">
         <div>
-          <CardTitle>Gestion des étudiants</CardTitle>
+          <CardTitle>Gestion des professeurs</CardTitle>
           <CardDescription>
-            Gérez les étudiants de la faculté de polytechinique
+            Gérez les professeurs de la faculté de polytechinique
           </CardDescription>
         </div>
-        <DropdownMenu>
-          <DropdownMenuTrigger as-child>
-            <Button size="sm"> Créer </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem>
-              <NuxtLink
-                :to="`/admin/student/create/excel`"
-                class="flex items-center gap-2"
-              >
-                <File class="mr-2 h-4 w-4" />
-                Téléverser un fichier excell
-              </NuxtLink>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <NuxtLink
-                to="/admin/student/create"
-                class="flex items-center gap-2"
-              >
-                <Plus class="mr-2 h-4 w-4" />
-                Manuellement
-              </NuxtLink>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <Button size="sm" asChild>
+          <NuxtLink to="/admin/teacher/create" class="flex items-center gap-2">
+            Créer
+          </NuxtLink>
+        </Button>
       </div>
     </CardHeader>
     <CardContent>
       <!-- Loader -->
       <LoaderContainer v-if="isLoading" />
 
-      <!-- Aucun étudiant -->
-      <div v-else-if="!students?.data?.length" class="text-center py-8">
-        <p class="text-muted-foreground">Aucun étudiant trouvé</p>
+      <!-- Aucun professeur -->
+      <div v-else-if="!teachers?.data?.length" class="text-center py-8">
+        <p class="text-muted-foreground">Aucun professeur trouvé</p>
       </div>
 
-      <!-- Table des étudiants -->
+      <!-- Table des professeurs -->
       <div v-else class="space-y-4">
         <Table>
           <TableHeader>
@@ -221,45 +201,32 @@ onMounted(async () => {
               <TableHead>Nom</TableHead>
               <TableHead>Postnom</TableHead>
               <TableHead>Genre</TableHead>
-              <TableHead>Promotion</TableHead>
-              <TableHead>Compte</TableHead>
+              <TableHead>Départment</TableHead>
               <TableHead>Création</TableHead>
               <TableHead class="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            <TableRow v-for="student in students.data" :key="student.id">
+            <TableRow v-for="teacher in teachers.data" :key="teacher.id">
               <TableCell class="font-medium">
-                {{ excerpt(student.name, 30) }}
+                {{ excerpt(teacher.name, 30) }}
               </TableCell>
 
               <TableCell class="font-medium">
-                {{ excerpt(student.firstname, 30) }}
+                {{ excerpt(teacher.firstname, 30) }}
               </TableCell>
 
               <TableCell class="capilalize">
-                {{ student.gender }}
+                {{ teacher.gender }}
               </TableCell>
 
               <TableCell>
-                {{
-                  excerpt(
-                    `${student.actual_level.level.name} ${student.actual_level.level.option.alias}`
-                  )
-                }}
-              </TableCell>
-
-              <TableCell>
-                <Badge
-                  :variant="student.user === null ? 'destructive' : 'outline'"
-                >
-                  {{ student.user === null ? "Non" : "Oui" }}
-                </Badge>
+                {{ excerpt(teacher.department.name, 70) }}
               </TableCell>
 
               <TableCell>
                 <p class="text-sm text-muted-foreground">
-                  {{ ago(student.created_at) }}
+                  {{ ago(teacher.created_at) }}
                 </p>
               </TableCell>
               <TableCell class="text-right">
@@ -273,7 +240,7 @@ onMounted(async () => {
                   <DropdownMenuContent align="end">
                     <DropdownMenuItem>
                       <NuxtLink
-                        :to="`/admin/student/${student.id}`"
+                        :to="`/admin/teacher/${teacher.id}`"
                         class="flex items-center gap-2"
                       >
                         <Eye class="mr-2 h-4 w-4" />
@@ -282,7 +249,7 @@ onMounted(async () => {
                     </DropdownMenuItem>
                     <DropdownMenuItem>
                       <NuxtLink
-                        :to="`/admin/student/${student.id}/edit`"
+                        :to="`/admin/teacher/${teacher.id}/edit`"
                         class="flex items-center gap-2"
                       >
                         <Edit class="mr-2 h-4 w-4" />
@@ -292,7 +259,7 @@ onMounted(async () => {
 
                     <DropdownMenuItem
                       class="text-destructive"
-                      @click="showModalDeleteStudentId = student.id"
+                      @click="showModalDeleteTeacherId = teacher.id"
                     >
                       <Trash2 class="mr-2 h-4 w-4" />
                       Supprimer
@@ -301,21 +268,21 @@ onMounted(async () => {
                 </DropdownMenu>
                 <ConfirmationDialog
                   :open="
-                    showModalDeleteStudentId !== null &&
-                    showModalDeleteStudentId === student.id
+                    showModalDeleteTeacherId !== null &&
+                    showModalDeleteTeacherId === teacher.id
                   "
                   variant="destructive"
-                  title="Suppression compte de l'étudiant"
-                  description="Cette action est irréversible. L'élément sera définitivement supprimé de nos serveurs."
+                  title="Suppression compte de le professeur"
+                  description="Cette action est irréversible. le élément sera définitivement supprimé de nos serveurs."
                   confirm-text="Supprimer"
                   cancel-text="Annuler"
                   :loading="isLoading"
                   @confirm="
                     async () => {
-                      await onDeleteStudent(student.id);
+                      await onDeleteTeacher(teacher.id);
                     }
                   "
-                  @cancel="showModalDeleteStudentId = null"
+                  @cancel="showModalDeleteTeacherId = null"
                 />
               </TableCell>
             </TableRow>
@@ -323,7 +290,7 @@ onMounted(async () => {
         </Table>
 
         <!-- Pagination -->
-        <Pagination v-if="students" :onPage="onPage" :meta="students" />
+        <Pagination v-if="teachers" :onPage="onPage" :meta="teachers" />
       </div>
     </CardContent>
   </Card>
