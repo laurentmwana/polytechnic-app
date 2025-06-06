@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { getCurrentYear } from "@/services/other";
 import type { YearModel } from "@/types/model";
-import { toast } from "vue-sonner";
 import YearDetails from "../year/YearDetails.vue";
 import YearLoader from "../year/YearLoader.vue";
 
@@ -18,38 +17,34 @@ const fetchYear = async () => {
     if (response.ok) {
       year.value = (data as { data: YearModel | null }).data;
     } else {
-      toast.error("Erreur", {
-        description:
-          (data as { message: string }).message || "Une erreur est survenue",
-      });
+      year.value = null;
     }
   } catch (error) {
-    toast.error("Erreur", {
-      description: `Impossible de récupèrer l'année académique en cours`,
-    });
+    console.error("Impossible de récupèrer l'année académique actuelle", error);
   } finally {
     isPending.value = false;
   }
 };
 
-onMounted(() => {
-  fetchYear();
+onMounted(async () => {
+  await fetchYear();
 });
 </script>
 
 <template>
-  <div class="container my-12" v-if="isPending">
-    <YearLoader />
-  </div>
-  <div class="container my-12" v-if="year !== null">
-    <div class="section-header">
-      <h2 class="section-title">Année académique</h2>
-      <p class="section-subtitle">
-        Une nouvelle année académique, une nouvelle aventure d’apprentissage et
-        de découvertes. Ensemble, construisons votre avenir, un semestre à la
-        fois.
-      </p>
+  <div class="container my-12">
+    <YearLoader v-if="isPending" />
+
+    <div v-if="year !== null">
+      <div class="section-header">
+        <h2 class="section-title">Année académique</h2>
+        <p class="section-subtitle">
+          Une nouvelle année académique, une nouvelle aventure d’apprentissage
+          et de découvertes. Ensemble, construisons votre avenir, un semestre à
+          la fois.
+        </p>
+      </div>
+      <YearDetails :year="year" />
     </div>
-    <YearDetails :year="year" />
   </div>
 </template>

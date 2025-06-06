@@ -1,3 +1,5 @@
+<script setup lang="ts"></script>
+
 <template>
   <div class="container my-12">
     <div class="section-header">
@@ -42,7 +44,7 @@
         <div
           class="relative h-[300px] md:h-auto rounded-xl overflow-hidden shadow-xl dark:shadow-black/30"
         >
-          <NuxtImage
+          <img
             src="/images/banner-1.png"
             alt="Faculté Polytechnique de l'Université de Kinshasa"
             class="object-cover"

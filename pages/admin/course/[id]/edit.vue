@@ -1,22 +1,16 @@
 <script setup lang="ts">
-import UserForm from "@/components/features/user/UserForm.vue";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/composables/useAuth";
-import type { SchemaUserFormInfer } from "@/definitions/user";
-import { editUser, getItemUsers } from "@/services/user";
-import type { UserModel } from "@/types/model";
+import type { SchemaCourseFormInfer } from "@/definitions/course";
+import { editCourse, getItemCourse } from "@/services/course";
+import type { CourseModel } from "@/types/model";
 import type { StateActionModel, ValidatorErrorProps } from "@/types/util";
 import { User } from "lucide-vue-next";
 import { toast } from "vue-sonner";
+import CourseForm from "../../../../components/features/course/CourseForm.vue";
 
 useHead({
-  title: "Détails utilisateur - Polytechnic Application",
+  title: "Edition d'une cours - Polytechnic Application",
 });
 
 definePageMeta({
@@ -24,42 +18,44 @@ definePageMeta({
   middleware: ["admin"],
 });
 
-interface ModelDataResponse {
-  data: UserModel;
+interface ModelResponse {
+  data: CourseModel;
 }
 
 const auth = useAuth();
 const route = useRoute();
 const router = useRouter();
 
-const user = ref<UserModel | null>(null);
+const course = ref<CourseModel | null>(null);
 const isLoading = ref<boolean>(true);
 const isEdit = ref<boolean>(false);
 const validator = ref<ValidatorErrorProps | null>(null);
 
-const userId = parseInt(route.params.id as string);
+const courseId = parseInt(route.params.id as string);
 
-if (!userId || isNaN(userId)) {
+if (!courseId || isNaN(courseId)) {
   throw createError({
     statusCode: 400,
-    statusMessage:
-      "L'ID de l'utilisateur est requis et doit être un nombre valide",
+    statusMessage: "L'ID de le cours est requis et doit être un nombre valide",
   });
 }
 
-const fetchUser = async () => {
+const fetchCourse = async () => {
   try {
     isLoading.value = true;
 
     if (!auth.session.value?.accessToken) {
-      throw new Error("Utilisateur non authentifié");
+      throw new Error("utilisateurnon authentifié");
     }
 
-    const response = await getItemUsers(auth.session.value.accessToken, userId);
+    const response = await getItemCourse(
+      auth.session.value.accessToken,
+      courseId
+    );
     const data = await response.json();
 
     if (response.ok) {
-      user.value = (data as ModelDataResponse).data;
+      course.value = (data as ModelResponse).data;
     } else if (response.status == 401) {
       toast.warning("Session", {
         description: "Votre session a expiré, merci de vous reconnecter",
@@ -73,14 +69,14 @@ const fetchUser = async () => {
     }
   } catch (error) {
     toast.error("Erreur", {
-      description: "Impossible de charger l'utilisateur",
+      description: "Impossible de charger le cours",
     });
   } finally {
     isLoading.value = false;
   }
 };
 
-const onSubmit = async (values: SchemaUserFormInfer) => {
+const onSubmit = async (values: SchemaCourseFormInfer) => {
   try {
     isEdit.value = true;
     validator.value = null;
@@ -89,9 +85,9 @@ const onSubmit = async (values: SchemaUserFormInfer) => {
       throw new Error("Utilisateur non authentifié");
     }
 
-    const response = await editUser(
+    const response = await editCourse(
       auth.session.value.accessToken,
-      userId,
+      courseId,
       values
     );
     const data = await response.json();
@@ -100,10 +96,10 @@ const onSubmit = async (values: SchemaUserFormInfer) => {
       const state = (data as StateActionModel).state;
       if (state) {
         toast.success("Edition", {
-          description: `les informations de l'utilisateur ${userId} ont été modifiées`,
+          description: `les informations du cours ${courseId} ont été modifiées`,
         });
 
-        router.push("/admin/user");
+        router.push("/admin/course");
       } else {
         toast.error("Edition", {
           description: `Nous n'avons pas pu effectuer cette action`,
@@ -124,33 +120,33 @@ const onSubmit = async (values: SchemaUserFormInfer) => {
     }
   } catch (error) {
     toast.error("Erreur", {
-      description: `Impossible d'editer l'utilisateur #${user.value?.id}`,
+      description: `Impossible d'editer le cours #${courseId}`,
     });
   } finally {
     isEdit.value = false;
   }
 };
 
-onMounted(() => {
-  fetchUser();
+onMounted(async () => {
+  await fetchCourse();
 });
 </script>
 
 <template>
   <div class="space-y-6">
     <!-- Header avec bouton retour -->
-    <GoBack back="/admin/user" />
+    <GoBack back="/admin/course" />
 
     <!-- Loader -->
     <LoaderContainer v-if="isLoading" :isCard="true" />
 
     <!-- Utilisateur non trouvé -->
-    <Card v-else-if="!user">
+    <Card v-else-if="!course">
       <CardContent class="text-center py-12">
         <User class="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-        <p class="text-lg font-medium mb-2">Utilisateur non trouvé</p>
+        <p class="text-lg font-medium mb-2">Cours non trouvé</p>
         <p class="text-muted-foreground">
-          L'utilisateur avec l'ID {{ userId }} n'existe pas.
+          Le cours avec l'ID {{ courseId }} n'existe pas.
         </p>
       </CardContent>
     </Card>
@@ -159,17 +155,13 @@ onMounted(() => {
       <Card>
         <CardHeader>
           <CardTitle class="flex items-center gap-2">
-            Editer l'utilisateur #{{ user.id }}
+            Editer le cours #{{ course.id }}
           </CardTitle>
-          <CardDescription>
-            Détails de l'utilisateur {{ user.name }} {{ user.firstname }}
-          </CardDescription>
         </CardHeader>
         <CardContent>
           <div class="max-w-2xl space-y-5">
             <ValidatorError :validator="validator" />
-
-            <UserForm :user="user" :onSubmit="onSubmit" />
+            <CourseForm :course="course" :onSubmit="onSubmit" />
           </div>
         </CardContent>
       </Card>

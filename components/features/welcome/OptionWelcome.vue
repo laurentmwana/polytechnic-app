@@ -18,10 +18,7 @@ const fetchOptions = async () => {
     if (response.ok) {
       options.value = (data as { data: OptionModel[] }).data;
     } else {
-      toast.error("Erreur", {
-        description:
-          (data as { message: string }).message || "Une erreur est survenue",
-      });
+      options.value = [];
     }
   } catch (error) {
     toast.error("Erreur", {
@@ -32,16 +29,16 @@ const fetchOptions = async () => {
   }
 };
 
-onMounted(() => {
-  fetchOptions();
+onMounted(async () => {
+  await fetchOptions();
 });
 </script>
 
 <template>
-  <div class="container my-12" v-if="isPending">
+  <div class="container my-12" v-if="isPending.value">
     <OptionLoader />
   </div>
-  <div class="container my-12">
+  <div class="container my-12" v-else>
     <div class="section-header">
       <h2 class="section-title">Nos Filières</h2>
       <p class="section-subtitle">

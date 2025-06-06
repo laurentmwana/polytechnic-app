@@ -1,12 +1,14 @@
 import type { AuthModel } from "@/types/model";
 import { computed, onMounted, readonly, ref } from "vue";
-import { getUserLocal } from "~/services/session";
+import { useRouter } from "vue-router";
+import { deleteUserLocal, getUserLocal } from "~/services/session";
 import { isAdmin, isStudent } from "../lib/role";
 
 export const useAuth = () => {
   const session = ref<AuthModel | null>(null);
   const isPending = ref<boolean>(true);
   const error = ref<string | null>(null);
+  const router = useRouter();
 
   const initializeAuth = () => {
     isPending.value = true;
@@ -22,6 +24,12 @@ export const useAuth = () => {
     } finally {
       isPending.value = false;
     }
+  };
+
+  const logout = () => {
+    deleteUserLocal();
+    session.value = null;
+    router.push("/auth/login");
   };
 
   const user = computed(() => session.value);
@@ -43,5 +51,6 @@ export const useAuth = () => {
     isStudent: isStudentUser,
     isAdmin: isAdminUser,
     initializeAuth,
+    logout,
   };
 };

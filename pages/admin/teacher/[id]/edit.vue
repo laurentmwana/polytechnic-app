@@ -1,22 +1,16 @@
 <script setup lang="ts">
-import UserForm from "@/components/features/user/UserForm.vue";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/composables/useAuth";
-import type { SchemaUserFormInfer } from "@/definitions/user";
-import { editUser, getItemUsers } from "@/services/user";
-import type { UserModel } from "@/types/model";
+import type { SchemaTeacherFormInfer } from "@/definitions/teacher";
+import { editTeacher, getItemTeacher } from "@/services/teacher";
+import type { TeacherModel } from "@/types/model";
 import type { StateActionModel, ValidatorErrorProps } from "@/types/util";
 import { User } from "lucide-vue-next";
 import { toast } from "vue-sonner";
+import TeacherForm from "../../../../components/features/teacher/TeacherForm.vue";
 
 useHead({
-  title: "Détails utilisateur - Polytechnic Application",
+  title: "Edition d'un professeur - Polytechnic Application",
 });
 
 definePageMeta({
@@ -25,41 +19,44 @@ definePageMeta({
 });
 
 interface ModelDataResponse {
-  data: UserModel;
+  data: TeacherModel;
 }
 
 const auth = useAuth();
 const route = useRoute();
 const router = useRouter();
 
-const user = ref<UserModel | null>(null);
+const teacher = ref<TeacherModel | null>(null);
 const isLoading = ref<boolean>(true);
 const isEdit = ref<boolean>(false);
 const validator = ref<ValidatorErrorProps | null>(null);
 
-const userId = parseInt(route.params.id as string);
+const teacherId = parseInt(route.params.id as string);
 
-if (!userId || isNaN(userId)) {
+if (!teacherId || isNaN(teacherId)) {
   throw createError({
     statusCode: 400,
     statusMessage:
-      "L'ID de l'utilisateur est requis et doit être un nombre valide",
+      "le ID du professeur est requis et doit être un nombre valide",
   });
 }
 
-const fetchUser = async () => {
+const fetchTeacher = async () => {
   try {
     isLoading.value = true;
 
     if (!auth.session.value?.accessToken) {
-      throw new Error("Utilisateur non authentifié");
+      throw new Error("utilisateur non authentifié");
     }
 
-    const response = await getItemUsers(auth.session.value.accessToken, userId);
+    const response = await getItemTeacher(
+      auth.session.value.accessToken,
+      teacherId
+    );
     const data = await response.json();
 
     if (response.ok) {
-      user.value = (data as ModelDataResponse).data;
+      teacher.value = (data as ModelDataResponse).data;
     } else if (response.status == 401) {
       toast.warning("Session", {
         description: "Votre session a expiré, merci de vous reconnecter",
@@ -73,14 +70,14 @@ const fetchUser = async () => {
     }
   } catch (error) {
     toast.error("Erreur", {
-      description: "Impossible de charger l'utilisateur",
+      description: "Impossible de charger le professeur",
     });
   } finally {
     isLoading.value = false;
   }
 };
 
-const onSubmit = async (values: SchemaUserFormInfer) => {
+const onSubmit = async (values: SchemaTeacherFormInfer) => {
   try {
     isEdit.value = true;
     validator.value = null;
@@ -89,9 +86,9 @@ const onSubmit = async (values: SchemaUserFormInfer) => {
       throw new Error("Utilisateur non authentifié");
     }
 
-    const response = await editUser(
+    const response = await editTeacher(
       auth.session.value.accessToken,
-      userId,
+      teacherId,
       values
     );
     const data = await response.json();
@@ -100,10 +97,10 @@ const onSubmit = async (values: SchemaUserFormInfer) => {
       const state = (data as StateActionModel).state;
       if (state) {
         toast.success("Edition", {
-          description: `les informations de l'utilisateur ${userId} ont été modifiées`,
+          description: `les informations du professeur ${teacherId} ont été modifiées`,
         });
 
-        router.push("/admin/user");
+        router.push("/admin/teachergit ");
       } else {
         toast.error("Edition", {
           description: `Nous n'avons pas pu effectuer cette action`,
@@ -124,33 +121,32 @@ const onSubmit = async (values: SchemaUserFormInfer) => {
     }
   } catch (error) {
     toast.error("Erreur", {
-      description: `Impossible d'editer l'utilisateur #${user.value?.id}`,
+      description: `Impossible d'editer le professeur #${teacher.value?.id}`,
     });
   } finally {
     isEdit.value = false;
   }
 };
 
-onMounted(() => {
-  fetchUser();
+onMounted(async () => {
+  await fetchTeacher();
 });
 </script>
 
 <template>
   <div class="space-y-6">
     <!-- Header avec bouton retour -->
-    <GoBack back="/admin/user" />
+    <GoBack back="/admin/teacher" />
 
     <!-- Loader -->
     <LoaderContainer v-if="isLoading" :isCard="true" />
 
-    <!-- Utilisateur non trouvé -->
-    <Card v-else-if="!user">
+    <Card v-else-if="!teacher">
       <CardContent class="text-center py-12">
         <User class="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-        <p class="text-lg font-medium mb-2">Utilisateur non trouvé</p>
+        <p class="text-lg font-medium mb-2">Professur non trouvé</p>
         <p class="text-muted-foreground">
-          L'utilisateur avec l'ID {{ userId }} n'existe pas.
+          le professeur avec le ID {{ teacherId }} n'existe pas.
         </p>
       </CardContent>
     </Card>
@@ -159,17 +155,13 @@ onMounted(() => {
       <Card>
         <CardHeader>
           <CardTitle class="flex items-center gap-2">
-            Editer l'utilisateur #{{ user.id }}
+            Editer le professeur #{{ teacher.id }}
           </CardTitle>
-          <CardDescription>
-            Détails de l'utilisateur {{ user.name }} {{ user.firstname }}
-          </CardDescription>
         </CardHeader>
         <CardContent>
           <div class="max-w-2xl space-y-5">
             <ValidatorError :validator="validator" />
-
-            <UserForm :user="user" :onSubmit="onSubmit" />
+            <TeacherForm :teacher="teacher" :onSubmit="onSubmit" />
           </div>
         </CardContent>
       </Card>

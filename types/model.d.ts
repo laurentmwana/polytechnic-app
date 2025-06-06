@@ -17,6 +17,14 @@ export interface ResetPasswordModel {
   is_update: boolean;
 }
 
+export interface ActualLevelModel {
+  id: number;
+  level: LevelModel;
+  year: YearModel;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface StudentModel {
   id: number;
   name: string;
@@ -26,6 +34,8 @@ export interface StudentModel {
   user: UserModel | null;
   registration_token: string;
   brth: string;
+  actual_level: ActualLevelModel;
+  user: UserModel | null;
   created_at: string;
   updated_at: string;
 }
@@ -78,6 +88,28 @@ export interface LevelModel {
   alias: string;
   option: OptionModel;
   programme: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CourseModel {
+  id: number;
+  name: string;
+  code: string;
+  credits: number;
+  level: LevelModel;
+  teacher: TeacherModel;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface TeacherModel {
+  id: number;
+  name: string;
+  firstname: string;
+  phone: string;
+  gender: string;
+  department: DepartmentModel;
   created_at: string;
   updated_at: string;
 }
