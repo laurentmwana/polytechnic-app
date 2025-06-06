@@ -27,11 +27,11 @@ const items = [
     children: [
       {
         title: "Déprtement",
-        url: "#",
+        url: "/admin/department",
       },
       {
         title: "Option",
-        url: "#",
+        url: "/admin/option",
       },
     ],
   },
@@ -61,7 +61,7 @@ const items = [
       },
       {
         title: "Promotions",
-        url: "#",
+        url: "/admin/level",
       },
     ],
   },
@@ -71,7 +71,7 @@ const items = [
     children: [
       {
         title: "Résultats",
-        url: "#",
+        url: "",
       },
     ],
   },

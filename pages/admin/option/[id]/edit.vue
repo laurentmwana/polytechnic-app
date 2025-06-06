@@ -1,16 +1,16 @@
 <script setup lang="ts">
+import OptionForm from "@/components/features/option/OptionForm.vue";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/composables/useAuth";
-import type { SchemaCourseFormInfer } from "@/definitions/course";
-import { editCourse, getItemCourse } from "@/services/course";
-import type { CourseModel } from "@/types/model";
+import type { SchemaOptionFormInfer } from "@/definitions/option";
+import { editOption, getItemOption } from "@/services/option";
+import type { OptionModel } from "@/types/model";
 import type { StateActionModel, ValidatorErrorProps } from "@/types/util";
 import { User } from "lucide-vue-next";
 import { toast } from "vue-sonner";
-import CourseForm from "../../../../components/features/course/CourseForm.vue";
 
 useHead({
-  title: "Edition d'une cours - Polytechnic Application",
+  title: "Edition d'une option - Polytechnic Application",
 });
 
 definePageMeta({
@@ -19,28 +19,28 @@ definePageMeta({
 });
 
 interface ModelResponse {
-  data: CourseModel;
+  data: OptionModel;
 }
 
 const auth = useAuth();
 const route = useRoute();
 const router = useRouter();
 
-const course = ref<CourseModel | null>(null);
+const option = ref<OptionModel | null>(null);
 const isLoading = ref<boolean>(true);
 const isEdit = ref<boolean>(false);
 const validator = ref<ValidatorErrorProps | null>(null);
 
-const courseId = parseInt(route.params.id as string);
+const optionId = parseInt(route.params.id as string);
 
-if (!courseId || isNaN(courseId)) {
+if (!optionId || isNaN(optionId)) {
   throw createError({
     statusCode: 400,
-    statusMessage: "L'ID de le cours est requis et doit être un nombre valide",
+    statusMessage: "L'ID de l'option est requis et doit être un nombre valide",
   });
 }
 
-const fetchCourse = async () => {
+const fetchOption = async () => {
   try {
     isLoading.value = true;
 
@@ -48,14 +48,14 @@ const fetchCourse = async () => {
       throw new Error("utilisateur non authentifié");
     }
 
-    const response = await getItemCourse(
+    const response = await getItemOption(
       auth.session.value.accessToken,
-      courseId
+      optionId
     );
     const data = await response.json();
 
     if (response.ok) {
-      course.value = (data as ModelResponse).data;
+      option.value = (data as ModelResponse).data;
     } else if (response.status == 401) {
       toast.warning("Session", {
         description: "Votre session a expiré, merci de vous reconnecter",
@@ -69,14 +69,14 @@ const fetchCourse = async () => {
     }
   } catch (error) {
     toast.error("Erreur", {
-      description: "Impossible de charger le cours",
+      description: "Impossible de charger l'option",
     });
   } finally {
     isLoading.value = false;
   }
 };
 
-const onSubmit = async (values: SchemaCourseFormInfer) => {
+const onSubmit = async (values: SchemaOptionFormInfer) => {
   try {
     isEdit.value = true;
     validator.value = null;
@@ -85,9 +85,9 @@ const onSubmit = async (values: SchemaCourseFormInfer) => {
       throw new Error("Utilisateur non authentifié");
     }
 
-    const response = await editCourse(
+    const response = await editOption(
       auth.session.value.accessToken,
-      courseId,
+      optionId,
       values
     );
     const data = await response.json();
@@ -96,10 +96,10 @@ const onSubmit = async (values: SchemaCourseFormInfer) => {
       const state = (data as StateActionModel).state;
       if (state) {
         toast.success("Edition", {
-          description: `les informations du cours ${courseId} ont été modifiées`,
+          description: `les informations de l'option ${optionId} ont été modifiées`,
         });
 
-        router.push("/admin/course");
+        router.push("/admin/option");
       } else {
         toast.error("Edition", {
           description: `Nous n'avons pas pu effectuer cette action`,
@@ -120,7 +120,7 @@ const onSubmit = async (values: SchemaCourseFormInfer) => {
     }
   } catch (error) {
     toast.error("Erreur", {
-      description: `Impossible d'editer le cours #${courseId}`,
+      description: `Impossible d'editer l'option #${optionId}`,
     });
   } finally {
     isEdit.value = false;
@@ -128,25 +128,25 @@ const onSubmit = async (values: SchemaCourseFormInfer) => {
 };
 
 onMounted(async () => {
-  await fetchCourse();
+  await fetchOption();
 });
 </script>
 
 <template>
   <div class="space-y-6">
     <!-- Header avec bouton retour -->
-    <GoBack back="/admin/course" />
+    <GoBack back="/admin/option" />
 
     <!-- Loader -->
     <LoaderContainer v-if="isLoading" :isCard="true" />
 
     <!-- Utilisateur non trouvé -->
-    <Card v-else-if="!course">
+    <Card v-else-if="!option">
       <CardContent class="text-center py-12">
         <User class="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-        <p class="text-lg font-medium mb-2">Cours non trouvé</p>
+        <p class="text-lg font-medium mb-2">Option non trouvée</p>
         <p class="text-muted-foreground">
-          Le cours avec l'ID {{ courseId }} n'existe pas.
+          L'option avec l'ID {{ optionId }} n'existe pas.
         </p>
       </CardContent>
     </Card>
@@ -155,13 +155,13 @@ onMounted(async () => {
       <Card>
         <CardHeader>
           <CardTitle class="flex items-center gap-2">
-            Editer le cours #{{ course.id }}
+            Editer l'option #{{ option.id }}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div class="max-w-2xl space-y-5">
             <ValidatorError :validator="validator" />
-            <CourseForm :course="course" :onSubmit="onSubmit" />
+            <OptionForm :option="option" :onSubmit="onSubmit" />
           </div>
         </CardContent>
       </Card>

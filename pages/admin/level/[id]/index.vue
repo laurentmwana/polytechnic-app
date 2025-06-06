@@ -2,13 +2,13 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/composables/useAuth";
 import { ago } from "@/lib/date-time";
-import { getItemCourse } from "@/services/course";
-import type { CourseModel } from "@/types/model";
-import { Calendar, Mail, User, UserCheck } from "lucide-vue-next";
+import { getItemLevel } from "@/services/level";
+import type { LevelModel } from "@/types/model";
+import { Calendar, Mail, User } from "lucide-vue-next";
 import { toast } from "vue-sonner";
 
 useHead({
-  title: "Détails course - Polytechnic Application",
+  title: "Détails promotion - Polytechnic Application",
 });
 
 definePageMeta({
@@ -17,25 +17,26 @@ definePageMeta({
 });
 
 interface ModelDataResponse {
-  data: CourseModel;
+  data: LevelModel;
 }
 
 const auth = useAuth();
 const route = useRoute();
 
-const course = ref<CourseModel | null>(null);
+const level = ref<LevelModel | null>(null);
 const isLoading = ref<boolean>(true);
 
-const courseId = parseInt(route.params.id as string);
+const levelId = parseInt(route.params.id as string);
 
-if (!courseId || isNaN(courseId)) {
+if (!levelId || isNaN(levelId)) {
   throw createError({
     statusCode: 400,
-    statusMessage: "L'ID de le course est requis et doit être un nombre valide",
+    statusMessage:
+      "L'ID de la promotion est requis et doit être un nombre valide",
   });
 }
 
-const fetchCourse = async () => {
+const fetchlevel = async () => {
   try {
     isLoading.value = true;
 
@@ -43,14 +44,14 @@ const fetchCourse = async () => {
       throw new Error("utilisateur non authentifié");
     }
 
-    const response = await getItemCourse(
+    const response = await getItemLevel(
       auth.session.value.accessToken,
-      courseId
+      levelId
     );
     const data = await response.json();
 
     if (response.ok) {
-      course.value = (data as ModelDataResponse).data;
+      level.value = (data as ModelDataResponse).data;
     } else if (response.status == 401) {
       toast.warning("Session", {
         description: "Votre session a expiré, merci de vous reconnecter",
@@ -64,7 +65,7 @@ const fetchCourse = async () => {
     }
   } catch (error) {
     toast.error("Erreur", {
-      description: "Impossible de charger le course",
+      description: "Impossible de charger le level",
     });
   } finally {
     isLoading.value = false;
@@ -72,37 +73,37 @@ const fetchCourse = async () => {
 };
 
 onMounted(async () => {
-  await fetchCourse();
+  await fetchlevel();
 });
 </script>
 
 <template>
   <div class="space-y-6">
     <!-- Header avec bouton retour -->
-    <GoBack back="/admin/course" />
+    <GoBack back="/admin/level" />
 
     <!-- Loader -->
     <LoaderContainer v-if="isLoading" :isCard="true" />
 
-    <!-- course non trouvé -->
-    <Card v-else-if="!course">
+    <!-- level non trouvé -->
+    <Card v-else-if="!level">
       <CardContent class="text-center py-12">
         <User class="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-        <p class="text-lg font-medium mb-2">course non trouvé</p>
+        <p class="text-lg font-medium mb-2">promotion non trouvée</p>
         <p class="text-muted-foreground">
-          Le course avec l'ID {{ courseId }} n'existe pas.
+          La promotion avec l'ID {{ levelId }} n'existe pas.
         </p>
       </CardContent>
     </Card>
 
-    <!-- Détails de le course -->
+    <!-- Détails de le level -->
     <div v-else class="grid gap-6 md:grid-cols-2">
       <!-- Informations principales -->
       <Card>
         <CardHeader>
           <CardTitle class="flex items-center gap-2">
             <User class="h-5 w-5" />
-            Informations du cours
+            Informations de la promotion
           </CardTitle>
         </CardHeader>
         <CardContent class="space-y-4">
@@ -110,9 +111,9 @@ onMounted(async () => {
             <div class="flex items-center gap-3">
               <User class="h-4 w-4 text-muted-foreground" />
               <div>
-                <p class="text-sm font-medium">Nom du cours</p>
+                <p class="text-sm font-medium">Nom</p>
                 <p class="text-sm text-muted-foreground">
-                  {{ course.name }}
+                  {{ level.name }}
                 </p>
               </div>
             </div>
@@ -120,27 +121,17 @@ onMounted(async () => {
             <div class="flex items-center gap-3">
               <Mail class="h-4 w-4 text-muted-foreground" />
               <div>
-                <p class="text-sm font-medium">Code</p>
-                <p class="text-sm text-muted-foreground">{{ course.code }}</p>
+                <p class="text-sm font-medium">lias</p>
+                <p class="text-sm text-muted-foreground">{{ level.alias }}</p>
               </div>
             </div>
 
             <div class="flex items-center gap-3">
               <Mail class="h-4 w-4 text-muted-foreground" />
               <div>
-                <p class="text-sm font-medium">Crédit(s)</p>
+                <p class="text-sm font-medium">Option</p>
                 <p class="text-sm text-muted-foreground">
-                  {{ course.credits }}
-                </p>
-              </div>
-            </div>
-
-            <div class="flex items-center gap-3">
-              <UserCheck class="h-4 w-4 text-muted-foreground" />
-              <div>
-                <p class="text-sm font-medium">Promotion</p>
-                <p class="text-sm text-muted-foreground">
-                  {{ course.level.name }} [{{ course.level.programme }}]
+                  {{ level.option.name }}
                 </p>
               </div>
             </div>
@@ -150,7 +141,7 @@ onMounted(async () => {
               <div>
                 <p class="text-sm font-medium">Créé le</p>
                 <p class="text-sm text-muted-foreground">
-                  {{ ago(course.created_at) }}
+                  {{ ago(level.created_at) }}
                 </p>
               </div>
             </div>

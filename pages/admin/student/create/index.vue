@@ -36,7 +36,7 @@ const onSubmit = async (values: SchemaStudentFormInfer) => {
     validator.value = null;
 
     if (!auth.session.value?.accessToken) {
-      throw new Error("utilisateurnon authentifié");
+      throw new Error("utilisateur non authentifié");
     }
 
     const response = await createStudent(

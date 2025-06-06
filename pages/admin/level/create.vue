@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import CourseForm from "@/components/features/course/CourseForm.vue";
+import LevelForm from "@/components/features/level/LevelForm.vue";
 import {
   Card,
   CardContent,
@@ -8,13 +8,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useAuth } from "@/composables/useAuth";
-import type { SchemaCourseFormInfer } from "@/definitions/course";
-import { createCourse } from "@/services/course";
+import type { SchemaLevelFormInfer } from "@/definitions/level";
+import { createLevel } from "@/services/level";
 import type { StateActionModel, ValidatorErrorProps } from "@/types/util";
 import { toast } from "vue-sonner";
 
 useHead({
-  title: "Création du cours - Polytechnic Application",
+  title: "Création d'une promotion - Polytechnic Application",
 });
 
 definePageMeta({
@@ -28,7 +28,7 @@ const router = useRouter();
 
 const isLoading = ref<boolean>(true);
 
-const onSubmit = async (values: SchemaCourseFormInfer) => {
+const onSubmit = async (values: SchemaLevelFormInfer) => {
   try {
     isLoading.value = true;
     validator.value = null;
@@ -37,17 +37,17 @@ const onSubmit = async (values: SchemaCourseFormInfer) => {
       throw new Error("utilisateur non authentifié");
     }
 
-    const response = await createCourse(auth.session.value.accessToken, values);
+    const response = await createLevel(auth.session.value.accessToken, values);
     const data = await response.json();
 
     if (response.ok) {
       const state = (data as StateActionModel).state;
       if (state) {
         toast.success("Création", {
-          description: `Un cours a été créé`,
+          description: `Une promotion a été créée`,
         });
 
-        router.push("/admin/course");
+        router.push("/admin/level");
       } else {
         toast.error("Création", {
           description: `Nous n'avons pas pu effectuer cette action`,
@@ -68,7 +68,7 @@ const onSubmit = async (values: SchemaCourseFormInfer) => {
     }
   } catch (error) {
     toast.error("Erreur", {
-      description: "Impossible de créer un cours, merci de réessayer (:",
+      description: "Impossible de créer une promotion, merci de réessayer (:",
     });
   }
 };
@@ -76,20 +76,20 @@ const onSubmit = async (values: SchemaCourseFormInfer) => {
 
 <template>
   <div class="space-y-6">
-    <GoBack back="/admin/student" />
+    <GoBack back="/admin/level" />
 
     <div class="w-full">
       <Card>
         <CardHeader>
           <CardTitle class="flex items-center gap-2">
-            Création d'un cours
+            Création d'une promotion
           </CardTitle>
           <CardDescription> </CardDescription>
         </CardHeader>
         <CardContent>
           <div class="max-w-2xl space-y-4">
             <ValidatorError :validator="validator" />
-            <CourseForm :onSubmit="onSubmit" />
+            <LevelForm :onSubmit="onSubmit" />
           </div>
         </CardContent>
       </Card>

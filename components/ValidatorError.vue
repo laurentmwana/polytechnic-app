@@ -6,18 +6,18 @@ defineProps<{ validator: ValidatorErrorProps | null }>();
 </script>
 <template>
   <div v-if="validator">
-    <Alert>
+    <Alert variant="destructive">
       <AlertTitle>
         {{ validator.message }}
       </AlertTitle>
       <AlertDescription>
-        <ul class="list-disc list-inside space-y-1 text-sm text-red-600">
+        <ul class="list-disc list-inside space-y-1 text-sm text-red-600 ms-4">
           <li
             v-for="(messages, field) in validator.errors"
             :key="field"
             class="font-medium"
           >
-            {{ field }} : {{ messages[0] }}
+            {{ messages[0] }}
           </li>
         </ul>
       </AlertDescription>

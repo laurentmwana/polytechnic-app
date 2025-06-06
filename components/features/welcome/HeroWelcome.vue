@@ -18,7 +18,7 @@ import { Book } from "lucide-vue-next";
         <h1
           class="mb-6 text-4xl leading-tight font-bold tracking-tight sm:text-5xl md:text-6xl"
         >
-          Faculté de polytechnique
+          Faculté polytechnique
         </h1>
 
         <p class="mb-8 max-w-2xl text-lg text-muted-foreground">

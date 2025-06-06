@@ -67,6 +67,26 @@ const ROUTES_API = {
   "~teacher.update": "/admin/teacher/:id",
   "~teacher.delete": "/admin/teacher/:id",
 
+  // DEPARTMENT
+  "~department.index": "/admin/department",
+  "~department.show": "/admin/department/:id",
+  "~department.update": "/admin/department/:id",
+
+  // OPTION
+
+  "~option.index": "/admin/option",
+  "~option.store": "/admin/option",
+  "~option.show": "/admin/option/:id",
+  "~option.update": "/admin/option/:id",
+  "~option.delete": "/admin/option/:id",
+
+  // LEVEL
+  "~level.index": "/admin/level",
+  "~level.store": "/admin/level",
+  "~level.show": "/admin/level/:id",
+  "~level.update": "/admin/level/:id",
+  "~level.delete": "/admin/level/:id",
+
   // YEAR
   "~year.index": "/admin/year-academic",
   "~year.close": "/admin/year-academic/:id/closed",
