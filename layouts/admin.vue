@@ -45,11 +45,11 @@ const items = [
       },
       {
         title: "Délibération",
-        url: "#",
+        url: "/admin/deliberation",
       },
       {
         title: "Juries",
-        url: "#",
+        url: "/admin/jury",
       },
       {
         title: "Cours",
@@ -67,11 +67,25 @@ const items = [
   },
 
   {
+    title: "Frais",
+    children: [
+      {
+        title: "Académique",
+        url: "",
+      },
+      {
+        title: "Laboratoire",
+        url: "",
+      },
+    ],
+  },
+
+  {
     title: "Publication",
     children: [
       {
         title: "Résultats",
-        url: "",
+        url: "#",
       },
     ],
   },
@@ -103,8 +117,9 @@ const isActive = (href?: string): boolean => {
 <template>
   <SidebarProvider>
     <Sidebar>
-      <SidebarHeader>
-        <h2 class="text-xl font-semibold text-center ps-2">Polytechnique</h2>
+      <SidebarHeader class="flex flex-col gap-4">
+        <h2 class="text-xl font-bold">Administration</h2>
+        <Separator />
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup v-for="item in items">
@@ -131,13 +146,16 @@ const isActive = (href?: string): boolean => {
     </Sidebar>
     <SidebarInset>
       <header
-        class="flex sticky top-0 bg-background h-12 shrink-0 items-center justify-between gap-2 border-b px-4"
+        class="flex sticky top-0 bg-background/95 z-50 border-border h-12 shrink-0 items-center justify-between gap-2 border-b px-4"
       >
         <div class="flex items-center gap-2">
           <SidebarTrigger class="-ml-1" />
           <Separator orientation="vertical" />
         </div>
-        <AvatarAdmin />
+        <div class="flex gap-2">
+          <ThemeToggle />
+          <AvatarAdmin />
+        </div>
       </header>
       <div class="flex flex-1 flex-col gap-4 p-4">
         <slot />

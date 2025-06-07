@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import CourseForm from "@/components/features/course/CourseForm.vue";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/composables/useAuth";
 import type { SchemaCourseFormInfer } from "@/definitions/course";
@@ -7,7 +8,6 @@ import type { CourseModel } from "@/types/model";
 import type { StateActionModel, ValidatorErrorProps } from "@/types/util";
 import { User } from "lucide-vue-next";
 import { toast } from "vue-sonner";
-import CourseForm from "../../../../components/features/course/CourseForm.vue";
 
 useHead({
   title: "Edition d'une cours - Polytechnic Application",

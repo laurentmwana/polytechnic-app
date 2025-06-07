@@ -113,3 +113,22 @@ export interface TeacherModel {
   created_at: string;
   updated_at: string;
 }
+
+export interface DeliberationModel {
+  id: number;
+  criteria: string;
+  start_at: string;
+  year: YearModel;
+  level: LevelModel;
+  semester: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface JuryModel {
+  id: number;
+  teacher: TeacherModel;
+  deliberation: DeliberationModel;
+  created_at: string;
+  updated_at: string;
+}

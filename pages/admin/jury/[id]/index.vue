@@ -2,13 +2,13 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/composables/useAuth";
 import { ago } from "@/lib/date-time";
-import { getItemDepartment } from "@/services/department";
-import type { DepartmentModel } from "@/types/model";
 import { Calendar, Mail, User } from "lucide-vue-next";
 import { toast } from "vue-sonner";
+import { getItemJury } from "../../../../services/jury";
+import type { JuryModel } from "../../../../types/model";
 
 useHead({
-  title: "Détails département - Polytechnic Application",
+  title: "Détails d'un jurie - Polytechnic Application",
 });
 
 definePageMeta({
@@ -17,26 +17,25 @@ definePageMeta({
 });
 
 interface ModelDataResponse {
-  data: DepartmentModel;
+  data: JuryModel;
 }
 
 const auth = useAuth();
 const route = useRoute();
 
-const department = ref<DepartmentModel | null>(null);
+const jury = ref<JuryModel | null>(null);
 const isLoading = ref<boolean>(true);
 
-const departmentId = parseInt(route.params.id as string);
+const juryId = parseInt(route.params.id as string);
 
-if (!departmentId || isNaN(departmentId)) {
+if (!juryId || isNaN(juryId)) {
   throw createError({
     statusCode: 400,
-    statusMessage:
-      "L'ID de le département est requis et doit être un nombre valide",
+    statusMessage: "L'ID de le jurie est requis et doit être un nombre valide",
   });
 }
 
-const fetchDepartment = async () => {
+const fetchJury = async () => {
   try {
     isLoading.value = true;
 
@@ -44,14 +43,11 @@ const fetchDepartment = async () => {
       throw new Error("utilisateur non authentifié");
     }
 
-    const response = await getItemDepartment(
-      auth.session.value.accessToken,
-      departmentId
-    );
+    const response = await getItemJury(auth.session.value.accessToken, juryId);
     const data = await response.json();
 
     if (response.ok) {
-      department.value = (data as ModelDataResponse).data;
+      jury.value = (data as ModelDataResponse).data;
     } else if (response.status == 401) {
       toast.warning("Session", {
         description: "Votre session a expiré, merci de vous reconnecter",
@@ -65,7 +61,7 @@ const fetchDepartment = async () => {
     }
   } catch (error) {
     toast.error("Erreur", {
-      description: "Impossible de charger le course",
+      description: "Impossible de charger le jurie",
     });
   } finally {
     isLoading.value = false;
@@ -73,37 +69,37 @@ const fetchDepartment = async () => {
 };
 
 onMounted(async () => {
-  await fetchDepartment();
+  await fetchJury();
 });
 </script>
 
 <template>
   <div class="space-y-6">
     <!-- Header avec bouton retour -->
-    <GoBack back="/admin/department" />
+    <GoBack back="/admin/jury" />
 
     <!-- Loader -->
     <LoaderContainer v-if="isLoading" :isCard="true" />
 
-    <!-- course non trouvé -->
-    <Card v-else-if="!department">
+    <!-- jurie non trouvé -->
+    <Card v-else-if="!jury">
       <CardContent class="text-center py-12">
         <User class="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-        <p class="text-lg font-medium mb-2">département non trouvé</p>
+        <p class="text-lg font-medium mb-2">jurie non trouvé</p>
         <p class="text-muted-foreground">
-          Le département avec l'ID {{ departmentId }} n'existe pas.
+          Le jurie avec l'ID {{ juryId }} n'existe pas.
         </p>
       </CardContent>
     </Card>
 
-    <!-- Détails de le course -->
+    <!-- Détails de le jurie -->
     <div v-else class="grid gap-6 md:grid-cols-2">
       <!-- Informations principales -->
       <Card>
         <CardHeader>
           <CardTitle class="flex items-center gap-2">
             <User class="h-5 w-5" />
-            Informations du département
+            Informations du jurie
           </CardTitle>
         </CardHeader>
         <CardContent class="space-y-4">
@@ -111,9 +107,9 @@ onMounted(async () => {
             <div class="flex items-center gap-3">
               <User class="h-4 w-4 text-muted-foreground" />
               <div>
-                <p class="text-sm font-medium">Nom du département</p>
+                <p class="text-sm font-medium">Professeur</p>
                 <p class="text-sm text-muted-foreground">
-                  {{ department.name }}
+                  {{ jury.teacher.name }} {{ jury.teacher.firstname }}
                 </p>
               </div>
             </div>
@@ -121,9 +117,11 @@ onMounted(async () => {
             <div class="flex items-center gap-3">
               <Mail class="h-4 w-4 text-muted-foreground" />
               <div>
-                <p class="text-sm font-medium">Alias</p>
+                <p class="text-sm font-medium">Délibération</p>
                 <p class="text-sm text-muted-foreground">
-                  {{ department.alias }}
+                  {{ jury.deliberation.level.name }} [{{
+                    jury.deliberation.year.name
+                  }}]
                 </p>
               </div>
             </div>
@@ -133,7 +131,7 @@ onMounted(async () => {
               <div>
                 <p class="text-sm font-medium">Créé le</p>
                 <p class="text-sm text-muted-foreground">
-                  {{ ago(department.created_at) }}
+                  {{ ago(jury.created_at) }}
                 </p>
               </div>
             </div>

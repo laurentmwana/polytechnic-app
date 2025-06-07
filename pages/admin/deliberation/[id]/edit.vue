@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import TeacherForm from "@/components/features/teacher/TeacherForm.vue";
+import DeliberationForm from "@/components/features/delibe/DeliberationForm.vue";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/composables/useAuth";
-import type { SchemaTeacherFormInfer } from "@/definitions/teacher";
-import { editTeacher, getItemTeacher } from "@/services/teacher";
-import type { TeacherModel } from "@/types/model";
+import type { SchemaDeliberationFormInfer } from "@/definitions/deliberation";
+import { editDeliberation, getItemDeliberation } from "@/services/deliberation";
+import type { DeliberationModel } from "@/types/model";
 import type { StateActionModel, ValidatorErrorProps } from "@/types/util";
 import { User } from "lucide-vue-next";
 import { toast } from "vue-sonner";
 
 useHead({
-  title: "Edition d'un professeur - Polytechnic Application",
+  title: "Edition d'une délibération - Polytechnic Application",
 });
 
 definePageMeta({
@@ -18,30 +18,30 @@ definePageMeta({
   middleware: ["admin"],
 });
 
-interface ModelDataResponse {
-  data: TeacherModel;
+interface ModelResponse {
+  data: DeliberationModel;
 }
 
 const auth = useAuth();
 const route = useRoute();
 const router = useRouter();
 
-const teacher = ref<TeacherModel | null>(null);
+const deliberation = ref<DeliberationModel | null>(null);
 const isLoading = ref<boolean>(true);
 const isEdit = ref<boolean>(false);
 const validator = ref<ValidatorErrorProps | null>(null);
 
-const teacherId = parseInt(route.params.id as string);
+const delibeId = parseInt(route.params.id as string);
 
-if (!teacherId || isNaN(teacherId)) {
+if (!delibeId || isNaN(delibeId)) {
   throw createError({
     statusCode: 400,
     statusMessage:
-      "le ID du professeur est requis et doit être un nombre valide",
+      "L'ID de la délibération est requis et doit être un nombre valide",
   });
 }
 
-const fetchTeacher = async () => {
+const fetchDeliberation = async () => {
   try {
     isLoading.value = true;
 
@@ -49,14 +49,14 @@ const fetchTeacher = async () => {
       throw new Error("utilisateur non authentifié");
     }
 
-    const response = await getItemTeacher(
+    const response = await getItemDeliberation(
       auth.session.value.accessToken,
-      teacherId
+      delibeId
     );
     const data = await response.json();
 
     if (response.ok) {
-      teacher.value = (data as ModelDataResponse).data;
+      deliberation.value = (data as ModelResponse).data;
     } else if (response.status == 401) {
       toast.warning("Session", {
         description: "Votre session a expiré, merci de vous reconnecter",
@@ -70,14 +70,14 @@ const fetchTeacher = async () => {
     }
   } catch (error) {
     toast.error("Erreur", {
-      description: "Impossible de charger le professeur",
+      description: "Impossible de charger la délibération",
     });
   } finally {
     isLoading.value = false;
   }
 };
 
-const onSubmit = async (values: SchemaTeacherFormInfer) => {
+const onSubmit = async (values: SchemaDeliberationFormInfer) => {
   try {
     isEdit.value = true;
     validator.value = null;
@@ -86,9 +86,9 @@ const onSubmit = async (values: SchemaTeacherFormInfer) => {
       throw new Error("Utilisateur non authentifié");
     }
 
-    const response = await editTeacher(
+    const response = await editDeliberation(
       auth.session.value.accessToken,
-      teacherId,
+      delibeId,
       values
     );
     const data = await response.json();
@@ -97,10 +97,10 @@ const onSubmit = async (values: SchemaTeacherFormInfer) => {
       const state = (data as StateActionModel).state;
       if (state) {
         toast.success("Edition", {
-          description: `les informations du professeur ${teacherId} ont été modifiées`,
+          description: `les informations de la délibération ${delibeId} ont été modifiées`,
         });
 
-        router.push("/admin/teachergit ");
+        router.push("/admin/deliberation");
       } else {
         toast.error("Edition", {
           description: `Nous n'avons pas pu effectuer cette action`,
@@ -121,7 +121,7 @@ const onSubmit = async (values: SchemaTeacherFormInfer) => {
     }
   } catch (error) {
     toast.error("Erreur", {
-      description: `Impossible d'editer le professeur #${teacher.value?.id}`,
+      description: `Impossible d'editer la délibération #${delibeId}`,
     });
   } finally {
     isEdit.value = false;
@@ -129,24 +129,25 @@ const onSubmit = async (values: SchemaTeacherFormInfer) => {
 };
 
 onMounted(async () => {
-  await fetchTeacher();
+  await fetchDeliberation();
 });
 </script>
 
 <template>
   <div class="space-y-6">
     <!-- Header avec bouton retour -->
-    <GoBack back="/admin/teacher" />
+    <GoBack back="/admin/deliberation" />
 
     <!-- Loader -->
     <LoaderContainer v-if="isLoading" :isCard="true" />
 
-    <Card v-else-if="!teacher">
+    <!-- Utilisateur non trouvé -->
+    <Card v-else-if="!deliberation">
       <CardContent class="text-center py-12">
         <User class="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-        <p class="text-lg font-medium mb-2">Professur non trouvé</p>
+        <p class="text-lg font-medium mb-2">Délibération non trouvée</p>
         <p class="text-muted-foreground">
-          le professeur avec le ID {{ teacherId }} n'existe pas.
+          La délibération avec l'ID {{ delibeId }} n'existe pas.
         </p>
       </CardContent>
     </Card>
@@ -155,13 +156,13 @@ onMounted(async () => {
       <Card>
         <CardHeader>
           <CardTitle class="flex items-center gap-2">
-            Editer le professeur #{{ teacher.id }}
+            Editer la délibération #{{ deliberation.id }}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div class="max-w-2xl space-y-5">
             <ValidatorError :validator="validator" />
-            <TeacherForm :teacher="teacher" :onSubmit="onSubmit" />
+            <DeliberationForm :delibe="deliberation" :onSubmit="onSubmit" />
           </div>
         </CardContent>
       </Card>

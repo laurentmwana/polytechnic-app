@@ -32,6 +32,7 @@ const ROUTES_API = {
   "&course": "/data-select/courses",
   "&department": "/data-select/departments",
   "&option": "/data-select/options",
+  "&delibe": "/data-select/deliberations",
   "&contact": "/contact",
 
   // ADMIN
@@ -86,6 +87,20 @@ const ROUTES_API = {
   "~level.show": "/admin/level/:id",
   "~level.update": "/admin/level/:id",
   "~level.delete": "/admin/level/:id",
+
+  // DELIBE
+  "~deliberation.index": "/admin/deliberation",
+  "~deliberation.store": "/admin/deliberation",
+  "~deliberation.show": "/admin/deliberation/:id",
+  "~deliberation.update": "/admin/deliberation/:id",
+  "~deliberation.delete": "/admin/deliberation/:id",
+
+  // JURY
+  "~jury.index": "/admin/jury",
+  "~jury.store": "/admin/jury",
+  "~jury.show": "/admin/jury/:id",
+  "~jury.update": "/admin/jury/:id",
+  "~jury.delete": "/admin/jury/:id",
 
   // YEAR
   "~year.index": "/admin/year-academic",

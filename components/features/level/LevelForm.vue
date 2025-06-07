@@ -15,7 +15,7 @@ const props = defineProps<{
   level?: LevelModel;
 }>();
 
-const { data: option, pending: optionPending } = await useFetch<OptionModel[]>(
+const { data: options, pending: optionPending } = await useFetch<OptionModel[]>(
   getRouteApi("&option")
 );
 
@@ -83,10 +83,10 @@ const handleSubmit = form.handleSubmit(async (values) => {
               <SelectValue :placeholder="selectPlaceholder" />
             </SelectTrigger>
             <SelectContent>
-              <SelectGroup v-if="option && option.length > 0">
+              <SelectGroup v-if="options && options.length > 0">
                 <SelectLabel>Options disponibles</SelectLabel>
                 <SelectItem
-                  v-for="option in option"
+                  v-for="option in options"
                   :key="option.id"
                   :value="option.id.toString()"
                 >

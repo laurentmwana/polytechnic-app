@@ -2,13 +2,13 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/composables/useAuth";
 import { ago } from "@/lib/date-time";
-import { getItemDepartment } from "@/services/department";
-import type { DepartmentModel } from "@/types/model";
-import { Calendar, Mail, User } from "lucide-vue-next";
+import { getItemDeliberation } from "@/services/deliberation";
+import type { DeliberationModel } from "@/types/model";
+import { Calendar, Mail, User, UserCheck } from "lucide-vue-next";
 import { toast } from "vue-sonner";
 
 useHead({
-  title: "Détails département - Polytechnic Application",
+  title: "Détails délibération - Polytechnic Application",
 });
 
 definePageMeta({
@@ -17,26 +17,26 @@ definePageMeta({
 });
 
 interface ModelDataResponse {
-  data: DepartmentModel;
+  data: DeliberationModel;
 }
 
 const auth = useAuth();
 const route = useRoute();
 
-const department = ref<DepartmentModel | null>(null);
+const deliberation = ref<DeliberationModel | null>(null);
 const isLoading = ref<boolean>(true);
 
-const departmentId = parseInt(route.params.id as string);
+const delibeId = parseInt(route.params.id as string);
 
-if (!departmentId || isNaN(departmentId)) {
+if (!delibeId || isNaN(delibeId)) {
   throw createError({
     statusCode: 400,
     statusMessage:
-      "L'ID de le département est requis et doit être un nombre valide",
+      "L'ID de le délibération est requis et doit être un nombre valide",
   });
 }
 
-const fetchDepartment = async () => {
+const fetchDeliberation = async () => {
   try {
     isLoading.value = true;
 
@@ -44,14 +44,14 @@ const fetchDepartment = async () => {
       throw new Error("utilisateur non authentifié");
     }
 
-    const response = await getItemDepartment(
+    const response = await getItemDeliberation(
       auth.session.value.accessToken,
-      departmentId
+      delibeId
     );
     const data = await response.json();
 
     if (response.ok) {
-      department.value = (data as ModelDataResponse).data;
+      deliberation.value = (data as ModelDataResponse).data;
     } else if (response.status == 401) {
       toast.warning("Session", {
         description: "Votre session a expiré, merci de vous reconnecter",
@@ -65,7 +65,7 @@ const fetchDepartment = async () => {
     }
   } catch (error) {
     toast.error("Erreur", {
-      description: "Impossible de charger le course",
+      description: "Impossible de charger la délibération",
     });
   } finally {
     isLoading.value = false;
@@ -73,25 +73,25 @@ const fetchDepartment = async () => {
 };
 
 onMounted(async () => {
-  await fetchDepartment();
+  await fetchDeliberation();
 });
 </script>
 
 <template>
   <div class="space-y-6">
     <!-- Header avec bouton retour -->
-    <GoBack back="/admin/department" />
+    <GoBack back="/admin/deliberation" />
 
     <!-- Loader -->
     <LoaderContainer v-if="isLoading" :isCard="true" />
 
     <!-- course non trouvé -->
-    <Card v-else-if="!department">
+    <Card v-else-if="!deliberation">
       <CardContent class="text-center py-12">
         <User class="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-        <p class="text-lg font-medium mb-2">département non trouvé</p>
+        <p class="text-lg font-medium mb-2">Délibération non trouvée</p>
         <p class="text-muted-foreground">
-          Le département avec l'ID {{ departmentId }} n'existe pas.
+          La délibération avec l'ID {{ delibeId }} n'existe pas.
         </p>
       </CardContent>
     </Card>
@@ -103,7 +103,7 @@ onMounted(async () => {
         <CardHeader>
           <CardTitle class="flex items-center gap-2">
             <User class="h-5 w-5" />
-            Informations du département
+            Informations sur la délibératin #{{ delibeId }}
           </CardTitle>
         </CardHeader>
         <CardContent class="space-y-4">
@@ -111,9 +111,10 @@ onMounted(async () => {
             <div class="flex items-center gap-3">
               <User class="h-4 w-4 text-muted-foreground" />
               <div>
-                <p class="text-sm font-medium">Nom du département</p>
+                <p class="text-sm font-medium">Promotion</p>
                 <p class="text-sm text-muted-foreground">
-                  {{ department.name }}
+                  {{ deliberation.level.name }}
+                  {{ deliberation.level.option.name }}
                 </p>
               </div>
             </div>
@@ -121,9 +122,29 @@ onMounted(async () => {
             <div class="flex items-center gap-3">
               <Mail class="h-4 w-4 text-muted-foreground" />
               <div>
-                <p class="text-sm font-medium">Alias</p>
+                <p class="text-sm font-medium">Semestre</p>
                 <p class="text-sm text-muted-foreground">
-                  {{ department.alias }}
+                  {{ deliberation.semester }}
+                </p>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+              <Mail class="h-4 w-4 text-muted-foreground" />
+              <div>
+                <p class="text-sm font-medium">Début</p>
+                <p class="text-sm text-muted-foreground">
+                  {{ deliberation.start_at }}
+                </p>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+              <UserCheck class="h-4 w-4 text-muted-foreground" />
+              <div>
+                <p class="text-sm font-medium">Année académique</p>
+                <p class="text-sm text-muted-foreground">
+                  {{ deliberation.year.name }}
                 </p>
               </div>
             </div>
@@ -133,7 +154,7 @@ onMounted(async () => {
               <div>
                 <p class="text-sm font-medium">Créé le</p>
                 <p class="text-sm text-muted-foreground">
-                  {{ ago(department.created_at) }}
+                  {{ ago(deliberation.created_at) }}
                 </p>
               </div>
             </div>
