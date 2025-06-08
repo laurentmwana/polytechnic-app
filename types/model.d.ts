@@ -120,6 +120,7 @@ export interface DeliberationModel {
   start_at: string;
   year: YearModel;
   level: LevelModel;
+  juries: JuryModel[];
   semester: string;
   created_at: string;
   updated_at: string;

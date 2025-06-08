@@ -175,7 +175,7 @@
 }
 
 .section-page-title {
-  @apply text-base lg:text-xl font-bold text-foreground mb-4;
+  @apply text-xl lg:text-xl font-bold text-foreground mb-4;
 }
 
 .section-page-subtitle {

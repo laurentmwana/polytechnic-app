@@ -127,3 +127,28 @@ export const getDashboard = async (token: string) => {
     },
   });
 };
+
+// DELIBE
+export const getCollectionDelibes = async (page: number) => {
+  return await fetch(getRouteApi("*delibe.index", { page }), {
+    headers: {
+      Accept: "application/json",
+    },
+  });
+};
+
+export const getDelibeLimit = async (limit: number) => {
+  return await fetch(getRouteApi("*delibe.index", { limit }), {
+    headers: {
+      Accept: "application/json",
+    },
+  });
+};
+
+export const getShowDelibe = async (delibeId: number) => {
+  return await fetch(getRouteApi("*delibe.show", { id: delibeId }), {
+    headers: {
+      Accept: "application/json",
+    },
+  });
+};

@@ -88,7 +88,9 @@ onMounted(async () => {
     <div class="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-10" v-else>
       <Card>
         <CardHeader>
-          <CardTitle> {{ dashboard.departments }} </CardTitle>
+          <CardTitle class="text-xl font-semibold">
+            {{ dashboard.departments }}
+          </CardTitle>
           <CardDescription>
             {{ dashboard.departments === 1 ? "Département" : "Départements" }}
           </CardDescription>
@@ -97,7 +99,9 @@ onMounted(async () => {
 
       <Card>
         <CardHeader>
-          <CardTitle> {{ dashboard.options }} </CardTitle>
+          <CardTitle class="text-xl font-semibold">
+            {{ dashboard.options }}
+          </CardTitle>
           <CardDescription>
             {{ dashboard.options === 1 ? "Option" : "Options" }}
           </CardDescription>
@@ -106,7 +110,9 @@ onMounted(async () => {
 
       <Card>
         <CardHeader>
-          <CardTitle> {{ dashboard.levels }} </CardTitle>
+          <CardTitle class="text-xl font-semibold">
+            {{ dashboard.levels }}
+          </CardTitle>
           <CardDescription>
             {{ dashboard.levels === 1 ? "Niveau" : "Niveaux" }}
           </CardDescription>
@@ -115,7 +121,9 @@ onMounted(async () => {
 
       <Card>
         <CardHeader>
-          <CardTitle> {{ dashboard.teachers }} </CardTitle>
+          <CardTitle class="text-xl font-semibold">
+            {{ dashboard.teachers }}
+          </CardTitle>
           <CardDescription>
             {{ dashboard.teachers === 1 ? "Professeur" : "Professeurs" }}
           </CardDescription>

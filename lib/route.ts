@@ -18,6 +18,9 @@ const ROUTES_API = {
   "*level.index": "/levels",
   "*level.show": "/level/:id",
 
+  "*delibe.index": "/deliberations",
+  "*delibe.show": "/deliberation/:id",
+
   // PROFILE
 
   "profile.edit": "/profile/edit",

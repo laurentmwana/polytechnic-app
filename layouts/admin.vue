@@ -26,7 +26,7 @@ const items = [
     title: "Edifice",
     children: [
       {
-        title: "Déprtement",
+        title: "Département",
         url: "/admin/department",
       },
       {
