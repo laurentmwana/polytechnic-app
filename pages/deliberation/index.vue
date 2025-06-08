@@ -2,7 +2,7 @@
   <div class="container py-12">
     <div class="min-h-screen transition-colors duration-300">
       <div class="min-h-screen">
-        <div class="max-w-7xl mx-auto">
+        <div>
           <!-- Header -->
           <div class="mb-8 flex justify-between items-center">
             <div>
@@ -115,7 +115,6 @@
               </CardHeader>
 
               <CardContent>
-
                 <!-- Informations de date -->
                 <div class="grid grid-cols-2 gap-4 text-sm mb-4">
                   <div>
@@ -176,25 +175,37 @@
             </Button>
           </div>
         </div>
+        <Pagination
+          v-if="deliberations"
+          :onPage="onPage"
+          :meta="deliberations"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { getDelibeLimit } from "@/services/other";
 import type { DeliberationModel } from "@/types/model";
 import { EyeIcon, FileTextIcon, RotateCcwIcon } from "lucide-vue-next";
 import { computed, onMounted, ref } from "vue";
+import { getCollectionDelibes } from "../../services/other";
 import type { PaginatedResponse } from "../../types/paginate";
 
 // État réactif
 const selectedYear = ref<string>("all");
 const selectedLevel = ref<string>("all");
 const selectedSemester = ref<string>("all");
-const isPending = ref<boolean>(false);
+const isPending = ref<boolean>(true);
 type DeliberationPaginateProps = PaginatedResponse<DeliberationModel[]>;
 const deliberations = ref<DeliberationPaginateProps | null>(null);
+
+const router = useRouter();
+const route = useRoute();
+
+const numberPage = ref<number>(
+  route.query.page ? parseInt(route.query.page as string) : 1
+);
 
 // Propriétés calculées
 const filteredDeliberations = computed(() => {
@@ -261,12 +272,13 @@ const resetFilters = () => {
 const fetchDeliberations = async () => {
   try {
     isPending.value = true;
-    const response = await getDelibeLimit(10);
+    const response = await getCollectionDelibes(numberPage.value);
+
     if (response.ok) {
       const data = await response.json();
       deliberations.value = data as DeliberationPaginateProps;
     } else {
-      deliberations.value ? deliberations.value.data : ([] = []);
+      deliberations.value = null;
     }
   } catch (error) {
     console.error("Impossible de récupèrer les délibérations");
@@ -274,6 +286,23 @@ const fetchDeliberations = async () => {
     isPending.value = false;
   }
 };
+
+const onPage = async (page: number) => {
+  numberPage.value = page;
+  await router.push(`/deliberation?page=${page}`);
+  await fetchDeliberations();
+};
+
+watch(
+  () => route.query.page,
+  (newPage) => {
+    const pageNumber = newPage ? parseInt(newPage as string) : 1;
+    if (pageNumber !== numberPage.value) {
+      numberPage.value = pageNumber;
+      fetchDeliberations();
+    }
+  }
+);
 
 onMounted(async () => {
   await fetchDeliberations();

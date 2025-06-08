@@ -16,7 +16,7 @@ const deliberations = ref<DeliberationModel[]>([]);
 const selectedYear = ref<string>("all");
 const selectedLevel = ref<string>("all");
 const selectedSemester = ref<string>("all");
-const isPending = ref<boolean>(false);
+const isPending = ref<boolean>(true);
 
 // Propriétés calculées
 const filteredDeliberations = computed(() => {

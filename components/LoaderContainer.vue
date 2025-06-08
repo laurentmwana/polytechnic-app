@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { Loader2 } from "lucide-vue-next";
-
 const props = withDefaults(defineProps<{ isCard?: boolean }>(), {
   isCard: false,
 });
@@ -13,15 +11,23 @@ const props = withDefaults(defineProps<{ isCard?: boolean }>(), {
   >
     <div class="flex items-center justify-center py-8">
       <div class="flex items-center space-x-2">
-        <Loader2 class="h-4 w-4 animate-spin" />
-        <span class="text-sm text-muted-foreground">Chargement...</span>
+        <div class="flex items-center space-x-2">
+          <div
+            class="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"
+          ></div>
+          <span class="text-muted-foreground">Chargement...</span>
+        </div>
       </div>
     </div>
   </div>
   <div class="flex items-center justify-center py-8" v-else>
     <div class="flex items-center space-x-2">
-      <Loader2 class="h-4 w-4 animate-spin" />
-      <span class="text-sm text-muted-foreground">Chargement...</span>
+      <div class="flex items-center space-x-2">
+        <div
+          class="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"
+        ></div>
+        <span class="text-muted-foreground">Chargement...</span>
+      </div>
     </div>
   </div>
 </template>

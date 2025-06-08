@@ -110,6 +110,7 @@ export interface TeacherModel {
   phone: string;
   gender: string;
   department: DepartmentModel;
+  courses: CourseModel[]
   created_at: string;
   updated_at: string;
 }

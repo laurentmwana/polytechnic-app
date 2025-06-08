@@ -21,6 +21,10 @@ const ROUTES_API = {
   "*delibe.index": "/deliberations",
   "*delibe.show": "/deliberation/:id",
 
+  
+  "*teacher.index": "/teachers",
+  "*teacher.show": "/teacher/:id",
+
   // PROFILE
 
   "profile.edit": "/profile/edit",

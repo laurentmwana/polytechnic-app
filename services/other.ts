@@ -152,3 +152,24 @@ export const getShowDelibe = async (delibeId: number) => {
     },
   });
 };
+
+
+
+
+// DELIBE
+export const getCollectionTeachers = async (page: number) => {
+  return await fetch(getRouteApi("*teacher.index", { page }), {
+    headers: {
+      Accept: "application/json",
+    },
+  });
+};
+
+
+export const getShowTeacher = async (teacherId: number) => {
+  return await fetch(getRouteApi("*teacher.show", { id: teacherId }), {
+    headers: {
+      Accept: "application/json",
+    },
+  });
+};

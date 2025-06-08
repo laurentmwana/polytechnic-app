@@ -158,7 +158,8 @@ const isActive = (href?: string): boolean => {
         </div>
       </header>
       <div class="flex flex-1 flex-col gap-4 p-4">
-        <slot />
+        <RouterView />
+        <slot></slot>
       </div>
     </SidebarInset>
   </SidebarProvider>
