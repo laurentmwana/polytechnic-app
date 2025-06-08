@@ -155,8 +155,7 @@ export const getShowDelibe = async (delibeId: number) => {
 
 
 
-
-// DELIBE
+// TEACHER
 export const getCollectionTeachers = async (page: number) => {
   return await fetch(getRouteApi("*teacher.index", { page }), {
     headers: {
@@ -173,3 +172,44 @@ export const getShowTeacher = async (teacherId: number) => {
     },
   });
 };
+
+
+
+
+// LABO
+export const getCollectionLabos = async (page: number) => {
+  return await fetch(getRouteApi("*fees-labo.index", { page }), {
+    headers: {
+      Accept: "application/json",
+    },
+  });
+};
+
+
+export const getShowLabo = async (teacherId: number) => {
+  return await fetch(getRouteApi("*fees-labo.show", { id: teacherId }), {
+    headers: {
+      Accept: "application/json",
+    },
+  });
+};
+
+
+// ACA
+export const getCollectionAcademics = async (page: number) => {
+  return await fetch(getRouteApi("*fees-aca.index", { page }), {
+    headers: {
+      Accept: "application/json",
+    },
+  });
+};
+
+
+export const getShowAcademic = async (id: number) => {
+  return await fetch(getRouteApi("*fees-aca.show", { id }), {
+    headers: {
+      Accept: "application/json",
+    },
+  });
+};
+

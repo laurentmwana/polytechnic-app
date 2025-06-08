@@ -53,10 +53,10 @@ const navItems = computed<NavItem[]>(() => [
     ],
   },
   {
-    label: "Paiement",
+    label: "Frais",
     children: [
-      { label: "Laboratoire", href: "#" },
-      { label: "Académique", href: "#" },
+      { label: "Laboratoire", href: "/fees-laboratory" },
+      { label: "Académique", href: "/fees-academic" },
     ],
   },
   ...(auth.isAuthenticated && auth.isStudent.value

@@ -21,9 +21,14 @@ const ROUTES_API = {
   "*delibe.index": "/deliberations",
   "*delibe.show": "/deliberation/:id",
 
-  
   "*teacher.index": "/teachers",
   "*teacher.show": "/teacher/:id",
+
+  "*fees-aca.index": "/fees-academics",
+  "*fees-aca.show": "/fees-academic/:id",
+
+  "*fees-labo.index": "/fees-laboratories",
+  "*fees-labo.show": "/fees-laboratory/:id",
 
   // PROFILE
 

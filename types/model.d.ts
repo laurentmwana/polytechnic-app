@@ -110,7 +110,7 @@ export interface TeacherModel {
   phone: string;
   gender: string;
   department: DepartmentModel;
-  courses: CourseModel[]
+  courses: CourseModel[];
   created_at: string;
   updated_at: string;
 }
@@ -131,6 +131,24 @@ export interface JuryModel {
   id: number;
   teacher: TeacherModel;
   deliberation: DeliberationModel;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface FeesAcademicModel {
+  id: number;
+  amount: number;
+  level: LevelModel;
+  year: YearModel;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface FeesLaboratoryModel {
+  id: number;
+  amount: number;
+  level: LevelModel;
+  year: YearModel;
   created_at: string;
   updated_at: string;
 }
