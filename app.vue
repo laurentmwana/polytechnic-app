@@ -3,12 +3,10 @@ import "vue-sonner/style.css";
 </script>
 
 <template>
-  <div class="h-full">
-    <NuxtLayout>
-      <NuxtPage />
-      <Toaster position="top-center" :expand="true" />
-    </NuxtLayout>
-  </div>
+  <NuxtLayout>
+    <NuxtPage />
+    <Toaster position="top-center" :expand="true" />
+  </NuxtLayout>
 </template>
 
 <!-- <style>

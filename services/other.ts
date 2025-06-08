@@ -105,6 +105,49 @@ export const getShowYear = async (id: number) => {
   });
 };
 
+
+// COURSE
+
+export const getCollectionCourses = async (page: number) => {
+  return await fetch(getRouteApi("*course.index", {page}), {
+    headers: {
+      Accept: "application/json",
+    },
+  });
+};
+
+export const getShowCourse = async (id: number) => {
+  return await fetch(getRouteApi("*course.show", { id }), {
+    headers: {
+      Accept: "application/json",
+    },
+  });
+};
+
+
+// COURSE FOLLOW
+
+
+export const getCollectionFollowes= async (token: string, id: number) => {
+  return await fetch(getRouteApi("°c-follow.index", { id }), {
+    headers: {
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+
+export const courseFollow = async (token: string, id: number) => {
+  return await fetch(getRouteApi("°c-follow.create", { id }), {
+    method: 'POST',
+    headers: {
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
 // CONTACT US
 export const contactUs = async (values: SchemaContactFormInfer) => {
   return await fetch(getRouteApi("&contact"), {
@@ -212,4 +255,6 @@ export const getShowAcademic = async (id: number) => {
     },
   });
 };
+
+
 

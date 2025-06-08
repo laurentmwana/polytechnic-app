@@ -35,10 +35,10 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="container my-12" v-if="isPending.value">
+  <div class="container my-12" v-if="isPending">
     <OptionLoader />
   </div>
-  <div class="container my-12" v-else>
+  <div class="container my-12" v-else-if="!isPending && options.length > 0">
     <div class="section-header">
       <h2 class="section-title">Nos Filières</h2>
       <p class="section-subtitle">

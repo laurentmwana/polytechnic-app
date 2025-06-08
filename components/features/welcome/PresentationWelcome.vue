@@ -49,7 +49,6 @@
             alt="Faculté Polytechnique de l'Université de Kinshasa"
             class="object-cover"
             fill
-            sizes="(max-width: 768px) 100vw, 50vw"
             priority
           />
           <div
@@ -58,7 +57,7 @@
           <div
             class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-primary/80 to-transparent p-6"
           >
-            <p class="text-muted-foreground font-medium text-lg">
+            <p class="text-gray-50 dark:text-gray-500 font-medium text-lg">
               Excellence académique et innovation technologique
             </p>
           </div>

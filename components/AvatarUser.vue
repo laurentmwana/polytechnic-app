@@ -1,5 +1,11 @@
 <script setup lang="ts">
-import { ListEnd, LogOut, User2 } from "lucide-vue-next";
+import {
+  BadgeDollarSign,
+  FolderArchive,
+  ListEnd,
+  LogOut,
+  User2,
+} from "lucide-vue-next";
 import { deleteUserLocal } from "~/services/session";
 import { getInitials } from "../lib/utils";
 import { Skeleton } from "./ui/skeleton";
@@ -67,11 +73,31 @@ const onLogout = () => {
 
         <DropdownMenuItem v-if="auth.isStudent.value" asChild>
           <NuxtLink
-            href="/informations"
+            href="/folder"
+            class="flex cursor-pointer items-center gap-2 rounded-md p-2 hover:bg-accent"
+          >
+            <FolderArchive class="h-4 w-4 text-muted-foreground" />
+            <span>Mon dossier</span>
+          </NuxtLink>
+        </DropdownMenuItem>
+
+        <DropdownMenuItem v-if="auth.isStudent.value" asChild>
+          <NuxtLink
+            href="/result"
             class="flex cursor-pointer items-center gap-2 rounded-md p-2 hover:bg-accent"
           >
             <ListEnd class="h-4 w-4 text-muted-foreground" />
-            <span>Mes informations</span>
+            <span>Mes résultats</span>
+          </NuxtLink>
+        </DropdownMenuItem>
+
+        <DropdownMenuItem v-if="auth.isStudent.value" asChild>
+          <NuxtLink
+            href="/paid"
+            class="flex cursor-pointer items-center gap-2 rounded-md p-2 hover:bg-accent"
+          >
+            <BadgeDollarSign class="h-4 w-4 text-muted-foreground" />
+            <span>Mes paiements</span>
           </NuxtLink>
         </DropdownMenuItem>
 
