@@ -14,7 +14,7 @@ import type { StateActionModel, ValidatorErrorProps } from "@/types/util";
 import { toast } from "vue-sonner";
 
 useHead({
-  title: "Création d'cours - Polytechnic Application",
+  title: "Création du cours - Polytechnic Application",
 });
 
 definePageMeta({
@@ -34,7 +34,7 @@ const onSubmit = async (values: SchemaCourseFormInfer) => {
     validator.value = null;
 
     if (!auth.session.value?.accessToken) {
-      throw new Error("utilisateurnon authentifié");
+      throw new Error("utilisateur non authentifié");
     }
 
     const response = await createCourse(auth.session.value.accessToken, values);

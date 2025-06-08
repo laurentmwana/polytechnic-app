@@ -8,10 +8,10 @@ import {
 } from "@/components/ui/card";
 import { useAuth } from "@/composables/useAuth";
 import { ago } from "@/lib/date-time";
+import { getItemTeacher } from "@/services/teacher";
 import type { TeacherModel } from "@/types/model";
 import { Calendar, Mail, User, UserCheck } from "lucide-vue-next";
 import { toast } from "vue-sonner";
-import { getItemTeacher } from "../../../../services/teacher";
 
 useHead({
   title: "Détails du professeur - Polytechnic Application",

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import TeacherForm from "@/components/features/teacher/TeacherForm.vue";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/composables/useAuth";
 import type { SchemaTeacherFormInfer } from "@/definitions/teacher";
@@ -7,7 +8,6 @@ import type { TeacherModel } from "@/types/model";
 import type { StateActionModel, ValidatorErrorProps } from "@/types/util";
 import { User } from "lucide-vue-next";
 import { toast } from "vue-sonner";
-import TeacherForm from "../../../../components/features/teacher/TeacherForm.vue";
 
 useHead({
   title: "Edition d'un professeur - Polytechnic Application",

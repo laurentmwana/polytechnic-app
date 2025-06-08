@@ -175,11 +175,11 @@
 }
 
 .section-page-title {
-  @apply text-base lg:text-xl font-bold text-foreground mb-4;
+  @apply text-2xl font-bold text-gray-900 dark:text-white mb-2;
 }
 
 .section-page-subtitle {
-  @apply text-lg text-muted-foreground max-w-2xl mx-auto;
+  @apply text-base text-muted-foreground max-w-2xl mx-auto;
 }
 
 .section-subtitle {

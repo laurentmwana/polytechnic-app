@@ -18,6 +18,18 @@ const ROUTES_API = {
   "*level.index": "/levels",
   "*level.show": "/level/:id",
 
+  "*delibe.index": "/deliberations",
+  "*delibe.show": "/deliberation/:id",
+
+  "*teacher.index": "/teachers",
+  "*teacher.show": "/teacher/:id",
+
+  "*fees-aca.index": "/fees-academics",
+  "*fees-aca.show": "/fees-academic/:id",
+
+  "*fees-labo.index": "/fees-laboratories",
+  "*fees-labo.show": "/fees-laboratory/:id",
+
   // PROFILE
 
   "profile.edit": "/profile/edit",
@@ -32,6 +44,7 @@ const ROUTES_API = {
   "&course": "/data-select/courses",
   "&department": "/data-select/departments",
   "&option": "/data-select/options",
+  "&delibe": "/data-select/deliberations",
   "&contact": "/contact",
 
   // ADMIN
@@ -66,6 +79,40 @@ const ROUTES_API = {
   "~teacher.show": "/admin/teacher/:id",
   "~teacher.update": "/admin/teacher/:id",
   "~teacher.delete": "/admin/teacher/:id",
+
+  // DEPARTMENT
+  "~department.index": "/admin/department",
+  "~department.show": "/admin/department/:id",
+  "~department.update": "/admin/department/:id",
+
+  // OPTION
+
+  "~option.index": "/admin/option",
+  "~option.store": "/admin/option",
+  "~option.show": "/admin/option/:id",
+  "~option.update": "/admin/option/:id",
+  "~option.delete": "/admin/option/:id",
+
+  // LEVEL
+  "~level.index": "/admin/level",
+  "~level.store": "/admin/level",
+  "~level.show": "/admin/level/:id",
+  "~level.update": "/admin/level/:id",
+  "~level.delete": "/admin/level/:id",
+
+  // DELIBE
+  "~deliberation.index": "/admin/deliberation",
+  "~deliberation.store": "/admin/deliberation",
+  "~deliberation.show": "/admin/deliberation/:id",
+  "~deliberation.update": "/admin/deliberation/:id",
+  "~deliberation.delete": "/admin/deliberation/:id",
+
+  // JURY
+  "~jury.index": "/admin/jury",
+  "~jury.store": "/admin/jury",
+  "~jury.show": "/admin/jury/:id",
+  "~jury.update": "/admin/jury/:id",
+  "~jury.delete": "/admin/jury/:id",
 
   // YEAR
   "~year.index": "/admin/year-academic",

@@ -48,15 +48,15 @@ const navItems = computed<NavItem[]>(() => [
       { label: "Filières", href: "/option" },
       { label: "Promotion", href: "/level" },
       { label: "Année académique", href: "/year-academic" },
-      { label: "Professeurs", href: "#" },
-      { label: "Délibération", href: "#" },
+      { label: "Professeurs", href: "/teacher" },
+      { label: "Délibération", href: "/deliberation" },
     ],
   },
   {
-    label: "Paiement",
+    label: "Frais",
     children: [
-      { label: "Laboratoire", href: "#" },
-      { label: "Académique", href: "#" },
+      { label: "Laboratoire", href: "/fees-laboratory" },
+      { label: "Académique", href: "/fees-academic" },
     ],
   },
   ...(auth.isAuthenticated && auth.isStudent.value
@@ -77,7 +77,7 @@ const navItems = computed<NavItem[]>(() => [
               href: "#",
             },
             {
-              label: "Mon coupon",
+              label: "Mes résultats",
               href: "#",
             },
             {
@@ -129,6 +129,7 @@ const handleLinkClick = (): void => {
                   <NavigationMenuTrigger
                     :class="
                       cn(
+                        'bg-bckground',
                         isActive(item.href) &&
                           'bg-accent text-accent-foreground font-semibold'
                       )

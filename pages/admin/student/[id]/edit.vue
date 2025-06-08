@@ -46,7 +46,7 @@ const fetchStudent = async () => {
     isLoading.value = true;
 
     if (!auth.session.value?.accessToken) {
-      throw new Error("utilisateurnon authentifié");
+      throw new Error("utilisateur non authentifié");
     }
 
     const response = await getItemStudent(

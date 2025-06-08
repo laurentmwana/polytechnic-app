@@ -118,7 +118,7 @@ const colorClasses = computed(() => {
     success: "border-green-500 bg-green-500",
     warning: "border-yellow-500 bg-yellow-500",
     error: "border-red-500 bg-red-500",
-    white: "border-white bg-white",
+    white: "border  bg-accent dark:bg-gray-50",
   };
   return colors[props.color];
 });

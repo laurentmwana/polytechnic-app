@@ -25,7 +25,7 @@ const props = defineProps<OptionCardProps>();
           class="text-xs"
           v-for="level in props.option.levels.slice(0, 3)"
         >
-          {{ excerpt(level.name + " " + `[level.alias]`, 45) }}
+          {{ excerpt(level.name + " [ " + level.alias + " ]", 45) }}
         </Badge>
 
         <Badge

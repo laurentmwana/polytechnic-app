@@ -127,3 +127,89 @@ export const getDashboard = async (token: string) => {
     },
   });
 };
+
+// DELIBE
+export const getCollectionDelibes = async (page: number) => {
+  return await fetch(getRouteApi("*delibe.index", { page }), {
+    headers: {
+      Accept: "application/json",
+    },
+  });
+};
+
+export const getDelibeLimit = async (limit: number) => {
+  return await fetch(getRouteApi("*delibe.index", { limit }), {
+    headers: {
+      Accept: "application/json",
+    },
+  });
+};
+
+export const getShowDelibe = async (delibeId: number) => {
+  return await fetch(getRouteApi("*delibe.show", { id: delibeId }), {
+    headers: {
+      Accept: "application/json",
+    },
+  });
+};
+
+
+
+// TEACHER
+export const getCollectionTeachers = async (page: number) => {
+  return await fetch(getRouteApi("*teacher.index", { page }), {
+    headers: {
+      Accept: "application/json",
+    },
+  });
+};
+
+
+export const getShowTeacher = async (teacherId: number) => {
+  return await fetch(getRouteApi("*teacher.show", { id: teacherId }), {
+    headers: {
+      Accept: "application/json",
+    },
+  });
+};
+
+
+
+
+// LABO
+export const getCollectionLabos = async (page: number) => {
+  return await fetch(getRouteApi("*fees-labo.index", { page }), {
+    headers: {
+      Accept: "application/json",
+    },
+  });
+};
+
+
+export const getShowLabo = async (teacherId: number) => {
+  return await fetch(getRouteApi("*fees-labo.show", { id: teacherId }), {
+    headers: {
+      Accept: "application/json",
+    },
+  });
+};
+
+
+// ACA
+export const getCollectionAcademics = async (page: number) => {
+  return await fetch(getRouteApi("*fees-aca.index", { page }), {
+    headers: {
+      Accept: "application/json",
+    },
+  });
+};
+
+
+export const getShowAcademic = async (id: number) => {
+  return await fetch(getRouteApi("*fees-aca.show", { id }), {
+    headers: {
+      Accept: "application/json",
+    },
+  });
+};
+
