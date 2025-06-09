@@ -3,13 +3,15 @@ import { ago } from "@/lib/date-time";
 import type { PaidAcademicModel } from "@/types/model";
 import type { PaginatedResponse } from "@/types/paginate";
 import { toast } from "vue-sonner";
-import { getAllPaidAcademics } from "../../../services/paid";
+import { getAllPaidAcademics } from "@/services/paid";
 
 useHead({
   title: "Paiement frais académique - Polytechnic Application",
 });
 definePageMeta({
   layout: "default",
+  middleware: ['student']
+
 });
 
 type feesAcademicPaginateProps = PaginatedResponse<PaidAcademicModel[]>;
