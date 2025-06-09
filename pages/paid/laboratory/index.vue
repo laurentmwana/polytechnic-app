@@ -3,13 +3,15 @@ import { ago } from "@/lib/date-time";
 import type { PaidLaboratoryModel } from "@/types/model";
 import type { PaginatedResponse } from "@/types/paginate";
 import { toast } from "vue-sonner";
-import { getAllPaidLabos } from "../../../services/paid";
+import { getAllPaidLabos } from "@/services/paid";
 
 useHead({
   title: "Paiement frais académique - Polytechnic Application",
 });
 definePageMeta({
   layout: "default",
+  middleware: ['student']
+
 });
 
 type FeesLaboPaginateProps = PaginatedResponse<PaidLaboratoryModel[]>;

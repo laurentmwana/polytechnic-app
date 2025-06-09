@@ -4,6 +4,8 @@ useHead({
 });
 definePageMeta({
   layout: "default",
+  middleware: ['student']
+
 });
 </script>
 

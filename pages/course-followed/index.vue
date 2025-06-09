@@ -2,7 +2,7 @@
 import { ago } from "@/lib/date-time";
 import { excerpt } from "@/lib/utils";
 import { getCollectionFollowes } from "@/services/other";
-import type { CourseFollowModel, CourseModel } from "@/types/model";
+import type { CourseFollowModel } from "@/types/model";
 import type { PaginatedResponse } from "@/types/paginate";
 import { Eye } from "lucide-vue-next";
 import { toast } from "vue-sonner";
@@ -12,6 +12,7 @@ useHead({
 });
 definePageMeta({
   layout: "default",
+  middleware: ["student"],
 });
 
 type CoursePaginateProps = PaginatedResponse<CourseFollowModel[]>;
@@ -42,6 +43,11 @@ const fetchFollowes = async () => {
 
     if (response.ok) {
       followes.value = data as CoursePaginateProps;
+    } else if (response.status === 401) {
+      toast.warning("Session expiré", {
+        description: "Votre session a expirée (:",
+      });
+      auth.logout();
     } else {
       toast.error("Erreur", {
         description:
