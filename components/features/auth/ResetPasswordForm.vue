@@ -104,7 +104,7 @@ const handleSubmit = form.handleSubmit(async (values) => {
 
     <Button class="w-full" type="submit" :disabled="isPending">
       <template v-if="isPending">
-        <Loader type="spinner" text="Chargement..." />
+        <Loader type="spinner" text="Chargement..." color="secondary" />
       </template>
       <template v-else> Modifier </template>
     </Button>

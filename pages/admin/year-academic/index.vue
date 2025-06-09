@@ -177,6 +177,7 @@ onMounted(async () => {
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead>#</TableHead>
               <TableHead>Nom</TableHead>
               <TableHead>Début</TableHead>
               <TableHead>Fin</TableHead>
@@ -187,6 +188,8 @@ onMounted(async () => {
           </TableHeader>
           <TableBody>
             <TableRow v-for="year in years.data" :key="year.id">
+              <TableCell class="font-medium"> #{{ year.id }} </TableCell>
+
               <TableCell class="font-medium">
                 {{ excerpt(year.name, 30) }}
               </TableCell>

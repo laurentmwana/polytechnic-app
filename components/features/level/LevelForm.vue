@@ -130,7 +130,7 @@ const handleSubmit = form.handleSubmit(async (values) => {
 
     <Button variant="secondary" type="submit" :disabled="isPending">
       <template v-if="isPending">
-        <Loader type="spinner" text="Chargement..." />
+        <Loader type="spinner" text="Chargement..." color="secondary" />
       </template>
       <template v-else>
         {{ props.level ? "Modifier" : "Créer" }}

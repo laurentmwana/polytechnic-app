@@ -45,8 +45,8 @@ const handleSubmit = form.handleSubmit(async (values) => {
   try {
     await props.onSubmit(values);
 
-    form.resetField("password", {value: ""})
-    form.resetField("password_confirmation", {value: ""})
+    form.resetField("password", { value: "" });
+    form.resetField("password_confirmation", { value: "" });
   } catch (error) {
     toast.error("Une erreur est survenue, veuillez réessayer.");
     console.error(error);
@@ -129,7 +129,7 @@ const handleSubmit = form.handleSubmit(async (values) => {
 
     <Button variant="secondary" type="submit" :disabled="isPending">
       <template v-if="isPending">
-        <Loader type="spinner" text="Chargement..." />
+        <Loader type="spinner" text="Chargement..." color="secondary" />
       </template>
       <template v-else>
         {{ props.user ? "Modifier" : "Créer" }}
