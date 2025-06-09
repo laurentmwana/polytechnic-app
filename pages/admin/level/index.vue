@@ -195,6 +195,7 @@ onMounted(async () => {
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead>#</TableHead>
               <TableHead>Nom</TableHead>
               <TableHead>Alias</TableHead>
               <TableHead>Option</TableHead>
@@ -205,6 +206,10 @@ onMounted(async () => {
           </TableHeader>
           <TableBody>
             <TableRow v-for="level in levels.data" :key="level.id">
+              <TableCell class="font-medium">
+                #{{ level.id }}
+              </TableCell>
+
               <TableCell class="font-medium">
                 {{ excerpt(level.name, 30) }}
               </TableCell>

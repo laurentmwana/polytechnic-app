@@ -71,11 +71,25 @@ const items = [
     children: [
       {
         title: "Académique",
-        url: "",
+        url: "/admin/fees/academic",
       },
       {
         title: "Laboratoire",
-        url: "",
+        url: "/admin/fees/laboratory",
+      },
+    ],
+  },
+
+  {
+    title: "En ordre avec",
+    children: [
+      {
+        title: "Frais académique",
+        url: "/admin/paid/academic",
+      },
+      {
+        title: "Frais laboratoire",
+        url: "/admin/paid/laboratory",
       },
     ],
   },
@@ -159,7 +173,6 @@ const isActive = (href?: string): boolean => {
       </header>
       <div class="flex flex-1 flex-col gap-4 p-4">
         <RouterView />
-        <slot></slot>
       </div>
     </SidebarInset>
   </SidebarProvider>

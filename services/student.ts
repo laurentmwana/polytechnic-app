@@ -1,7 +1,4 @@
-import type {
-  SchemaStudentExcelFormInfer,
-  SchemaStudentFormInfer,
-} from "../definitions/student";
+import type { SchemaStudentFormInfer } from "../definitions/student";
 import { getRouteApi } from "../lib/route";
 
 export const getCollectionStudents = async (token: string, page: number) => {
@@ -66,18 +63,13 @@ export const deleteStudent = async (token: string, userId: number) => {
   });
 };
 
-export const createStudentExcell = async (
-  token: string,
-  values: SchemaStudentExcelFormInfer
-) => {
+export const createStudentExcell = async (token: string, values: FormData) => {
   return await fetch(getRouteApi("~student.excel"), {
     method: "POST",
-    body: JSON.stringify(values),
+    body: values,
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
   });
 };
-
