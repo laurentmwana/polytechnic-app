@@ -47,8 +47,6 @@ const numberPage = ref<number>(
 
 const departments = ref<ModelCollectionProps | null>(null);
 const isLoading = ref<boolean>(true);
-const showModalLockcourseId = ref<number | null>(null);
-const showModalDeleteCourseId = ref<number | null>(null);
 
 const fetchDepartments = async () => {
   try {

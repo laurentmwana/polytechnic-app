@@ -47,6 +47,7 @@ const navItems = computed<NavItem[]>(() => [
       { label: "Départments", href: "/department" },
       { label: "Filières", href: "/option" },
       { label: "Promotion", href: "/level" },
+      { label: "Cours", href: "/course" },
       { label: "Année académique", href: "/year-academic" },
       { label: "Professeurs", href: "/teacher" },
       { label: "Délibération", href: "/deliberation" },
@@ -62,27 +63,23 @@ const navItems = computed<NavItem[]>(() => [
   ...(auth.isAuthenticated && auth.isStudent.value
     ? [
         {
-          label: "Mon Espace",
+          label: "Moi",
           children: [
             {
               label: "Mes cours",
-              href: "#",
+              href: "/course-followed",
             },
             {
-              label: "Laboratoire",
-              href: "#",
-            },
-            {
-              label: "Frais Académiques",
-              href: "#",
+              label: "Mes paiements",
+              href: "/paid",
             },
             {
               label: "Mes résultats",
-              href: "#",
+              href: "/result",
             },
             {
               label: "Mon dossier",
-              href: "#",
+              href: "/folder",
             },
           ],
         },

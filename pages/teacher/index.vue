@@ -88,7 +88,7 @@ onMounted(() => {
     <p>Pas de professeurs</p>
   </div>
 
-  <div class="container my-12" v-if="teachers">
+  <div class="container my-12" v-if="teachers && teachers.data.length > 0">
     <div class="section-page-header">
       <h2 class="section-page-title">Nos professeurs</h2>
     </div>

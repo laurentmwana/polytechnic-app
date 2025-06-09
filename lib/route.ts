@@ -24,6 +24,9 @@ const ROUTES_API = {
   "*teacher.index": "/teachers",
   "*teacher.show": "/teacher/:id",
 
+  "*course.index": "/courses",
+  "*course.show": "/course/:id",
+
   "*fees-aca.index": "/fees-academics",
   "*fees-aca.show": "/fees-academic/:id",
 
@@ -35,6 +38,16 @@ const ROUTES_API = {
   "profile.edit": "/profile/edit",
   "profile.password": "/profile/change-password",
 
+  // STUDENT
+  "°paid-labo.index": "/student/paid-laboratory",
+  "°paid-labo.show": "/student/paid-laboratory/:id",
+
+  "°paid-aca.index": "/student/paid-academic",
+  "°paid-aca.show": "/student/paid-academic/:id",
+
+  "°c-follow.index": "/student/course-followed",
+  "°c-follow.create": "/student/course-followed/:id",
+  
   // OTHER
 
   "&student": "/data-select/students",

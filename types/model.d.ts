@@ -99,6 +99,7 @@ export interface CourseModel {
   credits: number;
   level: LevelModel;
   teacher: TeacherModel;
+  is_follow: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -149,6 +150,33 @@ export interface FeesLaboratoryModel {
   amount: number;
   level: LevelModel;
   year: YearModel;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface PaidAcademicModel {
+  id: number;
+  academic: FeesAcademicModel;
+  paid_at: string | null;
+  is_paid: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface PaidLaboratoryModel {
+  id: number;
+  laboratory: FeesAcademicModel;
+  paid_at: string | null;
+  is_paid: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CourseFollowModel {
+  id: number;
+  year: YearModel;
+  course: CourseModel;
+  student: StudentModel;
   created_at: string;
   updated_at: string;
 }

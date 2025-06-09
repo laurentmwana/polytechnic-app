@@ -1,21 +1,24 @@
 <script setup lang="ts">
 import { ago } from "@/lib/date-time";
-import { getCollectionAcademics, getCollectionTeachers } from "@/services/other";
-import type {  FeesAcademicModel } from "@/types/model";
+import { excerpt } from "@/lib/utils";
+import { getCollectionFollowes } from "@/services/other";
+import type { CourseFollowModel, CourseModel } from "@/types/model";
 import type { PaginatedResponse } from "@/types/paginate";
+import { Eye } from "lucide-vue-next";
 import { toast } from "vue-sonner";
 
 useHead({
-  title: "Frais académique - Polytechnic Application",
+  title: "Mes cours - Polytechnic Application",
 });
 definePageMeta({
   layout: "default",
 });
 
-type FeesAcaPaginateProps = PaginatedResponse<FeesAcademicModel[]>;
+type CoursePaginateProps = PaginatedResponse<CourseFollowModel[]>;
 
 const isPending = ref<boolean>(true);
-const feesAcademics = ref<FeesAcaPaginateProps>();
+const auth = useAuth();
+const followes = ref<CoursePaginateProps>();
 const router = useRouter();
 const route = useRoute();
 
@@ -23,15 +26,22 @@ const numberPage = ref<number>(
   route.query.page ? parseInt(route.query.page as string) : 1
 );
 
-const fetchTeacher = async () => {
+const fetchFollowes = async () => {
   try {
     isPending.value = true;
 
-    const response = await getCollectionAcademics(numberPage.value);
+    if (!auth.session.value?.accessToken) {
+      return;
+    }
+
+    const response = await getCollectionFollowes(
+      auth.session.value.accessToken,
+      numberPage.value
+    );
     const data = await response.json();
 
     if (response.ok) {
-      feesAcademics.value = data as FeesAcaPaginateProps;
+      followes.value = data as CoursePaginateProps;
     } else {
       toast.error("Erreur", {
         description:
@@ -49,8 +59,8 @@ const fetchTeacher = async () => {
 
 const onPage = async (page: number) => {
   numberPage.value = page;
-  await router.push(`/teacher?page=${page}`);
-  await fetchTeacher();
+  await router.push(`/course-follow?page=${page}`);
+  await fetchFollowes();
 };
 
 watch(
@@ -59,20 +69,20 @@ watch(
     const pageNumber = newPage ? parseInt(newPage as string) : 1;
     if (pageNumber !== numberPage.value) {
       numberPage.value = pageNumber;
-      fetchTeacher();
+      fetchFollowes();
     }
   }
 );
 
 onMounted(() => {
-  fetchTeacher();
+  fetchFollowes();
 });
 </script>
 
 <template>
   <div class="container my-12" v-if="isPending">
     <div class="section-page-header">
-      <h2 class="section-page-title">Frais académique</h2>
+      <h2 class="section-page-title">Mes cours</h2>
     </div>
 
     <LoaderContainer :is-card="true" />
@@ -80,47 +90,48 @@ onMounted(() => {
 
   <div
     class="container my-12"
-    v-if="(!feesAcademics || (feesAcademics && feesAcademics.data.length === 0)) && !isPending"
+    v-else-if="
+      (!followes || (followes && followes.data.length === 0)) && !isPending
+    "
   >
     <div class="section-page-header">
-      <h2 class="section-page-title">Frais académique</h2>
+      <h2 class="section-page-title">Mes cours</h2>
     </div>
-    <p>Pas de frais académique</p>
+    <p>Pas de cours</p>
   </div>
 
-  <div class="container my-12" v-if="feesAcademics && feesAcademics.data.length > 0">
+  <div
+    class="container my-12"
+    v-else-if="followes && followes.data.length > 0 && !isPending"
+  >
     <div class="section-page-header">
-      <h2 class="section-page-title">Frais académique</h2>
+      <h2 class="section-page-title">Mes cours</h2>
     </div>
 
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>Montant</TableHead>
-          <TableHead>Promotion</TableHead>
+          <TableHead>Cours</TableHead>
           <TableHead>Année académique</TableHead>
           <TableHead>Création</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        <TableRow v-for="feesAcademic in feesAcademics.data" :key="feesAcademic.id">
+        <TableRow v-for="follow in followes.data" :key="follow.id">
           <TableCell>
-            {{ feesAcademic.amount }}$
+            {{ follow.course.name }}
           </TableCell>
           <TableCell>
-            {{ feesAcademic.level.name }}
+            {{ excerpt(follow.year.name, 30) }}
           </TableCell>
           <TableCell>
-            {{ feesAcademic.year.name }}
+            {{ ago(follow.created_at) }}
           </TableCell>
           <TableCell>
-            {{ ago(feesAcademic.created_at) }}
-          </TableCell>
-          <TableCell>
-            <div class="flex items-center justify-end">
-              <Button variant="secondary">
-                <NuxtLink :href="`/fees-academic/${feesAcademic.id}`">
-                  En savoir plus
+            <div class="flex items-center justify-end gap-4">
+              <Button size="sm" variant="secondary">
+                <NuxtLink :href="`/course/${follow.course.id}`">
+                  <Eye :size="15" />
                 </NuxtLink>
               </Button>
             </div>
@@ -130,6 +141,6 @@ onMounted(() => {
     </Table>
 
     <!-- Pagination -->
-    <Pagination :onPage="onPage" :meta="feesAcademics" />
+    <Pagination :onPage="onPage" :meta="followes" />
   </div>
 </template>

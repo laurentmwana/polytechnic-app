@@ -1,6 +1,6 @@
 <script setup lang="ts">
 useHead({
-  title: "Mes résultats - Polytechnic Application",
+  title: "Mon dossier - Polytechnic Application",
 });
 definePageMeta({
   layout: "default",
@@ -10,7 +10,9 @@ definePageMeta({
 <template>
   <div class="container my-12">
     <div class="section-page-header">
-      <h2 class="section-page-title">Mes résultats</h2>
+      <h2 class="section-page-title">
+        Mon dossier
+      </h2>
     </div>
   </div>
 </template>
