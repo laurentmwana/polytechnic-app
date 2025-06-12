@@ -1,59 +1,73 @@
+<template>
+  <div>
+    <ExcelUploader
+      :on-file="handleFileProcess"
+      :loading="isProcessing"
+      @file-selected="onFileSelected"
+      @file-removed="onFileRemoved"
+      @error="onError"
+    />
+
+    <!-- Affichage des résultats -->
+    <div v-if="processedData" class="mt-8 p-4 bg-muted/20 rounded-lg">
+      <h3 class="font-medium mb-2">Résultats du traitement</h3>
+      <pre class="text-sm">{{ JSON.stringify(processedData, null, 2) }}</pre>
+    </div>
+  </div>
+</template>
+
 <script setup lang="ts">
-import {
-  SchemaStudentExcelForm,
-  type SchemaStudentExcelFormInfer,
-} from "@/definitions/student";
-import { toTypedSchema } from "@vee-validate/zod";
-import { useForm } from "vee-validate";
+import ExcelUploader from "@/components/ui/file/ExcelUploader.vue";
 import { ref } from "vue";
 import { toast } from "vue-sonner";
 
+
 const props = defineProps<{
-  onSubmit: (values: SchemaStudentExcelFormInfer) => Promise<void>;
+  onSubmit: (file: File) => Promise<void>;
 }>();
 
-const isPending = ref(false);
+const isProcessing = ref(false);
+const processedData = ref<any>(null);
 
-const formSchema = toTypedSchema(SchemaStudentExcelForm);
-
-const form = useForm({
-  validationSchema: formSchema,
-});
-
-const handleSubmit = form.handleSubmit(async (values) => {
-  isPending.value = true;
+// Fonction de traitement du fichier
+const handleFileProcess = async (file: File): Promise<void> => {
+  isProcessing.value = true;
 
   try {
-    await props.onSubmit(values);
-  } catch (error) {
-    toast.error("Une erreur est survenue, veuillez réessayer.");
-    console.error(error);
-  } finally {
-    isPending.value = false;
-  }
-});
-</script>
 
-<template>
-  <form
-    enctype="multipart/form-data"
-    @submit.prevent="handleSubmit"
-    class="space-y-7"
-  >
-    <FormField v-slot="{ componentField }" name="file">
-      <FormItem>
-        <FormLabel>Fichier</FormLabel>
-        <FormControl>
-          <Input type="file" v-bind="componentField" />
-        </FormControl>
-        <FormMessage />
-      </FormItem>
-    </FormField>
-    <Button variant="secondary" type="submit" :disabled="isPending">
-      <template v-if="isPending">
-        <Loader type="spinner" text="Chargement..." color="secondary" />
-      </template>
-      <template v-else> Ajouter </template>
-    </Button>
-  </form>
-</template>
+    await props.onSubmit(file);
+
+    // Simuler des données traitées
+    processedData.value = {
+      fileName: file.name,
+      fileSize: file.size,
+      processedAt: new Date().toISOString(),
+      rows: 150,
+      columns: 8,
+    };
+
+  } catch (error) {
+    console.error("Erreur:", error);
+    toast.error("Erreur lors du traitement du fichier");
+    throw error; // Relancer pour que le composant enfant puisse l'afficher
+  } finally {
+    isProcessing.value = false;
+  }
+};
+
+// Gestionnaires d'événements
+const onFileSelected = (file: File) => {
+  console.log("Fichier sélectionné:", file.name);
+  processedData.value = null; // Reset des données précédentes
+};
+
+const onFileRemoved = () => {
+  console.log("Fichier supprimé");
+  processedData.value = null;
+};
+
+const onError = (message: string) => {
+  console.error("Erreur du composant:", message);
+  toast.error(message);
+};
+</script>

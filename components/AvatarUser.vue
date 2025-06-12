@@ -93,6 +93,17 @@ const onLogout = () => {
 
         <DropdownMenuItem v-if="auth.isStudent.value" asChild>
           <NuxtLink
+            href="/course-followed"
+            class="flex cursor-pointer items-center gap-2 rounded-md p-2 hover:bg-accent"
+          >
+            <ListEnd class="h-4 w-4 text-muted-foreground" />
+            <span>Mes cours</span>
+          </NuxtLink>
+        </DropdownMenuItem>
+
+
+        <DropdownMenuItem v-if="auth.isStudent.value" asChild>
+          <NuxtLink
             href="/paid"
             class="flex cursor-pointer items-center gap-2 rounded-md p-2 hover:bg-accent"
           >

@@ -130,6 +130,12 @@ const onSubmitChangePassword = async (values: SchemaProfilePasswordInfer) => {
 
 <template>
   <div class="container py-12">
+    <div class="section-page-header">
+      <h2 class="section-page-title">
+        Mon profil
+      </h2>
+    </div>
+
     <div v-if="auth.isPending.value">
       <!-- Skeleton loaders for loading state -->
       <div class="mb-6">
