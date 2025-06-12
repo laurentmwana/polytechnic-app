@@ -8,7 +8,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useAuth } from "@/composables/useAuth";
-import type { SchemaStudentExcelFormInfer } from "@/definitions/student";
 import { createStudentExcell } from "@/services/student";
 import type { UserModel } from "@/types/model";
 import type { StateActionModel, ValidatorErrorProps } from "@/types/util";
@@ -30,7 +29,7 @@ const router = useRouter();
 const user = ref<UserModel | null>(null);
 const isLoading = ref<boolean>(true);
 
-const onSubmit = async (values: SchemaStudentExcelFormInfer) => {
+const onSubmit = async (file: File) => {
   try {
     isLoading.value = true;
     validator.value = null;
@@ -41,7 +40,7 @@ const onSubmit = async (values: SchemaStudentExcelFormInfer) => {
 
     const formData = new FormData();
 
-    formData.append("excel", values.file, values.file.name);
+    formData.append("excel", file, file.name);
 
     const response = await createStudentExcell(
       auth.session.value.accessToken,
