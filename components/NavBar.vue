@@ -60,31 +60,6 @@ const navItems = computed<NavItem[]>(() => [
       { label: "Académique", href: "/fees-academic" },
     ],
   },
-  ...(auth.isAuthenticated && auth.isStudent.value
-    ? [
-        {
-          label: "Moi",
-          children: [
-            {
-              label: "Mes cours",
-              href: "/course-followed",
-            },
-            {
-              label: "Mes paiements",
-              href: "/paid",
-            },
-            {
-              label: "Mes résultats",
-              href: "/result",
-            },
-            {
-              label: "Mon dossier",
-              href: "/folder",
-            },
-          ],
-        },
-      ]
-    : []),
   { label: "Contact", href: "/contact" },
 ]);
 

@@ -47,6 +47,7 @@ const ROUTES_API = {
 
   "°c-follow.index": "/student/course-followed",
   "°c-follow.create": "/student/course-followed/:id",
+  "°folder.index": "/student/folder",
   
   // OTHER
 
