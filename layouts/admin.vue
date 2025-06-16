@@ -99,7 +99,7 @@ const items = [
     children: [
       {
         title: "Résultats",
-        url: "#",
+        url: "/admin/result",
       },
     ],
   },

@@ -133,6 +133,15 @@ const ROUTES_API = {
   "~year.close": "/admin/year-academic/:id/closed",
   "~year.show": "/admin/year-academic/:id",
 
+
+  // Result
+  "~result.index": "/admin/result",
+  "~result.store": "/admin/result",
+  "~result.show": "/admin/result/:id",
+  "~result.update": "/admin/result/:id",
+  "~result.delete": "/admin/result/:id",
+  "~result.eligible": "/admin/result/:id/eligible",
+
   "~dashboard": "/dashboard",
 };
 

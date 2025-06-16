@@ -204,3 +204,13 @@ export interface FolderModel {
     updated_at: string;
   };
 }
+
+export interface ResultModel {
+  id: number
+  is_eligible: boolean
+  file: string
+  student: StudentModel
+  deliberation: DeliberationModel,
+  created_at: string
+  updated_at: string
+}
