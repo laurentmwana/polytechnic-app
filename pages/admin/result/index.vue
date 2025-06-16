@@ -28,14 +28,15 @@ import { useAuth } from "@/composables/useAuth";
 import { ago } from "@/lib/date-time";
 import { excerpt } from "@/lib/utils";
 import { deleteOption, getCollectionOptions } from "@/services/option";
-import type { OptionModel } from "@/types/model";
+import type { OptionModel, ResultModel } from "@/types/model";
 import type { PaginatedResponse } from "@/types/paginate";
 import type { StateActionModel } from "@/types/util";
 import { Edit, Eye, MoreHorizontal, Trash2 } from "lucide-vue-next";
 import { toast } from "vue-sonner";
+import { deleteResult, getCollectionResults } from "~/services/result";
 
 useHead({
-  title: "Gestion des options - Polytechnic Application",
+  title: "Gestion des résultats - Polytechnic Application",
 });
 
 definePageMeta({
@@ -43,7 +44,7 @@ definePageMeta({
   middleware: ["admin"],
 });
 
-type ModelCollectionProps = PaginatedResponse<OptionModel[]>;
+type ModelCollectionProps = PaginatedResponse<ResultModel[]>;
 
 const auth = useAuth();
 const router = useRouter();
@@ -53,11 +54,11 @@ const numberPage = ref<number>(
   route.query.page ? parseInt(route.query.page as string) : 1
 );
 
-const options = ref<ModelCollectionProps | null>(null);
+const results = ref<ModelCollectionProps | null>(null);
 const isLoading = ref<boolean>(true);
-const showModalDeleteOptionId = ref<number | null>(null);
+const showModalDeleteResultId = ref<number | null>(null);
 
-const fetchOptions = async () => {
+const fetchResults = async () => {
   try {
     isLoading.value = true;
 
@@ -65,14 +66,14 @@ const fetchOptions = async () => {
       throw new Error("utilisateur non authentifié");
     }
 
-    const response = await getCollectionOptions(
+    const response = await getCollectionResults(
       auth.session.value.accessToken,
       numberPage.value
     );
     const data = await response.json();
 
     if (response.ok) {
-      options.value = data as ModelCollectionProps;
+      results.value = data as ModelCollectionProps;
     } else if (response.status == 401) {
       toast.warning("Session", {
         description: "Votre session a expiré, merci de vous reconnecter",
@@ -95,11 +96,11 @@ const fetchOptions = async () => {
 
 const onPage = async (page: number) => {
   numberPage.value = page;
-  await router.push(`/admin/option?page=${page}`);
-  await fetchOptions();
+  await router.push(`/admin/result?page=${page}`);
+  await fetchResults();
 };
 
-const onDeleteOption = async (optionId: number) => {
+const onDeleteResult = async (resultId: number) => {
   try {
     isLoading.value = true;
 
@@ -107,9 +108,9 @@ const onDeleteOption = async (optionId: number) => {
       throw new Error("Utilisateur non authentifié");
     }
 
-    const response = await deleteOption(
+    const response = await deleteResult(
       auth.session.value.accessToken,
-      optionId
+      resultId
     );
     const data = await response.json();
 
@@ -118,15 +119,15 @@ const onDeleteOption = async (optionId: number) => {
 
       if (state) {
         toast("Suppression", {
-          description: `Le options #${optionId} a été supprimé`,
+          description: `Le résultat #${resultId} a été supprimé`,
         });
 
-        router.replace("/admin/option?page=1");
+        router.replace("/admin/result?page=1");
 
-        await fetchOptions();
+        await fetchResults();
       } else {
         toast.error("Suppression échouée", {
-          description: `Nous n'avons pas pu modifier supprimer  le options #${optionId}`,
+          description: `Nous n'avons pas pu modifier supprimer  le résultat #${resultId}`,
         });
       }
     } else if (response.status == 401) {
@@ -142,7 +143,7 @@ const onDeleteOption = async (optionId: number) => {
     }
   } catch (error) {
     toast.error("Erreur", {
-      description: `Impossible de changer le statut de le options #${optionId}`,
+      description: `Impossible de changer le statut de le options #${resultId}`,
     });
   } finally {
     isLoading.value = false;
@@ -155,13 +156,13 @@ watch(
     const pageNumber = newPage ? parseInt(newPage as string) : 1;
     if (pageNumber !== numberPage.value) {
       numberPage.value = pageNumber;
-      fetchOptions();
+      fetchResults();
     }
   }
 );
 
 onMounted(async () => {
-  await fetchOptions();
+  await fetchResults();
 });
 </script>
 
@@ -170,13 +171,13 @@ onMounted(async () => {
     <CardHeader>
       <div class="flex items-center gap-4 justify-between">
         <div>
-          <CardTitle>Gestion des options</CardTitle>
+          <CardTitle>Gestion des résultats</CardTitle>
           <CardDescription>
-            Gérez les options de la faculté de polytechinique
+            Gérez les résultats de délibération           
           </CardDescription>
         </div>
         <Button asChild variant="outline" size="sm">
-          <NuxtLink to="/admin/option/create" class="flex items-center gap-2">
+          <NuxtLink to="/admin/result/create" class="flex items-center gap-2">
             Créer
           </NuxtLink>
         </Button>
@@ -186,9 +187,8 @@ onMounted(async () => {
       <!-- Loader -->
       <LoaderContainer v-if="isLoading" />
 
-      <!-- Aucun options -->
-      <div v-else-if="!options?.data?.length" class="text-center py-8">
-        <p class="text-muted-foreground">Aucune options trouvée</p>
+      <div v-else-if="!results?.data?.length" class="text-center py-8">
+        <p class="text-muted-foreground">Aucun résultat trouvé</p>
       </div>
 
       <!-- Table des options -->
@@ -196,39 +196,33 @@ onMounted(async () => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Nom</TableHead>
-              <TableHead>Alias</TableHead>
-              <TableHead>Département</TableHead>
-              <TableHead>Promotions</TableHead>
+              <TableHead>Etudiant</TableHead>
+              <TableHead>Délibération</TableHead>
+              <TableHead>Eligibilité</TableHead>
               <TableHead>Création</TableHead>
               <TableHead class="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            <TableRow v-for="option in options.data" :key="option.id">
+            <TableRow v-for="result in results.data" :key="result.id">
               <TableCell class="font-medium">
-                {{ excerpt(option.name, 30) }}
+                {{ excerpt(`${result.student.name} ${result.student.firstname}`, 30) }}
               </TableCell>
 
               <TableCell class="font-medium">
-                {{ excerpt(option.alias, 20) }}
+                {{ excerpt(`${result.deliberation.level.name} - ${result.deliberation.year.name}`, 30) }}
               </TableCell>
 
               <TableCell>
-                <TextLink :href="`/admin/department/${option.department.id}`">
-                  {{ excerpt(option.department.name, 30) }}
-                </TextLink>
-              </TableCell>
-
-              <TableCell>
-                <Badge variant="outline">
-                  {{ option.levels.length }}
+                <Badge>
+                  {{result.is_eligible ? 'Oui' : 'Non'}}
                 </Badge>
               </TableCell>
 
+
               <TableCell>
                 <p class="text-sm text-muted-foreground">
-                  {{ ago(option.created_at) }}
+                  {{ ago(result.created_at) }}
                 </p>
               </TableCell>
               <TableCell class="text-right">
@@ -242,7 +236,7 @@ onMounted(async () => {
                   <DropdownMenuContent align="end">
                     <DropdownMenuItem>
                       <NuxtLink
-                        :to="`/admin/option/${option.id}`"
+                        :to="`/admin/result/${result.id}`"
                         class="flex items-center gap-2"
                       >
                         <Eye class="mr-2 h-4 w-4" />
@@ -251,7 +245,7 @@ onMounted(async () => {
                     </DropdownMenuItem>
                     <DropdownMenuItem>
                       <NuxtLink
-                        :to="`/admin/option/${option.id}/edit`"
+                        :to="`/admin/result/${result.id}/edit`"
                         class="flex items-center gap-2"
                       >
                         <Edit class="mr-2 h-4 w-4" />
@@ -261,7 +255,7 @@ onMounted(async () => {
 
                     <DropdownMenuItem
                       class="text-destructive"
-                      @click="showModalDeleteOptionId = option.id"
+                      @click="showModalDeleteResultId = result.id"
                     >
                       <Trash2 class="mr-2 h-4 w-4" />
                       Supprimer
@@ -270,8 +264,8 @@ onMounted(async () => {
                 </DropdownMenu>
                 <ConfirmationDialog
                   :open="
-                    showModalDeleteOptionId !== null &&
-                    showModalDeleteOptionId === option.id
+                    showModalDeleteResultId !== null &&
+                    showModalDeleteResultId === result.id
                   "
                   variant="destructive"
                   title="Suppression compte de le options"
@@ -281,18 +275,17 @@ onMounted(async () => {
                   :loading="isLoading"
                   @confirm="
                     async () => {
-                      await onDeleteOption(option.id);
+                      await onDeleteResult(result.id);
                     }
                   "
-                  @cancel="showModalDeleteOptionId = null"
+                  @cancel="showModalDeleteResultId = null"
                 />
               </TableCell>
             </TableRow>
           </TableBody>
         </Table>
 
-        <!-- Pagination -->
-        <Pagination v-if="options" :onPage="onPage" :meta="options" />
+        <Pagination v-if="results" :onPage="onPage" :meta="results" />
       </div>
     </CardContent>
   </Card>

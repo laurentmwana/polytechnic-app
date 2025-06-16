@@ -47,6 +47,7 @@ const ROUTES_API = {
 
   "°c-follow.index": "/student/course-followed",
   "°c-follow.create": "/student/course-followed/:id",
+  "°folder.index": "/student/folder",
   
   // OTHER
 
@@ -131,6 +132,15 @@ const ROUTES_API = {
   "~year.index": "/admin/year-academic",
   "~year.close": "/admin/year-academic/:id/closed",
   "~year.show": "/admin/year-academic/:id",
+
+
+  // Result
+  "~result.index": "/admin/result",
+  "~result.store": "/admin/result",
+  "~result.show": "/admin/result/:id",
+  "~result.update": "/admin/result/:id",
+  "~result.delete": "/admin/result/:id",
+  "~result.eligible": "/admin/result/:id/eligible",
 
   "~dashboard": "/dashboard",
 };

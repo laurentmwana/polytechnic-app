@@ -180,3 +180,37 @@ export interface CourseFollowModel {
   created_at: string;
   updated_at: string;
 }
+
+export interface FolderModel {
+  id: number;
+  name: string;
+  firstname: string;
+  gender: string;
+  phone: string;
+
+  course_followeds: CourseFollowModel[];
+  historic_levels: {
+    id: number;
+    level: LevelModel;
+    year: YearModel;
+    created_at: string;
+    updated_at: string;
+  }[];
+  actual_level: {
+    id: number;
+    level: LevelModel;
+    year: YearModel;
+    created_at: string;
+    updated_at: string;
+  };
+}
+
+export interface ResultModel {
+  id: number
+  is_eligible: boolean
+  file: string
+  student: StudentModel
+  deliberation: DeliberationModel,
+  created_at: string
+  updated_at: string
+}
