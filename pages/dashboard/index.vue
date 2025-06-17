@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { toast } from "vue-sonner";
-import PaymentStatistic from "../../components/features/statistic/PaymentStatistic.vue";
-import { getDashboard } from "../../services/other";
-import type { StatisticPaymentModel } from "../../types/util";
+import PaymentStatistic from "@/components/features/statistic/PaymentStatistic.vue";
+import { getDashboard } from "@/services/other";
+import type { StatisticPaymentModel } from "@/types/util";
 
 useHead({
   title: "Tableau de bord - Polytechnic Application",
