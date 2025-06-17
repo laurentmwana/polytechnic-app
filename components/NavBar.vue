@@ -42,7 +42,8 @@ const navItems = computed<NavItem[]>(() => [
       { label: "Délibération", href: "/deliberation" },
     ],
   },
-  { label: "Contact", href: "/contact" },
+  { label: "Evènements", href: "/event" },
+  { label: "Aide", href: "/help" },
 ]);
 
 const isActive = (href?: string): boolean => {
@@ -59,7 +60,7 @@ const handleLinkClick = (): void => {
 </script>
 
 <template>
-  <nav class="backdrop-blur-sm border-b h-16">
+  <nav class="backdrop-blur border-b h-16">
     <div class="container mx-auto">
       <div class="flex items-center justify-between py-4">
         <!-- Logo -->
