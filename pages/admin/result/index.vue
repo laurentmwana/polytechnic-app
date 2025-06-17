@@ -243,16 +243,6 @@ onMounted(async () => {
                         Voir
                       </NuxtLink>
                     </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <NuxtLink
-                        :to="`/admin/result/${result.id}/edit`"
-                        class="flex items-center gap-2"
-                      >
-                        <Edit class="mr-2 h-4 w-4" />
-                        Modifier
-                      </NuxtLink>
-                    </DropdownMenuItem>
-
                     <DropdownMenuItem
                       class="text-destructive"
                       @click="showModalDeleteResultId = result.id"

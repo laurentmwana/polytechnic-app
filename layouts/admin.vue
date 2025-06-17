@@ -66,33 +66,6 @@ const items = [
     ],
   },
 
-  {
-    title: "Frais",
-    children: [
-      {
-        title: "Académique",
-        url: "/admin/fees/academic",
-      },
-      {
-        title: "Laboratoire",
-        url: "/admin/fees/laboratory",
-      },
-    ],
-  },
-
-  {
-    title: "En ordre avec",
-    children: [
-      {
-        title: "Frais académique",
-        url: "/admin/paid/academic",
-      },
-      {
-        title: "Frais laboratoire",
-        url: "/admin/paid/laboratory",
-      },
-    ],
-  },
 
   {
     title: "Publication",

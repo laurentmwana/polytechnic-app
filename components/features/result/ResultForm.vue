@@ -41,6 +41,7 @@ const handleSubmit = form.handleSubmit(async (values) => {
   isPending.value = true;
   try {
     await props.onSubmit(values);
+    form.reset({ file: null, deliberation_id: "" });
   } catch (error) {
     toast.error("Une erreur est survenue, veuillez réessayer.");
     console.error(error);

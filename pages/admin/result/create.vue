@@ -60,7 +60,7 @@ const onSubmit = async (values: SchemaResultFormInfer) => {
         toast.success("Publication réussie", {
           description: `Les résultats ont été publiés avec succès.`,
         });
-        await router.push("/admin/result");
+        router.push("/admin/result");
       } else {
         toast.error("Échec de la publication", {
           description: `Nous n'avons pas pu effectuer cette action.`,
