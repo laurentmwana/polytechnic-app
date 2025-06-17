@@ -223,6 +223,7 @@ onMounted(async () => {
               <TableHead>Genre</TableHead>
               <TableHead>Promotion</TableHead>
               <TableHead>Compte</TableHead>
+              <TableHead>Matricule</TableHead>
               <TableHead>Création</TableHead>
               <TableHead class="text-right">Actions</TableHead>
             </TableRow>
@@ -260,6 +261,9 @@ onMounted(async () => {
                 </Badge>
               </TableCell>
 
+              <TableCell>
+                {{ student.registration_token }}
+              </TableCell>
               <TableCell>
                 <p class="text-sm text-muted-foreground">
                   {{ ago(student.created_at) }}
