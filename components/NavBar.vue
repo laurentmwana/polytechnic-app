@@ -53,13 +53,6 @@ const navItems = computed<NavItem[]>(() => [
       { label: "Délibération", href: "/deliberation" },
     ],
   },
-  {
-    label: "Frais",
-    children: [
-      { label: "Laboratoire", href: "/fees-laboratory" },
-      { label: "Académique", href: "/fees-academic" },
-    ],
-  },
   { label: "Contact", href: "/contact" },
 ]);
 

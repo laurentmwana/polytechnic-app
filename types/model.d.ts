@@ -206,11 +206,13 @@ export interface FolderModel {
 }
 
 export interface ResultModel {
-  id: number
-  is_eligible: boolean
-  file: string
-  student: StudentModel
-  deliberation: DeliberationModel,
-  created_at: string
-  updated_at: string
+  id: number;
+  is_eligible: boolean;
+  is_paid_academic: boolean;
+  is_paid_labo: boolean;
+  file: string;
+  student: StudentModel;
+  deliberation: DeliberationModel;
+  created_at: string;
+  updated_at: string;
 }

@@ -27,28 +27,20 @@ const ROUTES_API = {
   "*course.index": "/courses",
   "*course.show": "/course/:id",
 
-  "*fees-aca.index": "/fees-academics",
-  "*fees-aca.show": "/fees-academic/:id",
-
-  "*fees-labo.index": "/fees-laboratories",
-  "*fees-labo.show": "/fees-laboratory/:id",
-
   // PROFILE
 
   "profile.edit": "/profile/edit",
   "profile.password": "/profile/change-password",
 
   // STUDENT
-  "°paid-labo.index": "/student/paid-laboratory",
-  "°paid-labo.show": "/student/paid-laboratory/:id",
-
-  "°paid-aca.index": "/student/paid-academic",
-  "°paid-aca.show": "/student/paid-academic/:id",
 
   "°c-follow.index": "/student/course-followed",
   "°c-follow.create": "/student/course-followed/:id",
   "°folder.index": "/student/folder",
-  
+
+  "°result.index": "/student/result",
+  "°result.download": "/student/result/:id/download",
+
   // OTHER
 
   "&student": "/data-select/students",
@@ -132,7 +124,6 @@ const ROUTES_API = {
   "~year.index": "/admin/year-academic",
   "~year.close": "/admin/year-academic/:id/closed",
   "~year.show": "/admin/year-academic/:id",
-
 
   // Result
   "~result.index": "/admin/result",

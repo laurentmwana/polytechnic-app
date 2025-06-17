@@ -11,7 +11,6 @@ useHead({
 definePageMeta({
   layout: "default",
   middleware: ['student']
-
 });
 
 type feesAcademicPaginateProps = PaginatedResponse<PaidAcademicModel[]>;

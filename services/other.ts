@@ -105,11 +105,10 @@ export const getShowYear = async (id: number) => {
   });
 };
 
-
 // COURSE
 
 export const getCollectionCourses = async (page: number) => {
-  return await fetch(getRouteApi("*course.index", {page}), {
+  return await fetch(getRouteApi("*course.index", { page }), {
     headers: {
       Accept: "application/json",
     },
@@ -124,11 +123,9 @@ export const getShowCourse = async (id: number) => {
   });
 };
 
-
 // COURSE FOLLOW
 
-
-export const getCollectionFollowes= async (token: string, id: number) => {
+export const getCollectionFollowes = async (token: string, id: number) => {
   return await fetch(getRouteApi("°c-follow.index", { id }), {
     headers: {
       Accept: "application/json",
@@ -137,10 +134,9 @@ export const getCollectionFollowes= async (token: string, id: number) => {
   });
 };
 
-
 export const courseFollow = async (token: string, id: number) => {
   return await fetch(getRouteApi("°c-follow.create", { id }), {
-    method: 'POST',
+    method: "POST",
     headers: {
       Accept: "application/json",
       Authorization: `Bearer ${token}`,
@@ -196,8 +192,6 @@ export const getShowDelibe = async (delibeId: number) => {
   });
 };
 
-
-
 // TEACHER
 export const getCollectionTeachers = async (page: number) => {
   return await fetch(getRouteApi("*teacher.index", { page }), {
@@ -207,7 +201,6 @@ export const getCollectionTeachers = async (page: number) => {
   });
 };
 
-
 export const getShowTeacher = async (teacherId: number) => {
   return await fetch(getRouteApi("*teacher.show", { id: teacherId }), {
     headers: {
@@ -216,45 +209,21 @@ export const getShowTeacher = async (teacherId: number) => {
   });
 };
 
-
-
-
 // LABO
-export const getCollectionLabos = async (page: number) => {
-  return await fetch(getRouteApi("*fees-labo.index", { page }), {
+export const getAllResults = async (token: string) => {
+  return await fetch(getRouteApi("°result.index"), {
     headers: {
       Accept: "application/json",
+      Authorization: `Bearer ${token}`,
     },
   });
 };
 
-
-export const getShowLabo = async (teacherId: number) => {
-  return await fetch(getRouteApi("*fees-labo.show", { id: teacherId }), {
+export const downloadFileResult = async (token: string, id: number) => {
+  return await fetch(getRouteApi("°result.download", { id }), {
     headers: {
-      Accept: "application/json",
+      Accept: "application/pdf",
+      Authorization: `Bearer ${token}`,
     },
   });
 };
-
-
-// ACA
-export const getCollectionAcademics = async (page: number) => {
-  return await fetch(getRouteApi("*fees-aca.index", { page }), {
-    headers: {
-      Accept: "application/json",
-    },
-  });
-};
-
-
-export const getShowAcademic = async (id: number) => {
-  return await fetch(getRouteApi("*fees-aca.show", { id }), {
-    headers: {
-      Accept: "application/json",
-    },
-  });
-};
-
-
-
