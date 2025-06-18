@@ -8,25 +8,25 @@ import { toast } from "vue-sonner";
 useHead({
   title: "Les années académiques - Polytechnic Application",
 });
+
 definePageMeta({
   layout: "default",
 });
 
 type YearPaginateProps = PaginatedResponse<YearModel[]>;
 
-const isPending = ref<boolean>(true);
+const isPending = ref(true);
 const years = ref<YearPaginateProps>();
 const router = useRouter();
 const route = useRoute();
 
-const numberPage = ref<number>(
+const numberPage = ref(
   route.query.page ? parseInt(route.query.page as string) : 1
 );
 
 const fetchYears = async () => {
   try {
     isPending.value = true;
-
     const response = await getCollectionYears(numberPage.value);
     const data = await response.json();
 
@@ -40,7 +40,7 @@ const fetchYears = async () => {
     }
   } catch (error) {
     toast.error("Erreur", {
-      description: `Impossible de récupèrer les années académiques`,
+      description: "Impossible de récupèrer les années académiques",
     });
   } finally {
     isPending.value = false;
@@ -70,36 +70,26 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="container my-12" v-if="isPending">
+  <div class="container my-12">
     <div class="section-page-header">
       <h2 class="section-page-title">Les années académiques</h2>
     </div>
 
-    <LoaderContainer :is-card="true" />
-  </div>
+    <LoaderContainer v-if="isPending" :is-card="true" />
 
-  <div
-    class="container my-12"
-    v-if="(!years || (years && years.data.length === 0)) && !isPending"
-  >
-    <div class="section-page-header">
-      <h2 class="section-page-title">Les années académiques</h2>
-    </div>
-    <p>Pas d'année académique</p>
-  </div>
-
-  <div class="container my-12" v-if="years">
-    <div class="section-page-header">
-      <h2 class="section-page-title">Les années académiques</h2>
+    <div v-else-if="!years || years.data.length === 0">
+      <p>Pas d'année académique</p>
     </div>
 
-    <div
-      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-center"
-    >
-      <YearCard v-for="year in years.data" :year="year" :key="year.id" />
-    </div>
+    <div v-else>
+      <div
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-center"
+      >
+        <YearCard v-for="year in years.data" :key="year.id" :year="year" />
+      </div>
 
-    <!-- Pagination -->
-    <Pagination :onPage="onPage" :meta="years" />
+      <!-- Pagination -->
+      <Pagination :onPage="onPage" :meta="years" />
+    </div>
   </div>
 </template>

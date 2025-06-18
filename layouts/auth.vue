@@ -1,3 +1,5 @@
+<script setup>
+</script>
 <template>
   <div class="flex min-h-svh flex-col items-center justify-center gap-6 p-4">
     <div class="flex w-full max-w-md flex-col gap-6">

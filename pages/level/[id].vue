@@ -1,4 +1,9 @@
 <script setup lang="ts">
+import { ref, onMounted } from "vue";
+import { useRoute } from "vue-router";
+
+import { createError } from "h3";
+
 import { ago } from "@/lib/date-time";
 import { getShowLevel } from "@/services/other";
 import type { LevelModel } from "@/types/model";
@@ -8,23 +13,24 @@ import { toast } from "vue-sonner";
 useHead({
   title: "En savoir plus sur une promotion - Polytechnic Application",
 });
+
 definePageMeta({
   layout: "default",
 });
 
 const route = useRoute();
 
-const levelId = parseInt(route.params.id as string);
+const levelId = parseInt(route.params.id as string, 10);
 
-if (!levelId || isNaN(levelId)) {
+if (isNaN(levelId)) {
   throw createError({
     statusCode: 400,
     statusMessage:
-      "L'ID d'une promotion est requis et doit être un nombre valide",
+      "L'ID d'une promotion est requis et doit être un nombre valide.",
   });
 }
 
-const isPending = ref<boolean>(true);
+const isPending = ref(true);
 const level = ref<LevelModel>();
 
 const fetchLevel = async () => {
@@ -39,23 +45,20 @@ const fetchLevel = async () => {
     } else {
       toast.error("Erreur", {
         description:
-          (data as { message: string }).message || "Une erreur est survenue",
+          (data as { message?: string }).message || "Une erreur est survenue.",
       });
     }
   } catch (error) {
     toast.error("Erreur", {
-      description: `Impossible de récupèrer les départments`,
+      description: "Impossible de récupérer les données de la promotion.",
     });
   } finally {
     isPending.value = false;
   }
 };
 
-onMounted(() => {
-  fetchLevel();
-});
+onMounted(fetchLevel);
 </script>
-
 <template>
   <div class="container my-12">
     <GoBack back="/level" />

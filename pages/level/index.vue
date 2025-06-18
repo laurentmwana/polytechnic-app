@@ -1,26 +1,32 @@
 <script setup lang="ts">
+import { ref, watch, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
+
+import { createError } from "h3";
+
 import { getCollectionLevels } from "@/services/other";
 import type { LevelModel } from "@/types/model";
+import type { PaginatedResponse } from "@/types/paginate";
+import LevelCard from "@/components/features/level/LevelCard.vue";
 import { toast } from "vue-sonner";
-import LevelCard from "../../components/features/level/LevelCard.vue";
-import type { PaginatedResponse } from "../../types/paginate";
 
 useHead({
-  title: "Nos options - Polytechnic Application",
+  title: "Nos promotions - Polytechnic Application",
 });
+
 definePageMeta({
   layout: "default",
 });
 
 type LevelPaginateProps = PaginatedResponse<LevelModel[]>;
 
-const isPending = ref<boolean>(true);
+const isPending = ref(true);
 const levels = ref<LevelPaginateProps>();
 const router = useRouter();
 const route = useRoute();
 
-const numberPage = ref<number>(
-  route.query.page ? parseInt(route.query.page as string) : 1
+const numberPage = ref(
+  route.query.page ? parseInt(route.query.page as string, 10) : 1
 );
 
 const fetchLevels = async () => {
@@ -35,12 +41,12 @@ const fetchLevels = async () => {
     } else {
       toast.error("Erreur", {
         description:
-          (data as { message: string }).message || "Une erreur est survenue",
+          (data as { message?: string }).message || "Une erreur est survenue.",
       });
     }
   } catch (error) {
     toast.error("Erreur", {
-      description: `Impossible de récupèrer les départments`,
+      description: "Impossible de récupérer les promotions.",
     });
   } finally {
     isPending.value = false;
@@ -56,7 +62,7 @@ const onPage = async (page: number) => {
 watch(
   () => route.query.page,
   (newPage) => {
-    const pageNumber = newPage ? parseInt(newPage as string) : 1;
+    const pageNumber = newPage ? parseInt(newPage as string, 10) : 1;
     if (pageNumber !== numberPage.value) {
       numberPage.value = pageNumber;
       fetchLevels();
@@ -64,11 +70,8 @@ watch(
   }
 );
 
-onMounted(() => {
-  fetchLevels();
-});
+onMounted(fetchLevels);
 </script>
-
 <template>
   <div class="container my-12" v-if="isPending">
     <div class="section-page-header">
@@ -97,10 +100,9 @@ onMounted(() => {
     <div
       class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-center"
     >
-      <LevelCard v-for="level in levels.data" :level="level" :key="level.id" />
+      <LevelCard v-for="level in levels.data" :key="level.id" :level="level" />
     </div>
 
-    <!-- Pagination -->
     <Pagination :onPage="onPage" :meta="levels" />
   </div>
 </template>

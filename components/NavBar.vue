@@ -64,10 +64,10 @@ const handleLinkClick = (): void => {
     <div class="container mx-auto">
       <div class="flex items-center justify-between py-4">
         <!-- Logo -->
-        <NuxtLink to="/" class="flex items-center">
+        <NuxtLink href="/" class="flex items-center">
           <Logo
-            :width="35"
-            :height="35"
+            :width="30"
+            :height="30"
             class="flex items-center justify-center"
           />
         </NuxtLink>
@@ -99,7 +99,7 @@ const handleLinkClick = (): void => {
                   as-child
                 >
                   <NuxtLink
-                    :to="child.href || '#'"
+                    :href="child.href || '#'"
                     :class="
                       cn(
                         'w-full cursor-pointer',

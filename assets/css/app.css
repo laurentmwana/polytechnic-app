@@ -185,3 +185,71 @@
 .section-subtitle {
   @apply text-lg text-muted-foreground max-w-2xl mx-auto;
 }
+
+/* Custom Scrollbar Styles */
+:deep(.custom-scrollbar) {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(59, 130, 246, 0.5) rgba(229, 231, 235, 0.3);
+}
+
+:deep(.custom-scrollbar::-webkit-scrollbar) {
+  width: 8px;
+}
+
+:deep(.custom-scrollbar::-webkit-scrollbar-track) {
+  background: rgba(229, 231, 235, 0.3);
+  border-radius: 9999px;
+}
+
+:deep(.custom-scrollbar::-webkit-scrollbar-thumb) {
+  background: rgba(59, 130, 246, 0.5);
+  border-radius: 9999px;
+  transition: background-color 0.2s;
+}
+
+:deep(.custom-scrollbar::-webkit-scrollbar-thumb:hover) {
+  background: rgba(59, 130, 246, 0.7);
+}
+
+/* Thin scrollbar variant */
+:deep(.scrollbar-thin::-webkit-scrollbar) {
+  width: 4px;
+}
+
+:deep(.scrollbar-thin::-webkit-scrollbar-track) {
+  background: transparent;
+}
+
+:deep(.scrollbar-thin::-webkit-scrollbar-thumb) {
+  background: rgba(156, 163, 175, 0.4);
+  border-radius: 9999px;
+}
+
+:deep(.scrollbar-thin::-webkit-scrollbar-thumb:hover) {
+  background: rgba(156, 163, 175, 0.6);
+}
+
+/* Global scrollbar styles */
+:deep(html) {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(156, 163, 175, 0.3) rgba(229, 231, 235, 0.3);
+}
+
+:deep(body::-webkit-scrollbar) {
+  width: 8px;
+}
+
+:deep(body::-webkit-scrollbar-track) {
+  background: rgba(229, 231, 235, 0.3);
+  border-radius: 9999px;
+}
+
+:deep(body::-webkit-scrollbar-thumb) {
+  background: rgba(156, 163, 175, 0.3);
+  border-radius: 9999px;
+  transition: background-color 0.2s;
+}
+
+:deep(body::-webkit-scrollbar-thumb:hover) {
+  background: rgba(156, 163, 175, 0.5);
+}

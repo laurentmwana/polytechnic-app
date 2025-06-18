@@ -1,7 +1,9 @@
+<script setup></script>
+
 <template>
-  <div class="h-full">
+  <div>
     <NavBar />
-    <main>
+    <main class="h-full mt-auto">
       <slot />
     </main>
     <footer class="py-8" id="footer">

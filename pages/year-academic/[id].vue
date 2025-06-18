@@ -2,16 +2,20 @@
 import { getShowYear } from "@/services/other";
 import type { YearModel } from "@/types/model";
 import { toast } from "vue-sonner";
-import YearDetails from "../../components/features/year/YearDetails.vue";
+import YearDetails from "@/components/features/year/YearDetails.vue";
+import GoBack from "@/components/GoBack.vue";
 
 useHead({
   title: "En savoir plus sur une année académique - Polytechnic Application",
 });
+
 definePageMeta({
   layout: "default",
 });
 
 const route = useRoute();
+const isPending = ref(true);
+const year = ref<YearModel>();
 
 const yearId = parseInt(route.params.id as string);
 
@@ -22,9 +26,6 @@ if (!yearId || isNaN(yearId)) {
       "L'ID d'une année académique est requis et doit être un nombre valide",
   });
 }
-
-const isPending = ref<boolean>(true);
-const year = ref<YearModel>();
 
 const fetchYear = async () => {
   try {
@@ -58,25 +59,21 @@ onMounted(() => {
 <template>
   <div class="container my-12">
     <GoBack back="/year-academic" />
-  </div>
 
-  <div class="container my-12" v-if="isPending">
     <div class="section-page-header">
       <h2 class="section-page-title">
-        En savoir plus sur la année académique #{{ yearId }}
+        En savoir plus sur l’année académique #{{ yearId }}
       </h2>
     </div>
 
-    <LoaderContainer :is-card="true" />
-  </div>
+    <LoaderContainer v-if="isPending" :is-card="true" />
 
-  <div class="container my-12" v-if="year">
-    <div class="section-page-header">
-      <h2 class="section-page-title">
-        En savoir plus sur la année académique #{{ yearId }}
-      </h2>
+    <div v-else-if="year">
+      <YearDetails :year="year" />
     </div>
 
-    <YearDetails :year="year" />
+    <p v-else class="text-gray-500">
+      Aucune donnée trouvée pour cette année académique.
+    </p>
   </div>
 </template>

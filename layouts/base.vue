@@ -1,6 +1,7 @@
+<script setup></script>
 <template>
+  <NavBar />
   <div class="h-full">
-    <NavBar />
     <main>
       <slot />
     </main>
