@@ -30,9 +30,7 @@ const onSubmit = async (values: { email: string; password: string }) => {
   if (response.ok) {
     redirecting.value = true;
     const user = (data as { data: AuthModel }).data;
-
     createUserLocal(user);
-
     router.replace("/");
   } else if (response.status == 422) {
     validator.value = data as ValidatorErrorProps;
@@ -47,44 +45,43 @@ const onSubmit = async (values: { email: string; password: string }) => {
 </script>
 
 <template>
-  <div v-if="redirecting">
-    <Card class="rounded-xl">
-      <CardHeader class="px-10 pt-8 pb-0 text-center">
-        <CardTitle class="text-xl">Connexion réussie</CardTitle>
-        <CardDescription>Redirection en cours...</CardDescription>
-      </CardHeader>
-      <CardContent class="px-10 py-8">
-        <div class="space-y-4 py-4">
-          <div class="flex items-center justify-center mb-6">
-            <Skeleton class="h-12 w-3/4" />
+  <div>
+    <div v-if="redirecting">
+      <Card class="rounded-xl">
+        <CardHeader class="px-10 pt-8 pb-0 text-center">
+          <CardTitle class="text-xl">Connexion réussie</CardTitle>
+          <CardDescription>Redirection en cours...</CardDescription>
+        </CardHeader>
+        <CardContent class="px-10 py-8">
+          <div class="space-y-4 py-4">
+            <div class="flex items-center justify-center mb-6">
+              <Skeleton class="h-12 w-3/4" />
+            </div>
+            <Skeleton class="h-10 w-full" />
+            <Skeleton class="h-10 w-full" />
+            <Skeleton class="h-10 w-full" />
+            <div class="flex justify-end mt-6">
+              <Skeleton class="h-10 w-24" />
+            </div>
           </div>
-          <Skeleton class="h-10 w-full" />
-          <Skeleton class="h-10 w-full" />
-          <Skeleton class="h-10 w-full" />
-          <div class="flex justify-end mt-6">
-            <Skeleton class="h-10 w-24" />
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  </div>
-  <div class="space-y-4" v-else>
-    <ValidatorError :validator="validator" />
-    <Card>
-      <CardHeader class="text-center">
-        <CardTitle class="text-xl font-semibold">Se connecter</CardTitle>
-        <CardDescription>
-          Connectez-vous à votre compte pour accéder à votre espace
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <LoginForm :onSubmit="onSubmit" />
+        </CardContent>
+      </Card>
+    </div>
+    <div class="space-y-4" v-else>
+      <ValidatorError :validator="validator" />
+      <Card>
+        <CardHeader class="text-center">
+          <CardTitle class="text-xl font-semibold">Se connecter</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <LoginForm :onSubmit="onSubmit" />
 
-        <div class="text-muted-foreground text-center text-sm mt-6">
-          Vous avez oublié votre mot de passe ?
-          <TextLink href="/auth/forgot-password"> Réinitialiser </TextLink>
-        </div>
-      </CardContent>
-    </Card>
+          <div class="text-muted-foreground text-center text-sm mt-6">
+            Vous avez oublié votre mot de passe ?
+            <TextLink href="/auth/forgot-password"> Réinitialiser </TextLink>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   </div>
 </template>

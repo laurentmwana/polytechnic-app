@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { toast } from "vue-sonner";
-import { ago } from "../../lib/date-time";
-import { getShowTeacher } from "../../services/other";
-import type { TeacherModel } from "../../types/model";
+import { ago } from "@/lib/date-time";
+import { getShowTeacher } from "@/services/other";
+import type { TeacherModel } from "@/types/model";
 import { Calendar, Mail, User, UserCheck } from "lucide-vue-next";
 
 useHead({
@@ -13,7 +13,6 @@ definePageMeta({
 });
 
 const route = useRoute();
-
 const teacherId = parseInt(route.params.id as string);
 
 if (!teacherId || isNaN(teacherId)) {
@@ -44,7 +43,7 @@ const fetchTeacher = async () => {
     }
   } catch (error) {
     toast.error("Erreur", {
-      description: `Impossible de récupèrer les professeurs`,
+      description: `Impossible de récupérer le professeur`,
     });
   } finally {
     isPending.value = false;
@@ -71,13 +70,12 @@ onMounted(() => {
     <LoaderContainer :is-card="true" />
   </div>
 
-  <div class="container my-12" v-if="teacher">
+  <div class="container my-12" v-else-if="teacher">
     <div class="section-page-header">
       <h2 class="section-page-title">
         En savoir plus sur le professeur #{{ teacherId }}
       </h2>
     </div>
-    
 
     <div class="grid gap-6 md:grid-cols-2">
       <!-- Informations principales -->
@@ -88,7 +86,7 @@ onMounted(() => {
             Informations personnelles
           </CardTitle>
           <CardDescription>
-            Détails de le professeur {{ teacher.name }} {{ teacher.firstname }}
+            Détails du professeur {{ teacher.name }} {{ teacher.firstname }}
           </CardDescription>
         </CardHeader>
         <CardContent class="space-y-4">
@@ -106,8 +104,10 @@ onMounted(() => {
             <div class="flex items-center gap-3">
               <Mail class="h-4 w-4 text-muted-foreground" />
               <div>
-                <p class="text-sm font-medium">Télpéhone</p>
-                <p class="text-sm text-muted-foreground">{{ teacher.phone }}</p>
+                <p class="text-sm font-medium">Téléphone</p>
+                <p class="text-sm text-muted-foreground">
+                  {{ teacher.phone }}
+                </p>
               </div>
             </div>
 

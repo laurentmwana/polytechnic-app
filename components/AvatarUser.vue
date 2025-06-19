@@ -101,17 +101,6 @@ const onLogout = () => {
           </NuxtLink>
         </DropdownMenuItem>
 
-
-        <DropdownMenuItem v-if="auth.isStudent.value" asChild>
-          <NuxtLink
-            href="/paid"
-            class="flex cursor-pointer items-center gap-2 rounded-md p-2 hover:bg-accent"
-          >
-            <BadgeDollarSign class="h-4 w-4 text-muted-foreground" />
-            <span>Mes paiements</span>
-          </NuxtLink>
-        </DropdownMenuItem>
-
         <DropdownMenuSeparator />
 
         <DropdownMenuItem

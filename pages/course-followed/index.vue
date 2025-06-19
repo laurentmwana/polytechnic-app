@@ -1,62 +1,61 @@
 <script setup lang="ts">
+import { ref, watch, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { toast } from "vue-sonner";
+
 import { ago } from "@/lib/date-time";
 import { excerpt } from "@/lib/utils";
 import { getCollectionFollowes } from "@/services/other";
 import type { CourseFollowModel } from "@/types/model";
 import type { PaginatedResponse } from "@/types/paginate";
-import { Eye } from "lucide-vue-next";
-import { toast } from "vue-sonner";
 
 useHead({
   title: "Mes cours - Polytechnic Application",
 });
+
 definePageMeta({
   layout: "default",
-  middleware: ["student"],
+  middleware: ["student", "verified"],
 });
 
 type CoursePaginateProps = PaginatedResponse<CourseFollowModel[]>;
 
-const isPending = ref<boolean>(true);
+const isPending = ref(true);
+const follows = ref<CoursePaginateProps>();
 const auth = useAuth();
-const followes = ref<CoursePaginateProps>();
 const router = useRouter();
 const route = useRoute();
 
-const numberPage = ref<number>(
-  route.query.page ? parseInt(route.query.page as string) : 1
+const numberPage = ref(
+  route.query.page ? parseInt(route.query.page as string, 10) : 1
 );
 
-const fetchFollowes = async () => {
+const fetchFollows = async () => {
   try {
     isPending.value = true;
 
-    if (!auth.session.value?.accessToken) {
-      return;
-    }
+    const token = auth.session.value?.accessToken;
+    if (!token) return;
 
-    const response = await getCollectionFollowes(
-      auth.session.value.accessToken,
-      numberPage.value
-    );
+    const response = await getCollectionFollowes(token, numberPage.value);
     const data = await response.json();
 
     if (response.ok) {
-      followes.value = data as CoursePaginateProps;
+      follows.value = data as CoursePaginateProps;
     } else if (response.status === 401) {
-      toast.warning("Session expiré", {
-        description: "Votre session a expirée (:",
+      toast.warning("Session expirée", {
+        description: "Votre session a expiré. Veuillez vous reconnecter.",
       });
       auth.logout();
     } else {
       toast.error("Erreur", {
         description:
-          (data as { message: string }).message || "Une erreur est survenue",
+          (data as { message: string }).message || "Une erreur est survenue.",
       });
     }
   } catch (error) {
     toast.error("Erreur", {
-      description: `Impossible de récupèrer les professeurss`,
+      description: "Impossible de récupérer les cours suivis.",
     });
   } finally {
     isPending.value = false;
@@ -66,87 +65,63 @@ const fetchFollowes = async () => {
 const onPage = async (page: number) => {
   numberPage.value = page;
   await router.push(`/course-follow?page=${page}`);
-  await fetchFollowes();
+  await fetchFollows();
 };
 
 watch(
   () => route.query.page,
   (newPage) => {
-    const pageNumber = newPage ? parseInt(newPage as string) : 1;
+    const pageNumber = newPage ? parseInt(newPage as string, 10) : 1;
     if (pageNumber !== numberPage.value) {
       numberPage.value = pageNumber;
-      fetchFollowes();
+      fetchFollows();
     }
   }
 );
 
-onMounted(() => {
-  fetchFollowes();
-});
+onMounted(fetchFollows);
 </script>
-
 <template>
-  <div class="container my-12" v-if="isPending">
+  <div class="container my-12">
     <div class="section-page-header">
       <h2 class="section-page-title">Mes cours</h2>
     </div>
 
-    <LoaderContainer :is-card="true" />
-  </div>
+    <LoaderContainer v-if="isPending" :is-card="true" />
 
-  <div
-    class="container my-12"
-    v-else-if="
-      (!followes || (followes && followes.data.length === 0)) && !isPending
-    "
-  >
-    <div class="section-page-header">
-      <h2 class="section-page-title">Mes cours</h2>
-    </div>
-    <p>Pas de cours</p>
-  </div>
+    <template v-else-if="!follows || follows.data.length === 0">
+      <p>Aucun cours suivi pour l’instant.</p>
+    </template>
 
-  <div
-    class="container my-12"
-    v-else-if="followes && followes.data.length > 0 && !isPending"
-  >
-    <div class="section-page-header">
-      <h2 class="section-page-title">Mes cours</h2>
-    </div>
-
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Cours</TableHead>
-          <TableHead>Année académique</TableHead>
-          <TableHead>Création</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        <TableRow v-for="follow in followes.data" :key="follow.id">
-          <TableCell>
-            {{ follow.course.name }}
-          </TableCell>
-          <TableCell>
-            {{ excerpt(follow.year.name, 30) }}
-          </TableCell>
-          <TableCell>
-            {{ ago(follow.created_at) }}
-          </TableCell>
-          <TableCell>
-            <div class="flex items-center justify-end gap-4">
-              <Button size="sm" variant="secondary">
+    <template v-else>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Cours</TableHead>
+            <TableHead>Année académique</TableHead>
+            <TableHead>Suivi depuis</TableHead>
+            <TableHead class="text-right">Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <TableRow v-for="follow in follows.data" :key="follow.id">
+            <TableCell>{{ follow.course.name }}</TableCell>
+            <TableCell>{{ excerpt(follow.year.name, 30) }}</TableCell>
+            <TableCell>{{ ago(follow.created_at) }}</TableCell>
+            <TableCell>
+              <div class="flex items-center justify-end gap-4">
                 <NuxtLink :href="`/course/${follow.course.id}`">
-                  <Eye :size="15" />
+                  <Button size="sm" variant="secondary">
+                    <Eye :size="15" />
+                  </Button>
                 </NuxtLink>
-              </Button>
-            </div>
-          </TableCell>
-        </TableRow>
-      </TableBody>
-    </Table>
+              </div>
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
 
-    <!-- Pagination -->
-    <Pagination :onPage="onPage" :meta="followes" />
+      <Pagination :onPage="onPage" :meta="follows" />
+    </template>
   </div>
 </template>

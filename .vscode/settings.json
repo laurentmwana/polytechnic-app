@@ -1,5 +1,14 @@
 {
   "files.exclude": {
-    ".nuxt": true
-  }
+    ".nuxt": true,
+    ".git": true,
+    ".output": true,
+    "dist": true,
+    "node_modules": true,
+  },
+  "eslint.workingDirectories": [
+     {
+      "mode": "auto"
+    }
+  ]
 }

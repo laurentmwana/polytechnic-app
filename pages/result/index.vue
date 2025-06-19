@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { FileText, Download, Loader2, Eye } from "lucide-vue-next";
+import { Download } from "lucide-vue-next";
 import type { ResultModel } from "~/types/model";
 import { getAllResults, downloadFileResult } from "~/services/other";
 import type { PaginatedResponse } from "~/types/paginate";
@@ -18,16 +18,15 @@ import {
 } from "@/components/ui/alert-dialog";
 import { excerpt } from "~/lib/utils";
 import { ago } from "~/lib/date-time";
-import { useAuth } from "~/composables/useAuth"; // supposé
+import { useAuth } from "~/composables/useAuth";
 import { useRouter } from "vue-router";
-
 
 useHead({
   title: "Mes résultats - Polytechnic Application",
 });
 definePageMeta({
   layout: "default",
-  middleware: ['student']
+  middleware: ["student", "verified"],
 });
 
 type ResultsResponseType = PaginatedResponse<ResultModel[]>;
@@ -43,19 +42,20 @@ const fetchResults = async () => {
   try {
     isPending.value = true;
 
-    if (!auth.session.value?.accessToken) {
-      throw new Error("utilisateur non authentifié");
+    const token = auth.session.value?.accessToken;
+    if (!token) {
+      throw new Error("Utilisateur non authentifié");
     }
 
-    const response = await getAllResults(auth.session.value.accessToken);
+    const response = await getAllResults(token);
     const data = await response.json();
 
     if (response.ok) {
       results.value = data as ResultsResponseType;
     } else if (response.status === 401) {
       auth.logout();
-      toast.warning("Session", {
-        description: "Votre session a expiré",
+      toast.warning("Session expirée", {
+        description: "Votre session a expiré. Veuillez vous reconnecter.",
       });
       router.push("/auth/login");
     } else {
@@ -87,20 +87,16 @@ const downloadResult = async (id: number) => {
   try {
     isPending.value = true;
 
-    if (!auth.session?.value?.accessToken) {
-      throw new Error("utilisateur non authentifié");
+    const token = auth.session?.value?.accessToken;
+    if (!token) {
+      throw new Error("Utilisateur non authentifié");
     }
 
-    const response = await downloadFileResult(
-      auth.session.value.accessToken,
-      id
-    );
+    const response = await downloadFileResult(token, id);
 
     if (response.ok) {
-      // Récupérer le blob (fichier PDF)
       const blob = await response.blob();
 
-      // Extraire le nom du fichier depuis Content-Disposition si disponible
       const disposition = response.headers.get("Content-Disposition");
       let filename = "resultat.pdf";
       if (disposition && disposition.includes("filename=")) {
@@ -110,7 +106,6 @@ const downloadResult = async (id: number) => {
         }
       }
 
-      // Créer un lien pour télécharger le fichier
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
@@ -120,13 +115,13 @@ const downloadResult = async (id: number) => {
       a.remove();
       window.URL.revokeObjectURL(url);
 
-      toast.success("Téléchargement", {
+      toast.success("Téléchargement réussi", {
         description: `Le fichier ${filename} a été téléchargé avec succès.`,
       });
     } else if (response.status === 401) {
       auth.logout();
-      toast.warning("Session", {
-        description: "Votre session a expiré",
+      toast.warning("Session expirée", {
+        description: "Votre session a expiré. Veuillez vous reconnecter.",
       });
       router.push("/auth/login");
     } else {
@@ -146,11 +141,8 @@ const downloadResult = async (id: number) => {
   }
 };
 
-onMounted(async () => {
-  await fetchResults();
-});
+onMounted(fetchResults);
 </script>
-
 <template>
   <div class="container py-12">
     <div class="section-page-header">
@@ -162,17 +154,16 @@ onMounted(async () => {
 
     <LoaderContainer v-if="isPending" />
 
-    <div
-      v-if="!isPending && results"
-      class="bg-white rounded-lg shadow-sm border"
-    >
+    <div v-else-if="results" class="rounded-lg shadow-sm border">
       <div class="overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead>Délibération</TableHead>
-              <TableHead>Eligible</TableHead>
-              <TableHead>Date de création</TableHead>
+              <TableHead>Eligible (Académique)</TableHead>
+              <TableHead>Payé Académique</TableHead>
+              <TableHead>Payé Labo</TableHead>
+              <TableHead>Date</TableHead>
               <TableHead class="text-end">Action</TableHead>
             </TableRow>
           </TableHeader>
@@ -181,6 +172,7 @@ onMounted(async () => {
               v-for="result in results.data"
               :key="result.id"
               @click="openModal(result)"
+              class="cursor-pointer"
             >
               <TableCell>
                 {{
@@ -189,19 +181,20 @@ onMounted(async () => {
                   ) || "Délibération #" + result.deliberation.id
                 }}
               </TableCell>
-
               <TableCell>
-                <Badge>
+                <Badge :variant="result.is_eligible ? 'default' : 'outline'">
                   {{ result.is_eligible ? "Oui" : "Non" }}
                 </Badge>
               </TableCell>
               <TableCell>
-                <Badge>
+                <Badge
+                  :variant="result.is_paid_academic ? 'default' : 'outline'"
+                >
                   {{ result.is_paid_academic ? "Oui" : "Non" }}
                 </Badge>
               </TableCell>
               <TableCell>
-                <Badge>
+                <Badge :variant="result.is_paid_labo ? 'default' : 'outline'">
                   {{ result.is_paid_labo ? "Oui" : "Non" }}
                 </Badge>
               </TableCell>
@@ -219,11 +212,10 @@ onMounted(async () => {
                     <AlertDialogContent>
                       <AlertDialogHeader>
                         <AlertDialogTitle>
-                          Voulez-vous vraiment télécharger ce fichier ?
+                          Télécharger ce résultat ?
                         </AlertDialogTitle>
                         <AlertDialogDescription>
-                          Cette action ne peut pas être annulée. Le
-                          téléchargement va commencer immédiatement.
+                          Le téléchargement commencera immédiatement.
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>

@@ -37,3 +37,24 @@ export const resetPasswordUser = async (body: {
     },
   });
 };
+
+export const verifiedEmail = async (token: string, params: {expires: string, signature: string, id: number, hash: string}) => {
+  return await fetch(getRouteApi("verified-email", params), {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const sendVerificationEmail = async (token: string) => {
+  return await fetch(getRouteApi("send-verified-email"), {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};

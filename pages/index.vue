@@ -2,6 +2,10 @@
 import { ref, onMounted, onUnmounted } from "vue";
 import { Book } from "lucide-vue-next";
 
+useHead({
+  title: "Accueil - Polytechnic Application",
+});
+
 definePageMeta({
   layout: "base",
 });

@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import { useAuth } from "@/composables/useAuth";
+import type { AuthModel } from "@/types/model";
 import UserProfileInfoForm from "@/components/features/user/UserProfileInfoForm.vue";
 import UserProfilePasswordForm from "@/components/features/user/UserProfilePasswordForm.vue";
 import type {
@@ -6,7 +10,7 @@ import type {
   SchemaProfilePasswordInfer,
 } from "@/definitions/profile";
 import { changePasswordUser, editProfileUser } from "@/services/profile";
-import { deleteUserLocal } from "@/services/session";
+import { createUserLocal, deleteUserLocal } from "@/services/session";
 import type { ValidatorErrorProps } from "@/types/util";
 import { toast } from "vue-sonner";
 
@@ -16,7 +20,7 @@ useHead({
 
 definePageMeta({
   middleware: ["auth"],
-  layouts: ["default"],
+  layout: "default",
 });
 
 const router = useRouter();
@@ -26,13 +30,14 @@ const editValidator = ref<ValidatorErrorProps | null>(null);
 const passwordValidator = ref<ValidatorErrorProps | null>(null);
 
 const onSubmitEditInfo = async (values: SchemaProfileInfoInfer) => {
+  editValidator.value = null;
+
+  if (!auth.session.value?.accessToken) {
+    toast.error("Erreur", { description: "Utilisateur non authentifié." });
+    return;
+  }
+
   try {
-    editValidator.value = null;
-
-    if (!auth.session.value?.accessToken) {
-      throw new Error("Utilisateur non authentifié");
-    }
-
     const response = await editProfileUser(
       auth.session.value.accessToken,
       values
@@ -40,36 +45,24 @@ const onSubmitEditInfo = async (values: SchemaProfileInfoInfer) => {
     const data = await response.json();
 
     if (response.ok) {
-      const state = (data as { state: boolean }).state;
-
-      if (state) {
-        toast.success("Informations du profil", {
-          description: "Vos informations ont été modifiées avec succès.",
-        });
-        deleteUserLocal();
-
-        toast.success("Connexion requise", {
-          description: "Veuillez vous reconnecter pour voir vos modifications.",
-        });
-
-        router.replace("/auth/login");
-      } else {
-        toast.error("Erreur", {
-          description: "Nous n'avons pas pu effectuer cette action.",
-        });
-      }
+      const newUser = (data as { data: AuthModel }).data;
+      createUserLocal(newUser);
+      auth.initializeAuth();
+      toast.success("Profil mis à jour", {
+        description: "Vos informations ont été modifiées avec succès.",
+      });
+      router.replace("/profile");
     } else if (response.status === 422) {
       editValidator.value = data as ValidatorErrorProps;
     } else if (response.status === 401) {
       deleteUserLocal();
       router.replace("/auth/login");
       toast.warning("Session expirée", {
-        description: "Votre session a expiré, merci de vous reconnecter.",
+        description: "Votre session a expiré. Veuillez vous reconnecter.",
       });
     } else {
       toast.error("Erreur", {
-        description:
-          (data as { message: string }).message || "Une erreur est survenue.",
+        description: (data as any).message || "Une erreur est survenue.",
       });
     }
   } catch (error) {
@@ -80,44 +73,37 @@ const onSubmitEditInfo = async (values: SchemaProfileInfoInfer) => {
 };
 
 const onSubmitChangePassword = async (values: SchemaProfilePasswordInfer) => {
+  passwordValidator.value = null;
+
+  if (!auth.session.value?.accessToken) {
+    toast.error("Erreur", { description: "Utilisateur non authentifié." });
+    return;
+  }
+
   try {
-    passwordValidator.value = null;
-
-    if (!auth.session.value?.accessToken) {
-      throw new Error("Utilisateur non authentifié");
-    }
-
     const response = await changePasswordUser(
       auth.session.value.accessToken,
       values
     );
     const data = await response.json();
 
-    if (response.ok) {
-      const state = (data as { state: boolean }).state;
-      if (state) {
-        toast.success("Mot de passe mis à jour", {
-          description: "Votre mot de passe a été modifié avec succès.",
-        });
+    if (response.ok && (data as any).state) {
+      toast.success("Mot de passe mis à jour", {
+        description: "Votre mot de passe a été modifié avec succès.",
+      });
 
-        router.replace("/profile");
-      } else {
-        toast.error("Erreur", {
-          description: "Nous n'avons pas pu effectuer cette action.",
-        });
-      }
+      router.replace("/profile");
     } else if (response.status === 422) {
       passwordValidator.value = data as ValidatorErrorProps;
     } else if (response.status === 401) {
       deleteUserLocal();
       router.replace("/auth/login");
       toast.warning("Session expirée", {
-        description: "Votre session a expiré, merci de vous reconnecter.",
+        description: "Votre session a expiré. Veuillez vous reconnecter.",
       });
     } else {
       toast.error("Erreur", {
-        description:
-          (data as { message: string }).message || "Une erreur est survenue.",
+        description: (data as any).message || "Une erreur est survenue.",
       });
     }
   } catch (error) {
@@ -131,9 +117,7 @@ const onSubmitChangePassword = async (values: SchemaProfilePasswordInfer) => {
 <template>
   <div class="container py-12">
     <div class="section-page-header">
-      <h2 class="section-page-title">
-        Mon profil
-      </h2>
+      <h2 class="section-page-title">Mon profil</h2>
     </div>
 
     <div v-if="auth.isPending.value">
@@ -209,6 +193,20 @@ const onSubmitChangePassword = async (values: SchemaProfilePasswordInfer) => {
     </div>
 
     <div class="space-y-6" v-else>
+      <Alert
+        variant="destructive"
+        v-if="auth.session.value && !auth.session.value.isEmailVerified"
+      >
+        <AlertTitle> Votre adresse e-mail n’est pas vérifiée</AlertTitle>
+        <AlertDescription>
+          Veuillez cliquer sur le lien ci-dessous pour procéder à la
+          vérification de votre adresse e-mail :
+          <NuxtLink href="/auth/send-verification-email">
+            👉 Vérifier mon adresse e-mail
+          </NuxtLink>
+        </AlertDescription>
+      </Alert>
+
       <Card>
         <CardHeader>
           <CardTitle>Informations du profil</CardTitle>

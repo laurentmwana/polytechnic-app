@@ -2,6 +2,8 @@ const ROUTES_API = {
   login: "/login",
   forgot: "/forgot-password",
   "reset-password": "/reset-password",
+  "send-verified-email": "/email/verification-notification",
+  "verified-email": "/verify-email/:id/:hash",
 
   // OTHER
 

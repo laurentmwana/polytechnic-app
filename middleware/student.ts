@@ -1,8 +1,10 @@
 import { getUserLocal } from "~/services/session";
 import { isStudent } from "../lib/role";
 
+const routes = ["/course-follow", "/result"];
+
 function isStudentRoute(path: string): boolean {
-  return path.startsWith("/student");
+  return path.startsWith("/student") || routes.includes(path);
 }
 
 export default defineNuxtRouteMiddleware((to) => {
@@ -12,7 +14,7 @@ export default defineNuxtRouteMiddleware((to) => {
     return navigateTo("/auth/login");
   }
 
-  if (user && !isStudent(user.roles) && isStudentRoute(to.path)) {
+  if (user && !isStudent(user.roles)) {
     return navigateTo("/unauthorized");
   }
 });

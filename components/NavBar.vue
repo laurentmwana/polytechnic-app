@@ -42,7 +42,8 @@ const navItems = computed<NavItem[]>(() => [
       { label: "Délibération", href: "/deliberation" },
     ],
   },
-  { label: "Contact", href: "/contact" },
+  { label: "Evènements", href: "/event" },
+  { label: "Aide", href: "/help" },
 ]);
 
 const isActive = (href?: string): boolean => {
@@ -59,14 +60,14 @@ const handleLinkClick = (): void => {
 </script>
 
 <template>
-  <nav class="backdrop-blur-sm border-b h-16">
+  <nav class="backdrop-blur border-b h-16">
     <div class="container mx-auto">
       <div class="flex items-center justify-between py-4">
         <!-- Logo -->
-        <NuxtLink to="/" class="flex items-center">
+        <NuxtLink href="/" class="flex items-center">
           <Logo
-            :width="35"
-            :height="35"
+            :width="30"
+            :height="30"
             class="flex items-center justify-center"
           />
         </NuxtLink>
@@ -98,7 +99,7 @@ const handleLinkClick = (): void => {
                   as-child
                 >
                   <NuxtLink
-                    :to="child.href || '#'"
+                    :href="child.href || '#'"
                     :class="
                       cn(
                         'w-full cursor-pointer',

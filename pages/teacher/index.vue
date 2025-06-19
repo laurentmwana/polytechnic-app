@@ -40,7 +40,7 @@ const fetchTeacher = async () => {
     }
   } catch (error) {
     toast.error("Erreur", {
-      description: `Impossible de récupèrer les professeurss`,
+      description: `Impossible de récupèrer les professeurs`,
     });
   } finally {
     isPending.value = false;
@@ -70,76 +70,52 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="container my-12" v-if="isPending">
+  <div class="container my-12">
     <div class="section-page-header">
       <h2 class="section-page-title">Nos professeurs</h2>
     </div>
 
-    <LoaderContainer :is-card="true" />
-  </div>
+    <LoaderContainer v-if="isPending" :is-card="true" />
 
-  <div
-    class="container my-12"
-    v-if="(!teachers || (teachers && teachers.data.length === 0)) && !isPending"
-  >
-    <div class="section-page-header">
-      <h2 class="section-page-title">Nos professeurs</h2>
-    </div>
-    <p>Pas de professeurs</p>
-  </div>
+    <p v-else-if="!teachers || teachers.data.length === 0">
+      Pas de professeurs
+    </p>
 
-  <div class="container my-12" v-if="teachers && teachers.data.length > 0">
-    <div class="section-page-header">
-      <h2 class="section-page-title">Nos professeurs</h2>
-    </div>
-
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Nom</TableHead>
-          <TableHead>Postnom</TableHead>
-          <TableHead>Genre</TableHead>
-          <TableHead>Département</TableHead>
-          <TableHead>Nombre de cours</TableHead>
-          <TableHead>Création</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        <TableRow v-for="teacher in teachers.data" :key="teacher.id">
-          <TableCell>
-            {{ teacher.name }}
-          </TableCell>
-          <TableCell>
-            {{ teacher.firstname }}
-          </TableCell>
-          <TableCell>
-            {{ teacher.gender }}
-          </TableCell>
-          <TableCell>
-            {{ teacher.department.name }}
-          </TableCell>
-          <TableCell>
-            <Badge>
-              {{ teacher.courses.length }}
-            </Badge>
-          </TableCell>
-          <TableCell>
-            {{ ago(teacher.created_at) }}
-          </TableCell>
-          <TableCell>
-            <div class="flex items-center justify-end">
-              <Button variant="secondary">
+    <div v-else>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Nom</TableHead>
+            <TableHead>Postnom</TableHead>
+            <TableHead>Genre</TableHead>
+            <TableHead>Département</TableHead>
+            <TableHead>Nombre de cours</TableHead>
+            <TableHead>Création</TableHead>
+            <TableHead>Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <TableRow v-for="teacher in teachers.data" :key="teacher.id">
+            <TableCell>{{ teacher.name }}</TableCell>
+            <TableCell>{{ teacher.firstname }}</TableCell>
+            <TableCell>{{ teacher.gender }}</TableCell>
+            <TableCell>{{ teacher.department.name }}</TableCell>
+            <TableCell>
+              <Badge>{{ teacher.courses.length }}</Badge>
+            </TableCell>
+            <TableCell>{{ ago(teacher.created_at) }}</TableCell>
+            <TableCell>
+              <div class="flex items-center justify-end">
                 <NuxtLink :href="`/teacher/${teacher.id}`">
-                  En savoir plus
+                  <Button variant="secondary">En savoir plus</Button>
                 </NuxtLink>
-              </Button>
-            </div>
-          </TableCell>
-        </TableRow>
-      </TableBody>
-    </Table>
+              </div>
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
 
-    <!-- Pagination -->
-    <Pagination :onPage="onPage" :meta="teachers" />
+      <Pagination :onPage="onPage" :meta="teachers" />
+    </div>
   </div>
 </template>

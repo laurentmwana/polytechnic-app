@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { ref, onMounted } from "vue";
+import { useRoute } from "vue-router";
+
 import { ago } from "@/lib/date-time";
 import { getShowOption } from "@/services/other";
 import type { OptionModel } from "@/types/model";
@@ -8,22 +11,22 @@ import { toast } from "vue-sonner";
 useHead({
   title: "En savoir plus sur une option - Polytechnic Application",
 });
+
 definePageMeta({
   layout: "default",
 });
 
 const route = useRoute();
-
-const optionId = parseInt(route.params.id as string);
+const optionId = Number(route.params.id);
 
 if (!optionId || isNaN(optionId)) {
   throw createError({
     statusCode: 400,
-    statusMessage: "L'ID d'une option est requis et doit être un nombre valide",
+    statusMessage: "L'ID de l'option est requis et doit être un nombre valide.",
   });
 }
 
-const isPending = ref<boolean>(true);
+const isPending = ref(true);
 const option = ref<OptionModel>();
 
 const fetchOption = async () => {
@@ -38,21 +41,19 @@ const fetchOption = async () => {
     } else {
       toast.error("Erreur", {
         description:
-          (data as { message: string }).message || "Une erreur est survenue",
+          (data as { message?: string }).message || "Une erreur est survenue.",
       });
     }
   } catch (error) {
     toast.error("Erreur", {
-      description: `Impossible de récupèrer les départments`,
+      description: "Impossible de récupérer l'option.",
     });
   } finally {
     isPending.value = false;
   }
 };
 
-onMounted(() => {
-  fetchOption();
-});
+onMounted(fetchOption);
 </script>
 
 <template>
@@ -63,7 +64,7 @@ onMounted(() => {
   <div class="container my-12" v-if="isPending">
     <div class="section-page-header">
       <h2 class="section-page-title">
-        En savoir plus sur le option #{{ optionId }}
+        En savoir plus sur l'option #{{ optionId }}
       </h2>
     </div>
 
@@ -103,32 +104,29 @@ onMounted(() => {
 
       <div class="section-page-header">
         <h2 class="section-page-title">
-          Les promotions associées à l' option #{{ optionId }}
+          Les promotions associées à l'option #{{ optionId }}
         </h2>
       </div>
-      <div>
-        <Accordion
-          type="single"
-          collapsible
-          class="grid gris-cols-1 md:grid-cols-2 gap-4 w-full"
+
+      <Accordion
+        type="single"
+        collapsible
+        class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full"
+      >
+        <AccordionItem
+          v-for="level in option.levels"
+          :key="level.id"
+          :value="level.id.toString()"
+          class="mb-5 rounded-md border px-3 shadow-sm"
         >
-          <AccordionItem
-            v-for="level in option.levels"
-            class="mb-5 rounded-md border px-3 shadow-sm"
-            :key="level.id"
-            :value="level.id.toString()"
-          >
-            <AccordionTrigger class="text-base font-medium">
-              {{ level.name }} {{ option.alias }}
-            </AccordionTrigger>
-            <AccordionContent
-              >{{ level.name }} {{ option.name }} [{{
-                level.programme
-              }}]</AccordionContent
-            >
-          </AccordionItem>
-        </Accordion>
-      </div>
+          <AccordionTrigger class="text-base font-medium">
+            {{ level.name }} {{ option.alias }}
+          </AccordionTrigger>
+          <AccordionContent>
+            {{ level.name }} {{ option.name }} [{{ level.programme }}]
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
     </div>
   </div>
 </template>
