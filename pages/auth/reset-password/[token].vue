@@ -18,7 +18,7 @@ definePageMeta({
 const route = useRoute();
 const router = useRouter();
 
-const token = route.params.accessToken as string;
+const token = route.params.token as string;
 const email = route.query.email as string;
 
 const validator = ref<ValidatorErrorProps | null>(null);
