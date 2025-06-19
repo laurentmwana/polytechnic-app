@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useAuth } from "@/composables/useAuth";
+import type { AuthModel } from "@/types/model";
 import UserProfileInfoForm from "@/components/features/user/UserProfileInfoForm.vue";
 import UserProfilePasswordForm from "@/components/features/user/UserProfilePasswordForm.vue";
 import type {
@@ -9,7 +10,7 @@ import type {
   SchemaProfilePasswordInfer,
 } from "@/definitions/profile";
 import { changePasswordUser, editProfileUser } from "@/services/profile";
-import { deleteUserLocal } from "@/services/session";
+import { createUserLocal, deleteUserLocal } from "@/services/session";
 import type { ValidatorErrorProps } from "@/types/util";
 import { toast } from "vue-sonner";
 
@@ -37,20 +38,20 @@ const onSubmitEditInfo = async (values: SchemaProfileInfoInfer) => {
   }
 
   try {
-    const response = await editProfileUser(auth.session.value.accessToken, values);
+    const response = await editProfileUser(
+      auth.session.value.accessToken,
+      values
+    );
     const data = await response.json();
 
-    if (response.ok && (data as any).state) {
+    if (response.ok) {
+      const newUser = (data as { data: AuthModel }).data;
+      createUserLocal(newUser);
+      auth.initializeAuth();
       toast.success("Profil mis à jour", {
         description: "Vos informations ont été modifiées avec succès.",
       });
-
-      deleteUserLocal();
-      toast.success("Connexion requise", {
-        description: "Veuillez vous reconnecter pour voir vos modifications.",
-      });
-
-      router.replace("/auth/login");
+      router.replace("/profile");
     } else if (response.status === 422) {
       editValidator.value = data as ValidatorErrorProps;
     } else if (response.status === 401) {
@@ -80,7 +81,10 @@ const onSubmitChangePassword = async (values: SchemaProfilePasswordInfer) => {
   }
 
   try {
-    const response = await changePasswordUser(auth.session.value.accessToken, values);
+    const response = await changePasswordUser(
+      auth.session.value.accessToken,
+      values
+    );
     const data = await response.json();
 
     if (response.ok && (data as any).state) {
@@ -110,13 +114,10 @@ const onSubmitChangePassword = async (values: SchemaProfilePasswordInfer) => {
 };
 </script>
 
-
 <template>
   <div class="container py-12">
     <div class="section-page-header">
-      <h2 class="section-page-title">
-        Mon profil
-      </h2>
+      <h2 class="section-page-title">Mon profil</h2>
     </div>
 
     <div v-if="auth.isPending.value">
@@ -192,6 +193,20 @@ const onSubmitChangePassword = async (values: SchemaProfilePasswordInfer) => {
     </div>
 
     <div class="space-y-6" v-else>
+      <Alert
+        variant="destructive"
+        v-if="auth.session.value && !auth.session.value.isEmailVerified"
+      >
+        <AlertTitle> Votre adresse e-mail n’est pas vérifiée</AlertTitle>
+        <AlertDescription>
+          Veuillez cliquer sur le lien ci-dessous pour procéder à la
+          vérification de votre adresse e-mail :
+          <NuxtLink href="/auth/send-verification-email">
+            👉 Vérifier mon adresse e-mail
+          </NuxtLink>
+        </AlertDescription>
+      </Alert>
+
       <Card>
         <CardHeader>
           <CardTitle>Informations du profil</CardTitle>

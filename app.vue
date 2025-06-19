@@ -3,14 +3,14 @@ import "vue-sonner/style.css";
 </script>
 
 <template>
-  <NuxtLoadingIndicator :color="true" />
+  <NuxtLoadingIndicator />
   <NuxtLayout>
     <NuxtPage />
     <Toaster position="top-center" :expand="true" />
   </NuxtLayout>
 </template>
 
-<style>
+<!-- <style>
 .page-enter-active,
 .page-leave-active {
   transition: all 0.4s;
@@ -20,4 +20,4 @@ import "vue-sonner/style.css";
   opacity: 0;
   filter: blur(1rem);
 }
-</style>
+</style> -->

@@ -10,7 +10,7 @@ useHead({
 });
 definePageMeta({
   layout: "default",
-  middleware: ["student"],
+  middleware: ["student", "verified"],
 });
 
 type FolderResponseType = { data: FolderModel };

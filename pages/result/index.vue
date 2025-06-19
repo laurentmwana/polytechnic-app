@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { FileText, Download, Loader2, Eye } from "lucide-vue-next";
+import { Download } from "lucide-vue-next";
 import type { ResultModel } from "~/types/model";
 import { getAllResults, downloadFileResult } from "~/services/other";
 import type { PaginatedResponse } from "~/types/paginate";
@@ -26,7 +26,7 @@ useHead({
 });
 definePageMeta({
   layout: "default",
-  middleware: ["student"],
+  middleware: ["student", "verified"],
 });
 
 type ResultsResponseType = PaginatedResponse<ResultModel[]>;

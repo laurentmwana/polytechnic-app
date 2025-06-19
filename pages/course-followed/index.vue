@@ -15,7 +15,7 @@ useHead({
 
 definePageMeta({
   layout: "default",
-  middleware: ["student"],
+  middleware: ["student", "verified"],
 });
 
 type CoursePaginateProps = PaginatedResponse<CourseFollowModel[]>;
