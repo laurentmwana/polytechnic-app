@@ -61,82 +61,134 @@
 }
 
 :root {
-  --background: oklch(0.982 0.012 282.6);
-  --foreground: oklch(0.154 0.052 282.6);
-  --muted: oklch(0.877 0.035 282.6);
-  --muted-foreground: oklch(0.405 0.056 282.6);
-  --popover: oklch(0.982 0.012 282.6);
-  --popover-foreground: oklch(0.154 0.052 282.6);
-  --card: oklch(0.982 0.012 282.6);
-  --card-foreground: oklch(0.154 0.052 282.6);
-  --border: oklch(0.929 0.021 282.6);
-  --input: oklch(0.929 0.021 282.6);
-  --primary: oklch(0.309 0.082 282.6);
-  --primary-foreground: oklch(0.841 0.068 282.6);
-  --secondary: oklch(0.809 0.014 282.6);
-  --secondary-foreground: oklch(0.227 0.01 282.6);
-  --accent: oklch(0.758 0.027 282.6);
-  --accent-foreground: oklch(0.175 0.02 282.6);
-  --destructive: oklch(0.299 0.243 27.2);
-  --destructive-foreground: oklch(0.899 0.05 27.2);
-  --ring: oklch(0.309 0.082 282.6);
-  --chart-1: oklch(0.309 0.082 282.6);
-  --chart-2: oklch(0.809 0.014 282.6);
-  --chart-3: oklch(0.758 0.027 282.6);
-  --chart-4: oklch(0.843 0.012 282.6);
-  --chart-5: oklch(0.309 0.087 282.6);
-  --radius: 0.5rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  /* Couleurs principales - Indigo moderne */
+  --background: oklch(0.99 0.005 270);
+  --foreground: oklch(0.15 0.02 270);
+  --muted: oklch(0.96 0.01 270);
+  --muted-foreground: oklch(0.45 0.03 270);
+  --popover: oklch(0.99 0.005 270);
+  --popover-foreground: oklch(0.15 0.02 270);
+  --card: oklch(0.99 0.005 270);
+  --card-foreground: oklch(0.15 0.02 270);
+
+  /* Bordures et inputs plus fins en light mode */
+  --border: oklch(0.9314 0.0347 251.25);
+  --input: oklch(0.98 0.002 270); /* Input encore plus transparent */
+
+  /* Couleur primaire - Indigo */
+  --primary: oklch(0.55 0.16 265);
+  --primary-foreground: oklch(0.98 0.01 265);
+
+  /* Couleurs secondaires */
+  --secondary: oklch(0.94 0.01 270);
+  --secondary-foreground: oklch(0.25 0.02 270);
+  --accent: oklch(0.88 0.02 270);
+  --accent-foreground: oklch(0.2 0.02 270);
+
+  /* Destructive plus visible en mode light */
+  --destructive: oklch(0.6276 0.2844 29.23);
+  --destructive-foreground: oklch(0.9785 0.0172 248.21);
+
+  /* Ring/outline plus fin */
+  --ring: oklch(0.55 0.16 265 / 0.3); /* Ring plus transparent */
+
+  --chart-1: oklch(0.55 0.16 265);
+  --chart-2: oklch(0.65 0.12 200);
+  --chart-3: oklch(0.7 0.1 140);
+  --chart-4: oklch(0.6 0.13 50);
+  --chart-5: oklch(0.5 0.18 320);
+  --radius: 0.75rem;
+
+  /* Sidebar avec bordures plus fines */
+  --sidebar: oklch(0.98 0.005 270);
+  --sidebar-foreground: oklch(0.2 0.02 270);
+  --sidebar-primary: oklch(0.55 0.16 265);
+  --sidebar-primary-foreground: oklch(0.98 0.01 265);
+  --sidebar-accent: oklch(0.94 0.01 270);
+  --sidebar-accent-foreground: oklch(0.25 0.02 270);
+  --sidebar-border: oklch(0.95 0.003 270); /* Bordure sidebar plus fine */
+  --sidebar-ring: oklch(0.55 0.16 265 / 0.3);
 }
 
 .dark {
-  --background: oklch(0.03 0.016 282.6);
-  --foreground: oklch(0.964 0.038 282.6);
-  --muted: oklch(0.105 0.033 282.6);
-  --muted-foreground: oklch(0.655 0.06 282.6);
-  --popover: oklch(0.03 0.016 282.6);
-  --popover-foreground: oklch(0.964 0.038 282.6);
-  --card: oklch(0.03 0.016 282.6);
-  --card-foreground: oklch(0.964 0.038 282.6);
-  --border: oklch(0.152 0.02 282.6);
-  --input: oklch(0.152 0.02 282.6);
-  --primary: oklch(0.309 0.082 282.6);
-  --primary-foreground: oklch(0.841 0.068 282.6);
-  --secondary: oklch(0.107 0.024 282.6);
-  --secondary-foreground: oklch(0.721 0.05 282.6);
-  --accent: oklch(0.199 0.037 282.6);
-  --accent-foreground: oklch(0.8 0.058 282.6);
-  --destructive: oklch(0.451 0.25 27.2);
-  --destructive-foreground: oklch(1 0 0);
-  --ring: oklch(0.309 0.082 282.6);
-  --chart-1: oklch(0.309 0.082 282.6);
-  --chart-2: oklch(0.107 0.024 282.6);
-  --chart-3: oklch(0.199 0.037 282.6);
-  --chart-4: oklch(0.14 0.02 282.6);
-  --chart-5: oklch(0.309 0.087 282.6);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.439 0 0);
+  /* Mode sombre avec indigo */
+  --background: oklch(0.08 0.015 270);
+  --foreground: oklch(0.95 0.02 270);
+  --muted: oklch(0.15 0.02 270);
+  --muted-foreground: oklch(0.6 0.03 270);
+  --popover: oklch(0.08 0.015 270);
+  --popover-foreground: oklch(0.95 0.02 270);
+  --card: oklch(0.08 0.015 270);
+  --card-foreground: oklch(0.95 0.02 270);
+
+  /* Bordures et inputs plus fins en mode sombre */
+  --border: oklch(0.2226 0.0303 251.9);
+  --input: oklch(0.12 0.012 270); /* Input plus subtil */
+
+  /* Couleur primaire indigo plus vive en mode sombre */
+  --primary: oklch(0.65 0.18 265);
+  --primary-foreground: oklch(0.08 0.015 265);
+
+  --secondary: oklch(0.18 0.025 270);
+  --secondary-foreground: oklch(0.85 0.02 270);
+  --accent: oklch(0.25 0.03 270);
+  --accent-foreground: oklch(0.9 0.02 270);
+
+  /* Destructive plus visible en mode dark */
+  --destructive: oklch(0.4201 0.1791 29.45);
+  --destructive-foreground: oklch(0.9785 0.0172 248.21);
+
+  /* Ring/outline plus fin en dark */
+  --ring: oklch(
+    0.65 0.18 265 / 0.25
+  ); /* Ring encore plus transparent en dark */
+
+  --chart-1: oklch(0.65 0.18 265);
+  --chart-2: oklch(0.7 0.15 200);
+  --chart-3: oklch(0.75 0.12 140);
+  --chart-4: oklch(0.7 0.16 50);
+  --chart-5: oklch(0.6 0.2 320);
+
+  /* Sidebar mode sombre avec bordures plus fines */
+  --sidebar: oklch(0.12 0.018 270);
+  --sidebar-foreground: oklch(0.9 0.02 270);
+  --sidebar-primary: oklch(0.65 0.18 265);
+  --sidebar-primary-foreground: oklch(0.08 0.015 265);
+  --sidebar-accent: oklch(0.18 0.025 270);
+  --sidebar-accent-foreground: oklch(0.85 0.02 270);
+  --sidebar-border: oklch(
+    0.16 0.01 270
+  ); /* Bordure sidebar plus fine en dark */
+  --sidebar-ring: oklch(0.65 0.18 265 / 0.25);
 }
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border outline-ring/30; /* Outline encore plus subtil */
   }
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* Styles pour les inputs plus libres avec bordures fines */
+  input,
+  textarea,
+  select {
+    @apply transition-all duration-200 ease-in-out;
+  }
+
+  input:focus,
+  textarea:focus,
+  select:focus {
+    @apply ring-1 ring-ring/15 border-ring/20; /* Ring et border focus plus fins */
+  }
+
+  /* Bordures par défaut encore plus fines */
+  input,
+  textarea,
+  select {
+    @apply border-border/60; /* Bordure par défaut plus transparente */
   }
 }
 
@@ -145,16 +197,16 @@
 }
 
 .container-card {
-  @apply p-6 border border-border shadow-sm rounded-lg bg-card;
+  @apply p-6 border border-border/30 shadow-sm rounded-lg bg-card backdrop-blur-sm; /* Bordure card plus fine */
 }
 
 .text-description {
   @apply text-sm text-muted-foreground leading-relaxed;
 }
 
-/* Styles pour les liens */
+/* Styles pour les liens avec indigo */
 .link-underline {
-  @apply text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500;
+  @apply text-foreground underline decoration-primary/30 underline-offset-4 transition-all duration-300 ease-out hover:decoration-primary hover:text-primary;
 }
 
 /* Styles pour les sections */
@@ -171,11 +223,11 @@
 }
 
 .section-title {
-  @apply text-2xl lg:text-3xl font-bold text-foreground mb-4;
+  @apply text-2xl lg:text-3xl font-bold text-foreground mb-4 tracking-tight;
 }
 
 .section-page-title {
-  @apply text-2xl font-bold text-gray-900 dark:text-white mb-2;
+  @apply text-2xl font-bold text-foreground mb-2 tracking-tight;
 }
 
 .section-page-subtitle {
@@ -186,34 +238,64 @@
   @apply text-lg text-muted-foreground max-w-2xl mx-auto;
 }
 
-/* Custom Scrollbar Styles */
+/* Styles pour les inputs libres avec bordures très fines */
+.input-free {
+  @apply bg-transparent border-border/40 focus:border-primary/30 focus:bg-background/50 transition-all duration-200 focus:ring-1 focus:ring-primary/10;
+}
+
+.input-minimal {
+  @apply border-0 border-b border-border/40 rounded-none bg-transparent focus:border-primary/50 focus:ring-0 px-0 py-2;
+}
+
+.input-indigo {
+  @apply bg-primary/3 border-primary/15 focus:border-primary/30 focus:bg-primary/5 text-foreground placeholder:text-muted-foreground focus:ring-1 focus:ring-primary/10;
+}
+
+/* Boutons destructifs plus doux */
+.btn-destructive-soft {
+  @apply bg-destructive/10 text-destructive hover:bg-destructive/20 border border-destructive/15;
+}
+
+/* Boutons indigo avec bordures fines */
+.btn-indigo {
+  @apply bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm border-0;
+}
+
+.btn-indigo-outline {
+  @apply border border-primary/50 text-primary bg-transparent hover:bg-primary hover:text-primary-foreground hover:border-primary;
+}
+
+.btn-indigo-ghost {
+  @apply text-primary hover:bg-primary/8 hover:text-primary border-0;
+}
+
+/* Custom Scrollbar Styles avec indigo */
 :deep(.custom-scrollbar) {
   scrollbar-width: thin;
-  scrollbar-color: rgba(59, 130, 246, 0.5) rgba(229, 231, 235, 0.3);
+  scrollbar-color: oklch(0.55 0.16 265 / 0.2) transparent;
 }
 
 :deep(.custom-scrollbar::-webkit-scrollbar) {
-  width: 8px;
+  width: 6px;
 }
 
 :deep(.custom-scrollbar::-webkit-scrollbar-track) {
-  background: rgba(229, 231, 235, 0.3);
-  border-radius: 9999px;
+  background: transparent;
 }
 
 :deep(.custom-scrollbar::-webkit-scrollbar-thumb) {
-  background: rgba(59, 130, 246, 0.5);
+  background: oklch(0.55 0.16 265 / 0.2);
   border-radius: 9999px;
   transition: background-color 0.2s;
 }
 
 :deep(.custom-scrollbar::-webkit-scrollbar-thumb:hover) {
-  background: rgba(59, 130, 246, 0.7);
+  background: oklch(0.55 0.16 265 / 0.35);
 }
 
 /* Thin scrollbar variant */
 :deep(.scrollbar-thin::-webkit-scrollbar) {
-  width: 4px;
+  width: 3px;
 }
 
 :deep(.scrollbar-thin::-webkit-scrollbar-track) {
@@ -221,35 +303,171 @@
 }
 
 :deep(.scrollbar-thin::-webkit-scrollbar-thumb) {
-  background: rgba(156, 163, 175, 0.4);
+  background: oklch(0.4 0.02 270 / 0.2);
   border-radius: 9999px;
 }
 
 :deep(.scrollbar-thin::-webkit-scrollbar-thumb:hover) {
-  background: rgba(156, 163, 175, 0.6);
+  background: oklch(0.4 0.02 270 / 0.35);
 }
 
 /* Global scrollbar styles */
 :deep(html) {
   scrollbar-width: thin;
-  scrollbar-color: rgba(156, 163, 175, 0.3) rgba(229, 231, 235, 0.3);
+  scrollbar-color: oklch(0.4 0.02 270 / 0.15) transparent;
 }
 
 :deep(body::-webkit-scrollbar) {
-  width: 8px;
+  width: 6px;
 }
 
 :deep(body::-webkit-scrollbar-track) {
-  background: rgba(229, 231, 235, 0.3);
-  border-radius: 9999px;
+  background: transparent;
 }
 
 :deep(body::-webkit-scrollbar-thumb) {
-  background: rgba(156, 163, 175, 0.3);
+  background: oklch(0.4 0.02 270 / 0.15);
   border-radius: 9999px;
   transition: background-color 0.2s;
 }
 
 :deep(body::-webkit-scrollbar-thumb:hover) {
-  background: rgba(156, 163, 175, 0.5);
+  background: oklch(0.4 0.02 270 / 0.3);
+}
+
+/* Animations améliorées */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-in-indigo {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+    background-color: oklch(0.55 0.16 265 / 0.05);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+    background-color: transparent;
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
+.animate-slide-in-indigo {
+  animation: slide-in-indigo 0.4s ease-out;
+}
+
+/* Effets de glassmorphism avec indigo */
+.glass {
+  @apply bg-background/80 backdrop-blur-md border border-border/30;
+}
+
+.glass-card {
+  @apply bg-card/80 backdrop-blur-md border border-border/20 shadow-lg;
+}
+
+.glass-indigo {
+  @apply bg-primary/3 backdrop-blur-md border border-primary/15 shadow-lg;
+}
+
+/* Gradients indigo */
+.gradient-indigo {
+  background: linear-gradient(
+    135deg,
+    oklch(0.55 0.16 265) 0%,
+    oklch(0.45 0.18 280) 100%
+  );
+}
+
+.gradient-indigo-subtle {
+  background: linear-gradient(
+    135deg,
+    oklch(0.98 0.01 265) 0%,
+    oklch(0.96 0.02 280) 100%
+  );
+}
+
+/* États de focus améliorés avec bordures fines */
+.focus-indigo:focus {
+  @apply ring-1 ring-primary/15 border-primary/30 outline-none;
+}
+
+.focus-indigo:focus-visible {
+  @apply ring-1 ring-primary/20 border-primary/40 outline-none;
+}
+
+/* Classes spécifiques pour les messages de validation */
+.error-message {
+  @apply text-destructive text-sm font-medium;
+}
+
+.error-message-light {
+  @apply text-red-600 dark:text-red-400 text-sm font-medium;
+}
+
+.success-message {
+  @apply text-green-600 dark:text-green-400 text-sm font-medium;
+}
+
+.warning-message {
+  @apply text-amber-600 dark:text-amber-400 text-sm font-medium;
+}
+
+.info-message {
+  @apply text-indigo-600 dark:text-indigo-400 text-sm font-medium;
+}
+
+/* Styles pour les inputs avec erreurs - bordures fines */
+.input-error {
+  @apply border-destructive/60 focus:border-destructive/80 focus:ring-1 focus:ring-destructive/15;
+}
+
+.input-success {
+  @apply border-green-500/60 focus:border-green-500/80 focus:ring-1 focus:ring-green-500/15;
+}
+
+/* Container pour les messages de validation */
+.validation-message {
+  @apply mt-1 flex items-center gap-1 text-sm;
+}
+
+.validation-message.error {
+  @apply text-red-600 dark:text-red-400;
+}
+
+.validation-message.success {
+  @apply text-green-600 dark:text-green-400;
+}
+
+.validation-message.warning {
+  @apply text-amber-600 dark:text-amber-400;
+}
+
+/* Styles pour les dividers et séparateurs */
+.divider {
+  @apply border-border/30;
+}
+
+.divider-vertical {
+  @apply border-l border-border/30;
+}
+
+/* Styles pour les cards avec bordures fines */
+.card-subtle {
+  @apply border border-border/25 bg-card/50;
+}
+
+.card-hover {
+  @apply border border-border/25 bg-card/50 hover:border-border/40 hover:bg-card/70 transition-all duration-200;
 }

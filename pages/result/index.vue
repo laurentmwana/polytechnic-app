@@ -154,7 +154,7 @@ onMounted(fetchResults);
 
     <LoaderContainer v-if="isPending" />
 
-    <div v-else-if="results" class="bg-white rounded-lg shadow-sm border">
+    <div v-else-if="results" class="rounded-lg shadow-sm border">
       <div class="overflow-x-auto">
         <Table>
           <TableHeader>
