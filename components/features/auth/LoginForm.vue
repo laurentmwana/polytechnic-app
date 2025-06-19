@@ -88,7 +88,6 @@ const handleSubmit = form.handleSubmit(async (values) => {
             type="password"
             v-bind="componentField"
             :disabled="isPending"
-            placeholder="••••••••"
           />
         </FormControl>
         <FormMessage />
