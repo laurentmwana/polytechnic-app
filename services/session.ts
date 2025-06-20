@@ -11,6 +11,16 @@ export const createUserLocal = (user: AuthModel) => {
   return true;
 };
 
+export const updateUserLocal = (updateUser: AuthModel) => {
+  const user  = getUserLocal()
+  const newUserToSave = {
+    ...user,
+    ...updateUser
+  }
+  createUserLocal(newUserToSave)
+};
+
+
 export const deleteUserLocal = () => {
   const userCookie = useCookie<AuthModel | null>("SESSION_USER");
   userCookie.value = null;
