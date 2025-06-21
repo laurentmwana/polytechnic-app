@@ -20,7 +20,7 @@ useHead({
 
 definePageMeta({
   layout: "admin",
-  middleware: ["admin"],
+  middleware: ["admin", "verified"],
 });
 const validator = ref<ValidatorErrorProps | null>(null);
 
@@ -58,10 +58,10 @@ const onSubmit = async (values: SchemaUserFormInfer) => {
     } else if (response.status === 422) {
       validator.value = data as ValidatorErrorProps;
     } else if (response.status == 401) {
-          toast.warning("Session", {
+      toast.warning("Session", {
         description: "Votre session a expiré, merci de vous reconnecter",
       });
-      auth.logout()
+      auth.logout();
     } else {
       toast.error("Erreur", {
         description:

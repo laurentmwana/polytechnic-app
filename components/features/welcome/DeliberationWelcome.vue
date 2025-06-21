@@ -78,7 +78,9 @@ const resetFilters = () => {
 
 const fetchDeliberations = async () => {
   try {
-    isPending.value = true;
+    if (!isPending.value) {
+      isPending.value = true;
+    }
     const response = await getDelibeLimit(10);
     if (response.ok) {
       const data = await response.json();

@@ -271,7 +271,9 @@ const resetFilters = () => {
 
 const fetchDeliberations = async () => {
   try {
-    isPending.value = true;
+    if (!isPending.value) {
+      isPending.value = true;
+    }
     const response = await getCollectionDelibes(numberPage.value);
 
     if (response.ok) {

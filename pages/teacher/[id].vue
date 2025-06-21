@@ -28,7 +28,9 @@ const teacher = ref<TeacherModel>();
 
 const fetchTeacher = async () => {
   try {
-    isPending.value = true;
+    if (!isPending.value) {
+      isPending.value = true;
+    }
 
     const response = await getShowTeacher(teacherId);
     const data = await response.json();

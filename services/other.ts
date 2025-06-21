@@ -227,3 +227,51 @@ export const downloadFileResult = async (token: string, id: number) => {
     },
   });
 };
+
+export const getLastNotifications = async (token: string) => {
+  return await fetch(getRouteApi("*notification.last"), {
+    headers: {
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const getShowNotification = async (token: string, id: string) => {
+  return await fetch(getRouteApi("*notification.show", { id }), {
+    headers: {
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const getCollectionNotifications = async (token: string, page: number) => {
+  return await fetch(getRouteApi("*notification.index", {page}), {
+    headers: {
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const deleteNotification = async (token: string, id: string) => {
+  return await fetch(getRouteApi("*notification.destroy", { id }), {
+    method: "DELETE",
+    headers: {
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+
+export const markAsReadNotification = async (token: string) => {
+  return await fetch(getRouteApi("*notification.mark-as-read"), {
+    method: "PUT",
+    headers: {
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};

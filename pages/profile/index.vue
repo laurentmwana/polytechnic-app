@@ -10,7 +10,7 @@ import type {
   SchemaProfilePasswordInfer,
 } from "@/definitions/profile";
 import { changePasswordUser, editProfileUser } from "@/services/profile";
-import { createUserLocal, deleteUserLocal } from "@/services/session";
+import { updateUserLocal } from "@/services/session";
 import type { ValidatorErrorProps } from "@/types/util";
 import { toast } from "vue-sonner";
 
@@ -46,7 +46,7 @@ const onSubmitEditInfo = async (values: SchemaProfileInfoInfer) => {
 
     if (response.ok) {
       const newUser = (data as { data: AuthModel }).data;
-      createUserLocal(newUser);
+      updateUserLocal(newUser);
       auth.initializeAuth();
       toast.success("Profil mis à jour", {
         description: "Vos informations ont été modifiées avec succès.",
@@ -55,11 +55,13 @@ const onSubmitEditInfo = async (values: SchemaProfileInfoInfer) => {
     } else if (response.status === 422) {
       editValidator.value = data as ValidatorErrorProps;
     } else if (response.status === 401) {
-      deleteUserLocal();
-      router.replace("/auth/login");
+      auth.logout()
+
       toast.warning("Session expirée", {
         description: "Votre session a expiré. Veuillez vous reconnecter.",
       });
+      router.replace("/auth/login");
+ 
     } else {
       toast.error("Erreur", {
         description: (data as any).message || "Une erreur est survenue.",

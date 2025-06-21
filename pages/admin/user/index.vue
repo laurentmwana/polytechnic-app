@@ -52,7 +52,7 @@ useHead({
 
 definePageMeta({
   layout: "admin",
-  middleware: ["admin"],
+  middleware: ["admin", "verified"],
 });
 
 type UserCollectionProps = PaginatedResponse<UserModel[]>;
@@ -87,10 +87,10 @@ const fetchUsers = async () => {
     if (response.ok) {
       users.value = data as UserCollectionProps;
     } else if (response.status == 401) {
-          toast.warning("Session", {
+      toast.warning("Session", {
         description: "Votre session a expiré, merci de vous reconnecter",
       });
-      auth.logout()
+      auth.logout();
     } else {
       toast.error("Erreur", {
         description:
@@ -143,9 +143,10 @@ const onLockAndUnLock = async (userId: number) => {
         });
       }
     } else if (response.status == 401) {
-          toast.warning("Session", {
+      toast.warning("Session", {
         description: "Votre session a expiré, merci de vous reconnecter",
-      });auth.logout()
+      });
+      auth.logout();
     } else {
       toast.error("Erreur", {
         description:
@@ -190,9 +191,10 @@ const onDeleteUser = async (userId: number) => {
         });
       }
     } else if (response.status == 401) {
-          toast.warning("Session", {
+      toast.warning("Session", {
         description: "Votre session a expiré, merci de vous reconnecter",
-      });auth.logout()
+      });
+      auth.logout();
     } else {
       toast.error("Erreur", {
         description:

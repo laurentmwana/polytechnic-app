@@ -9,7 +9,9 @@ const year = ref<YearModel | null>(null);
 
 const fetchYear = async () => {
   try {
-    isPending.value = true;
+    if (!isPending.value) {
+      isPending.value = true;
+    }
 
     const response = await getCurrentYear();
     const data = await response.json();

@@ -36,7 +36,9 @@ const numberPage = ref(
 
 const fetchCourses = async () => {
   try {
-    isPending.value = true;
+    if (!isPending.value) {
+      isPending.value = true;
+    }
 
     const response = await getCollectionCourses(numberPage.value);
     const data = await response.json();
@@ -66,7 +68,9 @@ const onPage = async (page: number) => {
 
 const onFollowCourse = async (courseId: number) => {
   try {
-    isPending.value = true;
+    if (!isPending.value) {
+      isPending.value = true;
+    }
 
     const token = auth.session.value?.accessToken;
     if (!token) throw new Error("Utilisateur non authentifié");
@@ -145,10 +149,10 @@ onMounted(fetchCourses);
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>Code</TableHead>
           <TableHead>Nom</TableHead>
           <TableHead>Crédits</TableHead>
           <TableHead>Promotion</TableHead>
+          <TableHead>Semestre</TableHead>
           <TableHead>Professeur</TableHead>
           <TableHead>Créé</TableHead>
           <TableHead class="text-right">Actions</TableHead>
@@ -156,12 +160,10 @@ onMounted(fetchCourses);
       </TableHeader>
       <TableBody>
         <TableRow v-for="course in courses.data" :key="course.id">
-          <TableCell>{{ course.code }}</TableCell>
           <TableCell>{{ excerpt(course.name, 30) }}</TableCell>
           <TableCell>{{ course.credits }}</TableCell>
-          <TableCell>{{
-            excerpt(`${course.level.name} [${course.level.alias}]`, 40)
-          }}</TableCell>
+          <TableCell>{{ excerpt(course.level.name, 40) }}</TableCell>
+          <TableCell>{{ course.semester }}</TableCell>
           <TableCell>{{
             excerpt(`${course.teacher.name} ${course.teacher.firstname}`, 40)
           }}</TableCell>

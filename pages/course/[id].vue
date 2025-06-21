@@ -33,7 +33,9 @@ const course = ref<CourseModel>();
 
 const fetchCourse = async () => {
   try {
-    isPending.value = true;
+    if (!isPending.value) {
+      isPending.value = true;
+    }
     const response = await getShowCourse(courseId);
     const data = await response.json();
 

@@ -22,7 +22,9 @@ interface StateSendVerification {
 
 const onSendVerificationEmail = async () => {
   try {
-    isPending.value = true;
+    if (!isPending.value) {
+      isPending.value = true;
+    }
 
     const token = auth.session.value?.accessToken;
     if (!token) {
@@ -44,7 +46,8 @@ const onSendVerificationEmail = async () => {
         isSend.value = true;
       } else {
         toast.success("Problème", {
-          description: "Nous n'avons pas pu effectuer cette action, merci de réessayer",
+          description:
+            "Nous n'avons pas pu effectuer cette action, merci de réessayer",
         });
       }
     } else if (response.status === 401) {

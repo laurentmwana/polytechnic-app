@@ -40,7 +40,9 @@ const router = useRouter();
 
 const fetchResults = async () => {
   try {
-    isPending.value = true;
+    if (!isPending.value) {
+      isPending.value = true;
+    }
 
     const token = auth.session.value?.accessToken;
     if (!token) {
@@ -85,7 +87,9 @@ const closeModal = () => {
 
 const downloadResult = async (id: number) => {
   try {
-    isPending.value = true;
+    if (!isPending.value) {
+      isPending.value = true;
+    }
 
     const token = auth.session?.value?.accessToken;
     if (!token) {

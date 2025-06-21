@@ -3,7 +3,6 @@ import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 
 import { createError } from "h3";
-
 import { ago } from "@/lib/date-time";
 import { getShowLevel } from "@/services/other";
 import type { LevelModel } from "@/types/model";
@@ -19,7 +18,6 @@ definePageMeta({
 });
 
 const route = useRoute();
-
 const levelId = parseInt(route.params.id as string, 10);
 
 if (isNaN(levelId)) {
@@ -35,7 +33,9 @@ const level = ref<LevelModel>();
 
 const fetchLevel = async () => {
   try {
-    isPending.value = true;
+    if (!isPending.value) {
+      isPending.value = true;
+    }
 
     const response = await getShowLevel(levelId);
     const data = await response.json();
@@ -85,19 +85,15 @@ onMounted(fetchLevel);
       <Card class="border-t-2">
         <CardHeader>
           <CardTitle class="text-2xl md:text-3xl">
-            {{ level.name }}
+            {{ level.alias }}
           </CardTitle>
           <CardDescription class="text-base">
-            {{ level.alias }} {{ level.option.alias }} [{{ level.programme }}]
+            {{ level.name }} {{ level.department.name ?? "" }}
           </CardDescription>
         </CardHeader>
         <CardFooter
           class="border-t pt-4 text-sm text-muted-foreground flex flex-wrap gap-4"
         >
-          <div class="flex items-center gap-1">
-            <CalendarDays class="h-4 w-4" />
-            <span>Créé : {{ ago(level.created_at) }}</span>
-          </div>
           <div class="flex items-center gap-1">
             <CalendarDays class="h-4 w-4" />
             <span>Mis à jour : {{ ago(level.updated_at) }}</span>

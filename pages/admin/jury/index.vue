@@ -40,7 +40,7 @@ useHead({
 
 definePageMeta({
   layout: "admin",
-  middleware: ["admin"],
+  middleware: ["admin", "verified"],
 });
 
 type ModelCollectionProps = PaginatedResponse<JuryModel[]>;

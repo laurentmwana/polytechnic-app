@@ -3,10 +3,10 @@ import DepartmentCard from "@/components/features/department/DepartmentCard.vue"
 import { getCollectionDepartments } from "@/services/other";
 import type { DepartmentModel } from "@/types/model";
 import { toast } from "vue-sonner";
-import type { PaginatedResponse } from "../../types/paginate";
+import type { PaginatedResponse } from "@/types/paginate";
 
 useHead({
-  title: "Nos départements - Polytechnic Application",
+  title: "départements - Polytechnic Application",
 });
 definePageMeta({
   layout: "default",
@@ -25,7 +25,9 @@ const numberPage = ref<number>(
 
 const fetchDepartments = async () => {
   try {
-    isPending.value = true;
+    if (!isPending.value) {
+      isPending.value = true;
+    }
 
     const response = await getCollectionDepartments(numberPage.value);
     const data = await response.json();
@@ -72,7 +74,7 @@ onMounted(() => {
 <template>
   <div class="container my-12" v-if="isPending">
     <div class="section-page-header">
-      <h2 class="section-page-title">Nos Départements</h2>
+      <h2 class="section-page-title">Départements</h2>
     </div>
 
     <LoaderContainer :is-card="true" />
@@ -86,14 +88,14 @@ onMounted(() => {
     "
   >
     <div class="section-page-header">
-      <h2 class="section-page-title">Nos Départements</h2>
+      <h2 class="section-page-title">Départements</h2>
     </div>
     <p>Pas de départements</p>
   </div>
 
   <div class="container my-12" v-if="departments">
     <div class="section-page-header">
-      <h2 class="section-page-title">Nos Départements</h2>
+      <h2 class="section-page-title">Départements</h2>
     </div>
 
     <div

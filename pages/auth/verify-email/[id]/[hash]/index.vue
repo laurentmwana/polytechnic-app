@@ -41,7 +41,9 @@ if (!hashToken || !expires || !signature) {
 
 const onVerifyEmail = async () => {
   try {
-    isPending.value = true;
+    if (!isPending.value) {
+      isPending.value = true;
+    }
 
     const token = auth.session.value?.accessToken;
     if (!token) {
@@ -66,13 +68,15 @@ const onVerifyEmail = async () => {
         await router.push("/");
       } else if (state.status === "verified") {
         toast.success("Adresse e-mail vérifiée", {
-          description: "Votre adresse e-mail a bien été vérifiée. Merci de vous reconnecter pour que les modifications soient prises en compte.",
+          description:
+            "Votre adresse e-mail a bien été vérifiée. Merci de vous reconnecter pour que les modifications soient prises en compte.",
         });
-        auth.logout()
+        auth.logout();
         await router.push("/auth/login");
       } else {
         toast.success("Problème", {
-          description: "Nous n'avons pas pu effectuer cette action, merci de réessayer",
+          description:
+            "Nous n'avons pas pu effectuer cette action, merci de réessayer",
         });
       }
     } else if (response.status === 401) {

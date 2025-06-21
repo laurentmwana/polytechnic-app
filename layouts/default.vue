@@ -1,12 +1,12 @@
 <script setup></script>
 
 <template>
-  <div>
+  <div class="h-full">
     <NavBar />
-    <main class="h-full mt-auto">
+    <main>
       <slot />
     </main>
-    <footer class="py-8" id="footer">
+    <footer class="py-8 mt-auto" id="footer">
       <div class="container">
         <div class="container-center grid grid-cols-1 gap-6 md:grid-cols-2">
           <div>

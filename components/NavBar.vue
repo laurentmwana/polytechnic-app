@@ -17,6 +17,7 @@ import { cn } from "@/lib/utils";
 import { Menu, ChevronDown } from "lucide-vue-next";
 import { computed, ref } from "vue";
 import { useRoute } from "vue-router";
+import LastNotification from "./features/notification/LastNotification.vue";
 
 const route = useRoute();
 const open = ref(false);
@@ -34,16 +35,14 @@ const navItems = computed<NavItem[]>(() => [
     label: "Académique",
     children: [
       { label: "Départments", href: "/department" },
-      { label: "Filières", href: "/option" },
       { label: "Promotion", href: "/level" },
       { label: "Cours", href: "/course" },
       { label: "Année académique", href: "/year-academic" },
       { label: "Professeurs", href: "/teacher" },
-      { label: "Délibération", href: "/deliberation" },
     ],
   },
+  { label: "Délibération", href: "/deliberation" },
   { label: "Evènements", href: "/event" },
-  { label: "Aide", href: "/help" },
 ]);
 
 const isActive = (href?: string): boolean => {
@@ -60,7 +59,7 @@ const handleLinkClick = (): void => {
 </script>
 
 <template>
-  <nav class="backdrop-blur border-b h-16">
+  <nav class="bg-background/95 sticky top-0 z-50 border-b backdrop-blur-sm">
     <div class="container mx-auto">
       <div class="flex items-center justify-between py-4">
         <!-- Logo -->
@@ -135,12 +134,9 @@ const handleLinkClick = (): void => {
 
         <!-- Right side items -->
         <div class="flex items-center space-x-4">
-          <!-- Theme Toggle -->
+          <LastNotification />
           <ThemeToggle />
-
-          <!-- Avatar User -->
           <AvatarUser />
-
           <!-- Mobile Menu Sheet -->
           <Sheet v-model:open="open">
             <SheetTrigger as-child class="lg:hidden">

@@ -28,7 +28,9 @@ const deliberation = ref<DeliberationModel>();
 
 const fetchDepartment = async () => {
   try {
-    isPending.value = true;
+    if (!isPending.value) {
+      isPending.value = true;
+    }
 
     const response = await getShowDelibe(delibeId);
     const data = await response.json();
