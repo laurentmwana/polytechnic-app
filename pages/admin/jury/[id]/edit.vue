@@ -10,7 +10,7 @@ import { User } from "lucide-vue-next";
 import { toast } from "vue-sonner";
 
 useHead({
-  title: "Edition d'un jurie - Polytechnic Application",
+  title: "Édition d'un jury - Polytechnic Application",
 });
 
 definePageMeta({
@@ -36,7 +36,7 @@ const juryId = parseInt(route.params.id as string);
 if (!juryId || isNaN(juryId)) {
   throw createError({
     statusCode: 400,
-    statusMessage: "L'ID de le jurie est requis et doit être un nombre valide",
+    statusMessage: "L'ID du jury est requis et doit être un nombre valide",
   });
 }
 
@@ -45,7 +45,7 @@ const fetchJury = async () => {
     isLoading.value = true;
 
     if (!auth.session.value?.accessToken) {
-      throw new Error("utilisateur non authentifié");
+      throw new Error("Utilisateur non authentifié");
     }
 
     const response = await getItemJury(auth.session.value.accessToken, juryId);
@@ -53,7 +53,7 @@ const fetchJury = async () => {
 
     if (response.ok) {
       jury.value = (data as ModelResponse).data;
-    } else if (response.status == 401) {
+    } else if (response.status === 401) {
       toast.warning("Session", {
         description: "Votre session a expiré, merci de vous reconnecter",
       });
@@ -66,7 +66,7 @@ const fetchJury = async () => {
     }
   } catch (error) {
     toast.error("Erreur", {
-      description: "Impossible de charger le jurie",
+      description: "Impossible de charger le jury",
     });
   } finally {
     isLoading.value = false;
@@ -92,19 +92,19 @@ const onSubmit = async (values: SchemaJuryFormInfer) => {
     if (response.ok) {
       const state = (data as StateActionModel).state;
       if (state) {
-        toast.success("Edition", {
-          description: `les informations du jurie ${juryId} ont été modifiées`,
+        toast.success("Édition", {
+          description: `Les informations du jury #${juryId} ont été modifiées`,
         });
 
         router.push("/admin/jury");
       } else {
-        toast.error("Edition", {
+        toast.error("Édition", {
           description: `Nous n'avons pas pu effectuer cette action`,
         });
       }
     } else if (response.status === 422) {
       validator.value = data as ValidatorErrorProps;
-    } else if (response.status == 401) {
+    } else if (response.status === 401) {
       toast.warning("Session", {
         description: "Votre session a expiré, merci de vous reconnecter",
       });
@@ -117,7 +117,7 @@ const onSubmit = async (values: SchemaJuryFormInfer) => {
     }
   } catch (error) {
     toast.error("Erreur", {
-      description: `Impossible d'editer le jurie #${juryId}`,
+      description: `Impossible d'éditer le jury #${juryId}`,
     });
   } finally {
     isEdit.value = false;
@@ -137,13 +137,13 @@ onMounted(async () => {
     <!-- Loader -->
     <LoaderContainer v-if="isLoading" :isCard="true" />
 
-    <!-- Utilisateur non trouvé -->
+    <!-- Jury non trouvé -->
     <Card v-else-if="!jury">
       <CardContent class="text-center py-12">
         <User class="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-        <p class="text-lg font-medium mb-2">Cours non trouvé</p>
+        <p class="text-lg font-medium mb-2">Jury non trouvé</p>
         <p class="text-muted-foreground">
-          le jurie avec l'ID {{ juryId }} n'existe pas.
+          Le jury avec l'ID {{ juryId }} n'existe pas.
         </p>
       </CardContent>
     </Card>
@@ -152,7 +152,7 @@ onMounted(async () => {
       <Card>
         <CardHeader>
           <CardTitle class="flex items-center gap-2">
-            Editer le jurie #{{ jury.id }}
+            Éditer le jury #{{ jury.id }}
           </CardTitle>
         </CardHeader>
         <CardContent>

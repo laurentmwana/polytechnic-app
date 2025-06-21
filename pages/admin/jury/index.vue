@@ -55,7 +55,6 @@ const numberPage = ref<number>(
 
 const juries = ref<ModelCollectionProps | null>(null);
 const isLoading = ref<boolean>(true);
-const showModalLockjuryId = ref<number | null>(null);
 const showModalDeletejuryId = ref<number | null>(null);
 
 const fetchJuries = async () => {
@@ -63,7 +62,7 @@ const fetchJuries = async () => {
     isLoading.value = true;
 
     if (!auth.session.value?.accessToken) {
-      throw new Error("utilisateur non authentifié");
+      throw new Error("Utilisateur non authentifié");
     }
 
     const response = await getCollectionJuries(
@@ -74,7 +73,7 @@ const fetchJuries = async () => {
 
     if (response.ok) {
       juries.value = data as ModelCollectionProps;
-    } else if (response.status == 401) {
+    } else if (response.status === 401) {
       toast.warning("Session", {
         description: "Votre session a expiré, merci de vous reconnecter",
       });
@@ -87,7 +86,7 @@ const fetchJuries = async () => {
     }
   } catch (error) {
     toast.error("Erreur", {
-      description: "Impossible de charger les cours",
+      description: "Impossible de charger les juries",
     });
   } finally {
     isLoading.value = false;
@@ -115,19 +114,20 @@ const onDeleteJury = async (juryId: number) => {
       const state = data as StateActionModel;
 
       if (state) {
-        toast("Suppression", {
-          description: `Le jurie #${juryId} a été supprimé`,
+        toast.success("Suppression", {
+          description: `Le jury #${juryId} a été supprimé.`,
         });
 
-        router.replace("/admin/jury?page=1");
-
+        // Si on est sur une page > 1 et qu'après suppression il n'y a plus de données,
+        // on peut revenir à la page 1 pour éviter les pages vides (optionnel)
+        await router.replace("/admin/jury?page=1");
         await fetchJuries();
       } else {
         toast.error("Suppression échouée", {
-          description: `Nous n'avons pas pu modifier supprimer  le jurie #${juryId}`,
+          description: `Impossible de supprimer le jury #${juryId}.`,
         });
       }
-    } else if (response.status == 401) {
+    } else if (response.status === 401) {
       toast.warning("Session", {
         description: "Votre session a expiré, merci de vous reconnecter",
       });
@@ -140,10 +140,10 @@ const onDeleteJury = async (juryId: number) => {
     }
   } catch (error) {
     toast.error("Erreur", {
-      description: `Impossible de changer le statut de le jurie #${juryId}`,
+      description: `Impossible de supprimer le jury #${juryId}.`,
     });
   } finally {
-    showModalLockjuryId.value = null;
+    showModalDeletejuryId.value = null;
     isLoading.value = false;
   }
 };
@@ -171,7 +171,7 @@ onMounted(async () => {
         <div>
           <CardTitle>Gestion des juries</CardTitle>
           <CardDescription>
-            Gérez les juries de la faculté de polytechinique
+            Gérez les juries de la faculté de polytechnique
           </CardDescription>
         </div>
         <Button asChild variant="outline" size="sm">
@@ -185,12 +185,12 @@ onMounted(async () => {
       <!-- Loader -->
       <LoaderContainer v-if="isLoading" />
 
-      <!-- Aucun cours -->
+      <!-- Aucun jury -->
       <div v-else-if="!juries?.data?.length" class="text-center py-8">
-        <p class="text-muted-foreground">Aucun jurie trouvé</p>
+        <p class="text-muted-foreground">Aucun jury trouvé</p>
       </div>
 
-      <!-- Table des cours -->
+      <!-- Table des juries -->
       <div v-else class="space-y-4">
         <Table>
           <TableHeader>
@@ -266,16 +266,12 @@ onMounted(async () => {
                     showModalDeletejuryId === jury.id
                   "
                   variant="destructive"
-                  title="Suppression compte de le cours"
-                  description="Cette action est irréversible. L'élément sera définitivement supprimé de nos serveurs."
+                  title="Suppression du jury"
+                  description="Cette action est irréversible. Le jury sera définitivement supprimé de nos serveurs."
                   confirm-text="Supprimer"
                   cancel-text="Annuler"
                   :loading="isLoading"
-                  @confirm="
-                    async () => {
-                      await onDeleteJury(jury.id);
-                    }
-                  "
+                  @confirm="async () => { await onDeleteJury(jury.id); }"
                   @cancel="showModalDeletejuryId = null"
                 />
               </TableCell>
