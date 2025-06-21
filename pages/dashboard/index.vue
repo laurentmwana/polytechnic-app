@@ -14,7 +14,7 @@ definePageMeta({
 
 interface DashboardProps {
   departments: number;
-  options: number;
+  courses: number;
   levels: number;
   teachers: number;
   statistics: StatisticPaymentModel | null;
@@ -24,7 +24,7 @@ const isPending = ref<boolean>(true);
 
 const dashboard = ref<DashboardProps>({
   departments: 0,
-  options: 0,
+  courses: 0,
   levels: 0,
   teachers: 0,
   statistics: null,
@@ -102,10 +102,10 @@ onMounted(async () => {
       <Card>
         <CardHeader>
           <CardTitle class="text-xl font-semibold">
-            {{ dashboard.options }}
+            {{ dashboard.courses }}
           </CardTitle>
           <CardDescription>
-            {{ dashboard.options === 1 ? "Option" : "Options" }}
+            Cours
           </CardDescription>
         </CardHeader>
       </Card>
