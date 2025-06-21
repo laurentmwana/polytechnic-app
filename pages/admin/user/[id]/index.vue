@@ -1,15 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import {
-  Badge,
-  Button,
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { useAuth } from "@/composables/useAuth";
 import { ago } from "@/lib/date-time";
 import { isStudentAccountDisable } from "@/lib/role";
