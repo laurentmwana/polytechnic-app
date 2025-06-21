@@ -15,6 +15,21 @@ const props = defineProps<{
   delibe?: DeliberationModel;
 }>();
 
+// Fonction pour formater une date au format YYYY-MM-DDTHH:mm
+function formatDatetimeLocal(dateStr?: string): string {
+  if (!dateStr) return "";
+  const date = new Date(dateStr);
+  if (isNaN(date.getTime())) return "";
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
+}
+
 const { data: levels, pending: levelPending } = await useFetch<LevelModel[]>(
   getRouteApi("&level")
 );
@@ -32,7 +47,7 @@ const form = useForm({
   initialValues: {
     criteria: props.delibe?.criteria ?? "",
     semester: props.delibe?.semester ?? "",
-    start_at: props.delibe?.start_at ?? "",
+    start_at: formatDatetimeLocal(props.delibe?.start_at),
     level_id: props.delibe?.level?.id?.toString() ?? "",
     year_academic_id: props.delibe?.year?.id?.toString() ?? "",
   },
@@ -44,7 +59,7 @@ const selectLevelPlaceholder = computed(() => {
 });
 
 const selectYearPlaceholder = computed(() => {
-  if (levelPending.value) return "Chargement...";
+  if (yearPending.value) return "Chargement...";
   return "Sélectionner une année académique";
 });
 
@@ -84,13 +99,13 @@ const handleSubmit = form.handleSubmit(async (values) => {
             </SelectTrigger>
             <SelectContent>
               <SelectGroup v-if="levels && levels.length > 0">
-                <SelectLabel>Promotion disponibles</SelectLabel>
+                <SelectLabel>Promotions disponibles</SelectLabel>
                 <SelectItem
                   v-for="level in levels"
                   :key="level.id"
                   :value="level.id.toString()"
                 >
-                  {{ level.name }} [{{ level.programme }}]
+                  {{ level.name }} [{{ level.department.alias }}]
                 </SelectItem>
               </SelectGroup>
               <SelectGroup v-else-if="!levelPending">
@@ -113,7 +128,7 @@ const handleSubmit = form.handleSubmit(async (values) => {
             </SelectTrigger>
             <SelectContent>
               <SelectGroup v-if="years && years.length > 0">
-                <SelectLabel>Année académique disponibles</SelectLabel>
+                <SelectLabel>Années académiques disponibles</SelectLabel>
                 <SelectItem
                   v-for="year in years"
                   :key="year.id"
@@ -138,13 +153,13 @@ const handleSubmit = form.handleSubmit(async (values) => {
         <FormControl>
           <Select v-bind="componentField">
             <SelectTrigger class="w-full">
-              <SelectValue placeholder="Selectionner un semestre" />
+              <SelectValue placeholder="Sélectionner un semestre" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectLabel> Semestres </SelectLabel>
-                <SelectItem value="Semestre 1"> Semestre 1 </SelectItem>
-                <SelectItem value="Semestre 2"> Semestre 2 </SelectItem>
+                <SelectLabel>Semestres</SelectLabel>
+                <SelectItem value="Semestre 1">Semestre 1</SelectItem>
+                <SelectItem value="Semestre 2">Semestre 2</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
@@ -157,7 +172,7 @@ const handleSubmit = form.handleSubmit(async (values) => {
       <FormItem>
         <FormLabel>Critère</FormLabel>
         <FormControl>
-          <Textarea v-bind="componentField"></Textarea>
+          <Textarea v-bind="componentField" />
         </FormControl>
         <FormMessage />
       </FormItem>

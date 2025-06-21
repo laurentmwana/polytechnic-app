@@ -52,45 +52,36 @@ const auth = useAuth();
 const router = useRouter();
 const route = useRoute();
 
-const numberPage = ref<number>(
-  route.query.page ? parseInt(route.query.page as string) : 1
-);
-
+const numberPage = ref<number>(parseInt(route.query.page as string) || 1);
 const deliberations = ref<ModelCollectionProps | null>(null);
 const isLoading = ref<boolean>(true);
-const showModalLockdelilibeId = ref<number | null>(null);
 const showModalDeleteDelibeId = ref<number | null>(null);
 
 const fetchDeliberations = async () => {
   try {
     isLoading.value = true;
 
-    if (!auth.session.value?.accessToken) {
-      throw new Error("utilisateur non authentifié");
-    }
+    const token = auth.session.value?.accessToken;
+    if (!token) throw new Error("Utilisateur non authentifié");
 
-    const response = await getCollectionDeliberations(
-      auth.session.value.accessToken,
-      numberPage.value
-    );
+    const response = await getCollectionDeliberations(token, numberPage.value);
     const data = await response.json();
 
     if (response.ok) {
       deliberations.value = data as ModelCollectionProps;
-    } else if (response.status == 401) {
-      toast.warning("Session", {
-        description: "Votre session a expiré, merci de vous reconnecter",
+    } else if (response.status === 401) {
+      toast.warning("Session expirée", {
+        description: "Veuillez vous reconnecter.",
       });
       auth.logout();
     } else {
       toast.error("Erreur", {
-        description:
-          (data as { message: string }).message || "Une erreur est survenue",
+        description: (data as { message: string }).message || "Erreur inconnue.",
       });
     }
-  } catch (error) {
+  } catch {
     toast.error("Erreur", {
-      description: "Impossible de charger les délibérations",
+      description: "Impossible de charger les délibérations.",
     });
   } finally {
     isLoading.value = false;
@@ -103,53 +94,32 @@ const onPage = async (page: number) => {
   await fetchDeliberations();
 };
 
-const onDeleteDelibe = async (delilibeId: number) => {
+const onDeleteDelibe = async (delibId: number) => {
   try {
     isLoading.value = true;
 
-    if (!auth.session.value?.accessToken) {
-      throw new Error("Utilisateur non authentifié");
-    }
+    const token = auth.session.value?.accessToken;
+    if (!token) throw new Error("Utilisateur non authentifié");
 
-    const response = await deleteDeliberation(
-      auth.session.value.accessToken,
-      delilibeId
-    );
+    const response = await deleteDeliberation(token, delibId);
     const data = await response.json();
 
-    if (response.ok) {
-      const state = data as StateActionModel;
-
-      if (state) {
-        toast("Suppression", {
-          description: `La délibération #${delilibeId} a été supprimé`,
-        });
-
-        router.replace("/admin/deliberation?page=1");
-
-        await fetchDeliberations();
-      } else {
-        toast.error("Suppression échouée", {
-          description: `Nous n'avons pas pu modifier supprimer  la délibération #${delilibeId}`,
-        });
-      }
-    } else if (response.status == 401) {
-      toast.warning("Session", {
-        description: "Votre session a expiré, merci de vous reconnecter",
+    if (response.ok && (data as StateActionModel)) {
+      toast("Suppression", {
+        description: `La délibération #${delibId} a été supprimée.`,
       });
-      auth.logout();
+      await onPage(1);
     } else {
-      toast.error("Erreur", {
-        description:
-          (data as { message: string }).message || "Une erreur est survenue",
+      toast.error("Échec de la suppression", {
+        description: `La délibération #${delibId} n'a pas pu être supprimée.`,
       });
     }
-  } catch (error) {
+  } catch {
     toast.error("Erreur", {
-      description: `Impossible de changer le statut de la délibération #${delilibeId}`,
+      description: `Erreur lors de la suppression de la délibération #${delibId}.`,
     });
   } finally {
-    showModalLockdelilibeId.value = null;
+    showModalDeleteDelibeId.value = null;
     isLoading.value = false;
   }
 };
@@ -157,7 +127,7 @@ const onDeleteDelibe = async (delilibeId: number) => {
 watch(
   () => route.query.page,
   (newPage) => {
-    const pageNumber = newPage ? parseInt(newPage as string) : 1;
+    const pageNumber = parseInt(newPage as string) || 1;
     if (pageNumber !== numberPage.value) {
       numberPage.value = pageNumber;
       fetchDeliberations();
@@ -165,9 +135,7 @@ watch(
   }
 );
 
-onMounted(async () => {
-  await fetchDeliberations();
-});
+onMounted(fetchDeliberations);
 </script>
 
 <template>
@@ -177,14 +145,11 @@ onMounted(async () => {
         <div>
           <CardTitle>Gestion des délibérations</CardTitle>
           <CardDescription>
-            Gérez les délibérations de la faculté de polytechinique
+            Gérez les délibérations de la faculté de polytechnique
           </CardDescription>
         </div>
         <Button asChild variant="outline" size="sm">
-          <NuxtLink
-            to="/admin/deliberation/create"
-            class="flex items-center gap-2"
-          >
+          <NuxtLink to="/admin/deliberation/create" class="flex items-center gap-2">
             Créer
           </NuxtLink>
         </Button>
@@ -194,12 +159,12 @@ onMounted(async () => {
       <!-- Loader -->
       <LoaderContainer v-if="isLoading" />
 
-      <!-- Aucun cours -->
+      <!-- Aucune délibération -->
       <div v-else-if="!deliberations?.data?.length" class="text-center py-8">
         <p class="text-muted-foreground">Aucune délibération trouvée</p>
       </div>
 
-      <!-- Table des cours -->
+      <!-- Table des délibérations -->
       <div v-else class="space-y-4">
         <Table>
           <TableHeader>
@@ -216,30 +181,20 @@ onMounted(async () => {
             <TableRow v-for="delibe in deliberations.data" :key="delibe.id">
               <TableCell class="font-medium">
                 {{
-                  excerpt(
-                    `${delibe.level.name} ${delibe.level.option.alias}`,
-                    30
-                  )
+                  excerpt(`${delibe.level.name} ${delibe.level.department.alias}`, 30)
                 }}
               </TableCell>
 
-              <TableCell class="font-medium">
-                {{ delibe.year.name }}
-              </TableCell>
+              <TableCell class="font-medium">{{ delibe.year.name }}</TableCell>
 
-              <TableCell class="font-medium">
-                {{ delibe.semester }}
-              </TableCell>
+              <TableCell class="font-medium">{{ delibe.semester }}</TableCell>
+
+              <TableCell>{{ delibe.start_at }}</TableCell>
 
               <TableCell>
-                {{ delibe.start_at }}
+                <p class="text-sm text-muted-foreground">{{ ago(delibe.created_at) }}</p>
               </TableCell>
 
-              <TableCell>
-                <p class="text-sm text-muted-foreground">
-                  {{ ago(delibe.created_at) }}
-                </p>
-              </TableCell>
               <TableCell class="text-right">
                 <DropdownMenu>
                   <DropdownMenuTrigger as-child>
@@ -248,6 +203,7 @@ onMounted(async () => {
                       <span class="sr-only">Ouvrir le menu</span>
                     </Button>
                   </DropdownMenuTrigger>
+
                   <DropdownMenuContent align="end">
                     <DropdownMenuItem>
                       <NuxtLink
@@ -258,6 +214,7 @@ onMounted(async () => {
                         Voir
                       </NuxtLink>
                     </DropdownMenuItem>
+
                     <DropdownMenuItem>
                       <NuxtLink
                         :to="`/admin/deliberation/${delibe.id}/edit`"
@@ -277,22 +234,16 @@ onMounted(async () => {
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
+
                 <ConfirmationDialog
-                  :open="
-                    showModalDeleteDelibeId !== null &&
-                    showModalDeleteDelibeId === delibe.id
-                  "
+                  :open="showModalDeleteDelibeId === delibe.id"
                   variant="destructive"
                   title="Suppression"
                   description="Cette action est irréversible. L'élément sera définitivement supprimé de nos serveurs."
                   confirm-text="Supprimer"
                   cancel-text="Annuler"
                   :loading="isLoading"
-                  @confirm="
-                    async () => {
-                      await onDeleteDelibe(delibe.id);
-                    }
-                  "
+                  @confirm="async () => await onDeleteDelibe(delibe.id)"
                   @cancel="showModalDeleteDelibeId = null"
                 />
               </TableCell>
@@ -301,11 +252,7 @@ onMounted(async () => {
         </Table>
 
         <!-- Pagination -->
-        <Pagination
-          v-if="deliberations"
-          :onPage="onPage"
-          :meta="deliberations"
-        />
+        <Pagination v-if="deliberations" :onPage="onPage" :meta="deliberations" />
       </div>
     </CardContent>
   </Card>

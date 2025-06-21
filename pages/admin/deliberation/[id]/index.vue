@@ -4,7 +4,7 @@ import { useAuth } from "@/composables/useAuth";
 import { ago } from "@/lib/date-time";
 import { getItemDeliberation } from "@/services/deliberation";
 import type { DeliberationModel } from "@/types/model";
-import { Calendar, Mail, User, UserCheck } from "lucide-vue-next";
+import { Calendar, MapPin, User, UserCheck } from "lucide-vue-next";
 import { toast } from "vue-sonner";
 
 useHead({
@@ -24,7 +24,7 @@ const auth = useAuth();
 const route = useRoute();
 
 const deliberation = ref<DeliberationModel | null>(null);
-const isLoading = ref<boolean>(true);
+const isLoading = ref(true);
 
 const delibeId = parseInt(route.params.id as string);
 
@@ -32,7 +32,7 @@ if (!delibeId || isNaN(delibeId)) {
   throw createError({
     statusCode: 400,
     statusMessage:
-      "L'ID de le délibération est requis et doit être un nombre valide",
+      "L'ID de la délibération est requis et doit être un nombre valide",
   });
 }
 
@@ -41,7 +41,7 @@ const fetchDeliberation = async () => {
     isLoading.value = true;
 
     if (!auth.session.value?.accessToken) {
-      throw new Error("utilisateur non authentifié");
+      throw new Error("Utilisateur non authentifié");
     }
 
     const response = await getItemDeliberation(
@@ -52,8 +52,8 @@ const fetchDeliberation = async () => {
 
     if (response.ok) {
       deliberation.value = (data as ModelDataResponse).data;
-    } else if (response.status == 401) {
-      toast.warning("Session", {
+    } else if (response.status === 401) {
+      toast.warning("Session expirée", {
         description: "Votre session a expiré, merci de vous reconnecter",
       });
       auth.logout();
@@ -63,7 +63,7 @@ const fetchDeliberation = async () => {
           (data as { message: string }).message || "Une erreur est survenue",
       });
     }
-  } catch (error) {
+  } catch {
     toast.error("Erreur", {
       description: "Impossible de charger la délibération",
     });
@@ -72,20 +72,20 @@ const fetchDeliberation = async () => {
   }
 };
 
-onMounted(async () => {
-  await fetchDeliberation();
+onMounted(() => {
+  fetchDeliberation();
 });
 </script>
 
 <template>
   <div class="space-y-6">
-    <!-- Header avec bouton retour -->
+    <!-- Bouton retour -->
     <GoBack back="/admin/deliberation" />
 
     <!-- Loader -->
     <LoaderContainer v-if="isLoading" :isCard="true" />
 
-    <!-- course non trouvé -->
+    <!-- Délibération non trouvée -->
     <Card v-else-if="!deliberation">
       <CardContent class="text-center py-12">
         <User class="h-12 w-12 mx-auto text-muted-foreground mb-4" />
@@ -96,31 +96,29 @@ onMounted(async () => {
       </CardContent>
     </Card>
 
-    <!-- Détails de le course -->
+    <!-- Détails de la délibération -->
     <div v-else class="grid gap-6 md:grid-cols-2">
-      <!-- Informations principales -->
       <Card>
         <CardHeader>
           <CardTitle class="flex items-center gap-2">
             <User class="h-5 w-5" />
-            Informations sur la délibératin #{{ delibeId }}
+            Informations sur la délibération #{{ delibeId }}
           </CardTitle>
         </CardHeader>
         <CardContent class="space-y-4">
           <div class="grid gap-4">
             <div class="flex items-center gap-3">
-              <User class="h-4 w-4 text-muted-foreground" />
+              <MapPin class="h-4 w-4 text-muted-foreground" />
               <div>
                 <p class="text-sm font-medium">Promotion</p>
                 <p class="text-sm text-muted-foreground">
-                  {{ deliberation.level.name }}
-                  {{ deliberation.level.option.name }}
+                  {{ deliberation.level.name }} {{ deliberation.level.department.name }}
                 </p>
               </div>
             </div>
 
             <div class="flex items-center gap-3">
-              <Mail class="h-4 w-4 text-muted-foreground" />
+              <Calendar class="h-4 w-4 text-muted-foreground" />
               <div>
                 <p class="text-sm font-medium">Semestre</p>
                 <p class="text-sm text-muted-foreground">
@@ -130,7 +128,7 @@ onMounted(async () => {
             </div>
 
             <div class="flex items-center gap-3">
-              <Mail class="h-4 w-4 text-muted-foreground" />
+              <Calendar class="h-4 w-4 text-muted-foreground" />
               <div>
                 <p class="text-sm font-medium">Début</p>
                 <p class="text-sm text-muted-foreground">
