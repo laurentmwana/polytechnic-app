@@ -13,7 +13,7 @@ export const SchemaLevelForm = z.object({
 
   programme: z.string(),
 
-  option_id: z.string().min(1, "L'option est requise."),
+  department_id: z.string().min(1, "Le départment est requis.").optional(),
 });
 
 export type SchemaLevelFormInfer = z.infer<typeof SchemaLevelForm>;
