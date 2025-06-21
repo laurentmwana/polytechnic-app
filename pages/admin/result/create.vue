@@ -24,7 +24,7 @@ useHead({
 
 definePageMeta({
   layout: "admin",
-  middleware: ["admin"],
+  middleware: ["admin", "verified"],
 });
 
 const validator = ref<ValidatorErrorProps | null>(null);

@@ -30,7 +30,7 @@ useHead({
 
 definePageMeta({
   layout: "admin",
-  middleware: ["admin"],
+  middleware: ["admin", "verified"],
 });
 
 interface ModelDataResponse {

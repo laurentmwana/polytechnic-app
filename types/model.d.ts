@@ -67,27 +67,17 @@ export interface DepartmentModel {
   id: number;
   name: string;
   alias: string;
-  options: OptionModel[];
-  created_at: string;
-  updated_at: string;
-}
-
-export interface OptionModel {
-  id: number;
-  name: string;
-  alias: string;
-  department: DepartmentModel;
   levels: LevelModel[];
   created_at: string;
   updated_at: string;
 }
 
+
 export interface LevelModel {
   id: number;
   name: string;
   alias: string;
-  option: OptionModel;
-  programme: string;
+  department: DepartmentModel | null;
   created_at: string;
   updated_at: string;
 }
@@ -97,6 +87,7 @@ export interface CourseModel {
   name: string;
   code: string;
   credits: number;
+  semester: string
   level: LevelModel;
   teacher: TeacherModel;
   is_follow: boolean;
@@ -132,42 +123,6 @@ export interface JuryModel {
   id: number;
   teacher: TeacherModel;
   deliberation: DeliberationModel;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface FeesAcademicModel {
-  id: number;
-  amount: number;
-  level: LevelModel;
-  year: YearModel;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface FeesLaboratoryModel {
-  id: number;
-  amount: number;
-  level: LevelModel;
-  year: YearModel;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface PaidAcademicModel {
-  id: number;
-  academic: FeesAcademicModel;
-  paid_at: string | null;
-  is_paid: boolean;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface PaidLaboratoryModel {
-  id: number;
-  laboratory: FeesAcademicModel;
-  paid_at: string | null;
-  is_paid: boolean;
   created_at: string;
   updated_at: string;
 }

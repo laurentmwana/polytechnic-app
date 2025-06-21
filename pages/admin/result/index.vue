@@ -41,7 +41,7 @@ useHead({
 
 definePageMeta({
   layout: "admin",
-  middleware: ["admin"],
+  middleware: ["admin", "verified"],
 });
 
 type ModelCollectionProps = PaginatedResponse<ResultModel[]>;
@@ -173,7 +173,7 @@ onMounted(async () => {
         <div>
           <CardTitle>Gestion des résultats</CardTitle>
           <CardDescription>
-            Gérez les résultats de délibération           
+            Gérez les résultats de délibération
           </CardDescription>
         </div>
         <Button asChild variant="outline" size="sm">
@@ -206,19 +206,28 @@ onMounted(async () => {
           <TableBody>
             <TableRow v-for="result in results.data" :key="result.id">
               <TableCell class="font-medium">
-                {{ excerpt(`${result.student.name} ${result.student.firstname}`, 30) }}
+                {{
+                  excerpt(
+                    `${result.student.name} ${result.student.firstname}`,
+                    30
+                  )
+                }}
               </TableCell>
 
               <TableCell class="font-medium">
-                {{ excerpt(`${result.deliberation.level.name} - ${result.deliberation.year.name}`, 30) }}
+                {{
+                  excerpt(
+                    `${result.deliberation.level.name} - ${result.deliberation.year.name}`,
+                    30
+                  )
+                }}
               </TableCell>
 
               <TableCell>
                 <Badge>
-                  {{result.is_eligible ? 'Oui' : 'Non'}}
+                  {{ result.is_eligible ? "Oui" : "Non" }}
                 </Badge>
               </TableCell>
-
 
               <TableCell>
                 <p class="text-sm text-muted-foreground">

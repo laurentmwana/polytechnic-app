@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { CalendarDays } from "lucide-vue-next";
 import { toast } from "vue-sonner";
-import { ago } from "../../lib/date-time";
-import { getShowDepartment } from "../../services/other";
-import type { DepartmentModel } from "../../types/model";
+import { ago } from "@/lib/date-time";
+import { getShowDepartment } from "@/services/other";
+import type { DepartmentModel } from "@/types/model";
 
 useHead({
   title: "En savoir plus sur un département - Polytechnic Application",
@@ -51,9 +51,7 @@ const fetchDepartment = async () => {
   }
 };
 
-onMounted(() => {
-  fetchDepartment();
-});
+onMounted(fetchDepartment);
 </script>
 
 <template>
@@ -93,10 +91,6 @@ onMounted(() => {
         >
           <div class="flex items-center gap-1">
             <CalendarDays class="h-4 w-4" />
-            <span>Créé : {{ ago(department.created_at) }}</span>
-          </div>
-          <div class="flex items-center gap-1">
-            <CalendarDays class="h-4 w-4" />
             <span>Mis à jour : {{ ago(department.updated_at) }}</span>
           </div>
         </CardFooter>
@@ -104,7 +98,7 @@ onMounted(() => {
 
       <div class="section-page-header">
         <h2 class="section-page-title">
-          Les options associées au département #{{ departmentId }}
+          Les promotions
         </h2>
       </div>
       <div>
@@ -114,15 +108,15 @@ onMounted(() => {
           class="grid gris-cols-1 md:grid-cols-2 gap-4 w-full"
         >
           <AccordionItem
-            v-for="option in department.options"
+            v-for="level in department.levels"
             class="mb-5 rounded-md border px-3 shadow-sm"
-            :key="option.id"
-            :value="option.id.toString()"
+            :key="level.id"
+            :value="level.id.toString()"
           >
             <AccordionTrigger class="text-base font-medium">
-              {{ option.alias }}
+              {{ level.alias }}
             </AccordionTrigger>
-            <AccordionContent>{{ option.name }}</AccordionContent>
+            <AccordionContent>{{ level.name }}</AccordionContent>
           </AccordionItem>
         </Accordion>
       </div>

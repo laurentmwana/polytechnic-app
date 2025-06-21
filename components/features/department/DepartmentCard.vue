@@ -20,25 +20,25 @@ const props = defineProps<DepartmentCardProps>();
     <CardContent class="h-full">
       <div class="flex flex-wrap gap-3 mb-2">
         <Badge
-          :key="option.id"
+          :key="level.id"
           variant="outline"
           class="text-xs"
-          v-for="option in props.department.options.slice(0, 3)"
+          v-for="level in props.department.levels.slice(0, 3)"
         >
-          {{ excerpt(option.name, 45) }}
+          {{ excerpt(level.name, 45) }}
         </Badge>
 
         <Badge
           variant="outline"
           class="text-xs"
-          v-if="props.department.options.length > 3"
+          v-if="props.department.levels.length > 3"
         >
-          +{{ props.department.options.length - 3 }}
+          +{{ props.department.levels.length - 3 }}
         </Badge>
       </div>
       <p class="text-sm text-muted-foreground">
-        <span class="font-medium">{{ props.department.options.length }}</span>
-        filières disponibles
+        <span class="font-medium">{{ props.department.levels.length }}</span>
+        promotions disponibles
       </p>
     </CardContent>
     <CardFooter class="pt-0">

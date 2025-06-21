@@ -145,10 +145,10 @@ onMounted(fetchCourses);
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>Code</TableHead>
           <TableHead>Nom</TableHead>
           <TableHead>Crédits</TableHead>
           <TableHead>Promotion</TableHead>
+          <TableHead>Semestre</TableHead>
           <TableHead>Professeur</TableHead>
           <TableHead>Créé</TableHead>
           <TableHead class="text-right">Actions</TableHead>
@@ -156,11 +156,13 @@ onMounted(fetchCourses);
       </TableHeader>
       <TableBody>
         <TableRow v-for="course in courses.data" :key="course.id">
-          <TableCell>{{ course.code }}</TableCell>
           <TableCell>{{ excerpt(course.name, 30) }}</TableCell>
           <TableCell>{{ course.credits }}</TableCell>
           <TableCell>{{
-            excerpt(`${course.level.name} [${course.level.alias}]`, 40)
+            excerpt(course.level.name, 40)
+          }}</TableCell>
+              <TableCell>{{
+            course.semester
           }}</TableCell>
           <TableCell>{{
             excerpt(`${course.teacher.name} ${course.teacher.firstname}`, 40)

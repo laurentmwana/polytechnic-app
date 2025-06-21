@@ -1,17 +1,14 @@
 <script setup lang="ts">
 import { ref, watch, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
-
-import { createError } from "h3";
-
 import { getCollectionLevels } from "@/services/other";
 import type { LevelModel } from "@/types/model";
 import type { PaginatedResponse } from "@/types/paginate";
-import LevelCard from "@/components/features/level/LevelCard.vue";
 import { toast } from "vue-sonner";
+import { Eye } from "lucide-vue-next";
 
 useHead({
-  title: "Nos promotions - Polytechnic Application",
+  title: "Promotions - Polytechnic Application",
 });
 
 definePageMeta({
@@ -73,36 +70,61 @@ watch(
 onMounted(fetchLevels);
 </script>
 <template>
-  <div class="container my-12" v-if="isPending">
+  <div class="container my-12">
     <div class="section-page-header">
-      <h2 class="section-page-title">Les promotions</h2>
+      <h2 class="section-page-title">Promotions</h2>
     </div>
 
-    <LoaderContainer :is-card="true" />
-  </div>
+    <LoaderContainer :is-card="true" v-if="isPending" />
 
-  <div
-    class="container my-12"
-    v-if="(!levels || (levels && levels.data.length === 0)) && !isPending"
-  >
-    <div class="section-page-header">
-      <h2 class="section-page-title">Les promotions</h2>
-    </div>
-
-    <p>Pas de promotion</p>
-  </div>
-
-  <div class="container my-12" v-if="levels">
-    <div class="section-page-header">
-      <h2 class="section-page-title">Nos promotions</h2>
-    </div>
-
-    <div
-      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-center"
-    >
-      <LevelCard v-for="level in levels.data" :key="level.id" :level="level" />
+    <div v-else-if="!isPending && levels">
+      <div>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>#</TableHead>
+            <TableHead>Nom</TableHead>
+            <TableHead>Alias</TableHead>
+            <TableHead>Département</TableHead>
+            <TableHead class="text-end">
+              Action
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <TableRow v-for="level in levels.data">
+            <TableCell>
+              #{{ level.id }}
+            </TableCell>
+            <TableCell>
+              {{ level.name }}
+            </TableCell>
+            <TableCell>
+              {{ level.alias }}
+            </TableCell>
+            <TableCell>
+              <TextLink v-if="level.department" :href="`/department/${level.department.id}`">
+                {{ level.department.name }}
+              </TextLink>
+              <p v-else>
+                ---
+              </p>
+            </TableCell>
+            <TableCell>
+              <div clas="flex items-center justify-end">
+                <Button variant="outline" size="sm" :as-child="true">
+                  <NuxtLink :to="`/level/${level.id}`">
+                    <Eye :size="15" />
+                  </NuxtLink>
+                </Button>
+              </div>
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
     </div>
 
     <Pagination :onPage="onPage" :meta="levels" />
+    </div>
   </div>
 </template>

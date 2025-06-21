@@ -34,16 +34,14 @@ const navItems = computed<NavItem[]>(() => [
     label: "Académique",
     children: [
       { label: "Départments", href: "/department" },
-      { label: "Filières", href: "/option" },
       { label: "Promotion", href: "/level" },
       { label: "Cours", href: "/course" },
       { label: "Année académique", href: "/year-academic" },
       { label: "Professeurs", href: "/teacher" },
-      { label: "Délibération", href: "/deliberation" },
     ],
   },
+  { label: "Délibération", href: "/deliberation" },
   { label: "Evènements", href: "/event" },
-  { label: "Aide", href: "/help" },
 ]);
 
 const isActive = (href?: string): boolean => {

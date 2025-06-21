@@ -71,6 +71,10 @@ const items = [
     title: "Publication",
     children: [
       {
+        title: "Evènement",
+        url: "/admin/event",
+      },
+      {
         title: "Résultats",
         url: "/admin/result",
       },

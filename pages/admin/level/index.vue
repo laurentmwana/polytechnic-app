@@ -40,7 +40,7 @@ useHead({
 
 definePageMeta({
   layout: "admin",
-  middleware: ["admin"],
+  middleware: ["admin", "verified"],
 });
 
 type ModelCollectionProps = PaginatedResponse<LevelModel[]>;
@@ -206,9 +206,7 @@ onMounted(async () => {
           </TableHeader>
           <TableBody>
             <TableRow v-for="level in levels.data" :key="level.id">
-              <TableCell class="font-medium">
-                #{{ level.id }}
-              </TableCell>
+              <TableCell class="font-medium"> #{{ level.id }} </TableCell>
 
               <TableCell class="font-medium">
                 {{ excerpt(level.name, 30) }}
