@@ -29,7 +29,7 @@ const ROUTES_API = {
   "*course.index": "/courses",
   "*course.show": "/course/:id",
 
-  "*notification.index": "/notifications",
+  "*notification.index": "/notification",
   "*notification.last": "/last-notification",
   "*notification.show": "/notification/:id",
   "*notification.destroy": "/notification/:id/destroy",

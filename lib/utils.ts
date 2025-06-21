@@ -17,10 +17,12 @@ export const getInitials = (content: string) => {
 };
 
 export function excerpt(
-  text: string,
+  text?: string,
   limit: number = 100,
   separator: string = "..."
 ): string | null {
+  if (!text || typeof text !== "string") return "";
+
   if (text.length <= limit) {
     return text;
   }

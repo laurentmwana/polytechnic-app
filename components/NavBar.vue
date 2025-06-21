@@ -47,9 +47,7 @@ const navItems = computed<NavItem[]>(() => [
 
 const isActive = (href?: string): boolean => {
   if (!href) return false;
-  if (href === "/") {
-    return route.path === "/";
-  }
+  if (href === "/") return route.path === "/";
   return route.path.startsWith(href);
 };
 
@@ -59,9 +57,11 @@ const handleLinkClick = (): void => {
 </script>
 
 <template>
-  <nav class="bg-background/95 sticky top-0 z-50 border-b backdrop-blur-sm">
-    <div class="container mx-auto">
-      <div class="flex items-center justify-between py-4">
+  <nav
+    class="relative bg-background/95 sticky top-0 z-50 border-b backdrop-blur-sm h-16"
+  >
+    <div class="container mx-auto h-full">
+      <div class="flex items-center justify-between h-full">
         <!-- Logo -->
         <NuxtLink href="/" class="flex items-center">
           <Logo
@@ -72,9 +72,9 @@ const handleLinkClick = (): void => {
         </NuxtLink>
 
         <!-- Desktop Menu -->
-        <div class="hidden lg:flex items-center space-x-1">
+        <div class="hidden lg:flex items-center space-x-1 h-full">
           <template v-for="item in navItems" :key="item.label">
-            <!-- Dropdown menu items -->
+            <!-- Dropdown -->
             <DropdownMenu v-if="item.children">
               <DropdownMenuTrigger as-child>
                 <Button
@@ -113,7 +113,7 @@ const handleLinkClick = (): void => {
               </DropdownMenuContent>
             </DropdownMenu>
 
-            <!-- Simple menu items -->
+            <!-- Simple -->
             <Button
               v-else
               variant="ghost"
@@ -132,11 +132,14 @@ const handleLinkClick = (): void => {
           </template>
         </div>
 
-        <!-- Right side items -->
-        <div class="flex items-center space-x-4">
-          <LastNotification />
-          <ThemeToggle />
-          <AvatarUser />
+        <!-- Right side (notification, toggle, avatar, menu) -->
+        <div class="flex items-center space-x-4 h-full">
+          <div class="flex items-center space-x-2">
+            <LastNotification />
+            <ThemeToggle />
+            <AvatarUser />
+          </div>
+
           <!-- Mobile Menu Sheet -->
           <Sheet v-model:open="open">
             <SheetTrigger as-child class="lg:hidden">
