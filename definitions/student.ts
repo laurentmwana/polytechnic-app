@@ -14,12 +14,9 @@ export const SchemaStudentForm = z.object({
   gender: z
     .string()
     .min(1, "Le genre est requis.")
-    .refine(
-      (val) => ["masculin", "féminin", "autre"].includes(val.toLowerCase()),
-      {
-        message: "Le genre doit être 'masculin', 'féminin' ou 'autre'.",
-      }
-    ),
+    .refine((val) => ["homme", "femme"].includes(val.toLowerCase()), {
+      message: "Le genre doit être 'homme', 'femme'.",
+    }),
 
   phone: z
     .string()

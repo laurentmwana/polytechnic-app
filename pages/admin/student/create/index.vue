@@ -10,7 +10,6 @@ import {
 import { useAuth } from "@/composables/useAuth";
 import type { SchemaStudentFormInfer } from "@/definitions/student";
 import { createStudent } from "@/services/student";
-import type { UserModel } from "@/types/model";
 import type { StateActionModel, ValidatorErrorProps } from "@/types/util";
 import { toast } from "vue-sonner";
 
@@ -22,13 +21,12 @@ definePageMeta({
   layout: "admin",
   middleware: ["admin", "verified"],
 });
+
 const validator = ref<ValidatorErrorProps | null>(null);
+const isLoading = ref<boolean>(false);
 
 const auth = useAuth();
 const router = useRouter();
-
-const user = ref<UserModel | null>(null);
-const isLoading = ref<boolean>(true);
 
 const onSubmit = async (values: SchemaStudentFormInfer) => {
   try {
@@ -36,13 +34,10 @@ const onSubmit = async (values: SchemaStudentFormInfer) => {
     validator.value = null;
 
     if (!auth.session.value?.accessToken) {
-      throw new Error("utilisateur non authentifié");
+      throw new Error("Utilisateur non authentifié");
     }
 
-    const response = await createStudent(
-      auth.session.value.accessToken,
-      values
-    );
+    const response = await createStudent(auth.session.value.accessToken, values);
     const data = await response.json();
 
     if (response.ok) {
@@ -51,8 +46,7 @@ const onSubmit = async (values: SchemaStudentFormInfer) => {
         toast.success("Création", {
           description: `Un étudiant a été créé`,
         });
-
-        router.push("/admin/user");
+        router.push("/admin/student");
       } else {
         toast.error("Création", {
           description: `Nous n'avons pas pu effectuer cette action`,
@@ -60,7 +54,7 @@ const onSubmit = async (values: SchemaStudentFormInfer) => {
       }
     } else if (response.status === 422) {
       validator.value = data as ValidatorErrorProps;
-    } else if (response.status == 401) {
+    } else if (response.status === 401) {
       toast.warning("Session", {
         description: "Votre session a expiré, merci de vous reconnecter",
       });
@@ -73,8 +67,11 @@ const onSubmit = async (values: SchemaStudentFormInfer) => {
     }
   } catch (error) {
     toast.error("Erreur", {
-      description: `Impossible d'editer l'étudiant #${user.value?.id}`,
+      description: `Impossible de créer l'étudiant`,
     });
+    console.error(error);
+  } finally {
+    isLoading.value = false;
   }
 };
 </script>
@@ -89,12 +86,12 @@ const onSubmit = async (values: SchemaStudentFormInfer) => {
           <CardTitle class="flex items-center gap-2">
             Création d'un étudiant
           </CardTitle>
-          <CardDescription> </CardDescription>
+          <CardDescription></CardDescription>
         </CardHeader>
         <CardContent>
           <div class="max-w-2xl space-y-4">
             <ValidatorError :validator="validator" />
-            <StudentForm :onSubmit="onSubmit" />
+            <StudentForm :onSubmit="onSubmit" :loading="isLoading" />
           </div>
         </CardContent>
       </Card>

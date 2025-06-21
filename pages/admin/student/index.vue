@@ -33,6 +33,7 @@ import type { PaginatedResponse } from "@/types/paginate";
 import type { StateActionModel } from "@/types/util";
 import { Edit, Eye, File, MoreHorizontal, Plus, Trash2 } from "lucide-vue-next";
 import { toast } from "vue-sonner";
+import { onMounted, ref, watch } from "vue";
 
 useHead({
   title: "Gestion des étudiants - Polytechnic Application",
@@ -55,7 +56,6 @@ const numberPage = ref<number>(
 
 const students = ref<ModelCollectionProps | null>(null);
 const isLoading = ref<boolean>(true);
-const showModalLockStudentId = ref<number | null>(null);
 const showModalDeleteStudentId = ref<number | null>(null);
 
 const fetchStudents = async () => {
@@ -63,7 +63,7 @@ const fetchStudents = async () => {
     isLoading.value = true;
 
     if (!auth.session.value?.accessToken) {
-      throw new Error("utilisateur non authentifié");
+      throw new Error("Utilisateur non authentifié");
     }
 
     const response = await getCollectionStudents(
@@ -74,7 +74,7 @@ const fetchStudents = async () => {
 
     if (response.ok) {
       students.value = data as ModelCollectionProps;
-    } else if (response.status == 401) {
+    } else if (response.status === 401) {
       toast.warning("Session", {
         description: "Votre session a expiré, merci de vous reconnecter",
       });
@@ -95,8 +95,9 @@ const fetchStudents = async () => {
 };
 
 const onPage = async (page: number) => {
+  if (page === numberPage.value) return; // éviter rechargement inutile
   numberPage.value = page;
-  await router.push(`/admin/student?page=${page}`);
+  await router.push({ path: "/admin/student", query: { page: page.toString() } });
   await fetchStudents();
 };
 
@@ -117,20 +118,21 @@ const onDeleteStudent = async (studentId: number) => {
     if (response.ok) {
       const state = data as StateActionModel;
 
-      if (state) {
-        toast("Suppression", {
+      if (state?.state) {
+        toast.success("Suppression", {
           description: `L'étudiant #${studentId} a été supprimé`,
         });
 
-        router.replace("/admin/user?page=1");
+        // Remplacer la route en conservant page actuelle
+        await router.replace({ path: "/admin/student", query: { page: "1" } });
 
         await fetchStudents();
       } else {
         toast.error("Suppression échouée", {
-          description: `Nous n'avons pas pu modifier supprimer  l'étudiant #${studentId}`,
+          description: `Nous n'avons pas pu supprimer l'étudiant #${studentId}`,
         });
       }
-    } else if (response.status == 401) {
+    } else if (response.status === 401) {
       toast.warning("Session", {
         description: "Votre session a expiré, merci de vous reconnecter",
       });
@@ -143,10 +145,10 @@ const onDeleteStudent = async (studentId: number) => {
     }
   } catch (error) {
     toast.error("Erreur", {
-      description: `Impossible de changer le statut de l'étudiant #${studentId}`,
+      description: `Impossible de supprimer l'étudiant #${studentId}`,
     });
   } finally {
-    showModalLockStudentId.value = null;
+    showModalDeleteStudentId.value = null;
     isLoading.value = false;
   }
 };
@@ -174,12 +176,12 @@ onMounted(async () => {
         <div>
           <CardTitle>Gestion des étudiants</CardTitle>
           <CardDescription>
-            Gérez les étudiants de la faculté de polytechinique
+            Gérez les étudiants de la faculté de polytechnique
           </CardDescription>
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger as-child>
-            <Button size="sm"> Créer </Button>
+            <Button size="sm">Créer</Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem>
@@ -188,7 +190,7 @@ onMounted(async () => {
                 class="flex items-center gap-2"
               >
                 <File class="mr-2 h-4 w-4" />
-                Téléverser un fichier excell
+                Téléverser un fichier Excel
               </NuxtLink>
             </DropdownMenuItem>
             <DropdownMenuItem>
@@ -238,7 +240,7 @@ onMounted(async () => {
                 {{ excerpt(student.firstname, 30) }}
               </TableCell>
 
-              <TableCell class="capilalize">
+              <TableCell class="capitalize">
                 {{ student.gender }}
               </TableCell>
 
@@ -246,11 +248,11 @@ onMounted(async () => {
                 <div v-if="student.actual_level">
                   {{
                     excerpt(
-                      `${student.actual_level.level.name} ${student.actual_level.level.option.alias}`
+                      `${student.actual_level.level.name}`
                     )
                   }}
                 </div>
-                <div v-else>pas de promotion</div>
+                <div v-else>Pas de promotion</div>
               </TableCell>
 
               <TableCell>
@@ -264,17 +266,18 @@ onMounted(async () => {
               <TableCell>
                 {{ student.registration_token }}
               </TableCell>
+
               <TableCell>
                 <p class="text-sm text-muted-foreground">
                   {{ ago(student.created_at) }}
                 </p>
               </TableCell>
+
               <TableCell class="text-right">
                 <DropdownMenu>
                   <DropdownMenuTrigger as-child>
-                    <Button variant="ghost" size="sm">
+                    <Button variant="ghost" size="sm" aria-label="Ouvrir le menu">
                       <MoreHorizontal class="h-4 w-4" />
-                      <span class="sr-only">Ouvrir le menu</span>
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
@@ -306,6 +309,7 @@ onMounted(async () => {
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
+
                 <ConfirmationDialog
                   :open="
                     showModalDeleteStudentId !== null &&
@@ -317,11 +321,7 @@ onMounted(async () => {
                   confirm-text="Supprimer"
                   cancel-text="Annuler"
                   :loading="isLoading"
-                  @confirm="
-                    async () => {
-                      await onDeleteStudent(student.id);
-                    }
-                  "
+                  @confirm="async () => await onDeleteStudent(student.id)"
                   @cancel="showModalDeleteStudentId = null"
                 />
               </TableCell>
