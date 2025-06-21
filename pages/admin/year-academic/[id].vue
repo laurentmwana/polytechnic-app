@@ -10,8 +10,9 @@ import { useAuth } from "@/composables/useAuth";
 import { ago } from "@/lib/date-time";
 import { getItemYear } from "@/services/year";
 import type { YearModel } from "@/types/model";
-import { Calendar, Clock10, Clock11, Lock, Mail, User } from "lucide-vue-next";
+import { Calendar, Clock10, Clock11, Lock, User } from "lucide-vue-next";
 import { toast } from "vue-sonner";
+import { ref, onMounted } from "vue";
 
 useHead({
   title: "Détails année académique - Polytechnic Application",
@@ -47,7 +48,7 @@ const fetchYear = async () => {
     isLoading.value = true;
 
     if (!auth.session.value?.accessToken) {
-      throw new Error("année académique non authentifié");
+      throw new Error("Utilisateur non authentifié");
     }
 
     const response = await getItemYear(auth.session.value.accessToken, yearId);
@@ -55,7 +56,7 @@ const fetchYear = async () => {
 
     if (response.ok) {
       year.value = (data as ModelDataResponse).data;
-    } else if (response.status == 401) {
+    } else if (response.status === 401) {
       toast.warning("Session", {
         description: "Votre session a expiré, merci de vous reconnecter",
       });
@@ -88,11 +89,11 @@ onMounted(async () => {
     <!-- Loader -->
     <LoaderContainer v-if="isLoading" :isCard="true" />
 
-    <!-- année académique non trouvé -->
+    <!-- Année académique non trouvée -->
     <Card v-else-if="!year">
       <CardContent class="text-center py-12">
         <User class="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-        <p class="text-lg font-medium mb-2">année académique non trouvé</p>
+        <p class="text-lg font-medium mb-2">Année académique non trouvée</p>
         <p class="text-muted-foreground">
           L'année académique avec l'ID {{ yearId }} n'existe pas.
         </p>
@@ -101,7 +102,6 @@ onMounted(async () => {
 
     <!-- Détails de l'année académique -->
     <div v-else class="grid gap-6 md:grid-cols-2">
-      <!-- Informations principales -->
       <Card>
         <CardHeader>
           <CardTitle class="flex items-center gap-2">
@@ -115,7 +115,7 @@ onMounted(async () => {
         <CardContent class="space-y-4">
           <div class="grid gap-4">
             <div class="flex items-center gap-3">
-              <Mail class="h-4 w-4 text-muted-foreground" />
+              <Calendar class="h-4 w-4 text-muted-foreground" />
               <div>
                 <p class="text-sm font-medium">Année</p>
                 <p class="text-sm text-muted-foreground">{{ year.name }}</p>
@@ -126,9 +126,7 @@ onMounted(async () => {
               <Clock10 class="h-4 w-4 text-muted-foreground" />
               <div>
                 <p class="text-sm font-medium">Début</p>
-                <p class="text-sm text-muted-foreground">
-                  {{ year.start }}
-                </p>
+                <p class="text-sm text-muted-foreground">{{ year.start }}</p>
               </div>
             </div>
 
@@ -136,16 +134,14 @@ onMounted(async () => {
               <Clock11 class="h-4 w-4 text-muted-foreground" />
               <div>
                 <p class="text-sm font-medium">Fin</p>
-                <p class="text-sm text-muted-foreground">
-                  {{ year.end }}
-                </p>
+                <p class="text-sm text-muted-foreground">{{ year.end }}</p>
               </div>
             </div>
 
             <div class="flex items-center gap-3">
               <Lock class="h-4 w-4 text-muted-foreground" />
               <div>
-                <p class="text-sm font-medium">Status</p>
+                <p class="text-sm font-medium">Statut</p>
                 <p class="text-sm text-muted-foreground">
                   {{ year.is_closed ? "Fermée" : "En cours" }}
                 </p>
