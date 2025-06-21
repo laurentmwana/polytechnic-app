@@ -38,12 +38,13 @@ export const resetPasswordUser = async (body: {
   });
 };
 
-export const verifiedEmail = async (token: string, params: {expires: string, signature: string, id: number, hash: string}) => {
+export const verifiedEmail = async (
+  token: string,
+  params: { expires: string; signature: string; id: number; hash: string }
+) => {
   return await fetch(getRouteApi("verified-email", params), {
-    method: "POST",
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
   });
