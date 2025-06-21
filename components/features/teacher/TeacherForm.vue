@@ -7,7 +7,7 @@ import { getRouteApi } from "@/lib/route";
 import type { DepartmentModel, TeacherModel } from "@/types/model";
 import { toTypedSchema } from "@vee-validate/zod";
 import { useForm } from "vee-validate";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { toast } from "vue-sonner";
 
 const props = defineProps<{
@@ -15,16 +15,14 @@ const props = defineProps<{
   teacher?: TeacherModel;
 }>();
 
-const { data: departments, pending: departmentsPending } = await useFetch<
-  DepartmentModel[]
->(getRouteApi("&department"));
+const { data: departments, pending: departmentsPending } = await useFetch<DepartmentModel[]>(
+  getRouteApi("&department")
+);
 
 const isPending = ref(false);
 
-const formSchema = toTypedSchema(SchemaTeacherForm);
-
 const form = useForm({
-  validationSchema: formSchema,
+  validationSchema: toTypedSchema(SchemaTeacherForm),
   initialValues: {
     name: props.teacher?.name ?? "",
     firstname: props.teacher?.firstname ?? "",
@@ -34,14 +32,12 @@ const form = useForm({
   },
 });
 
-const selectPlaceholder = computed(() => {
-  if (departmentsPending.value) return "Chargement...";
-  return "Sélectionner un département";
-});
+const selectPlaceholder = computed(() =>
+  departmentsPending.value ? "Chargement..." : "Sélectionner un département"
+);
 
 const handleSubmit = form.handleSubmit(async (values) => {
   isPending.value = true;
-
   try {
     await props.onSubmit(values);
   } catch (error) {
@@ -55,6 +51,7 @@ const handleSubmit = form.handleSubmit(async (values) => {
 
 <template>
   <form @submit.prevent="handleSubmit" class="space-y-7">
+    <!-- Nom -->
     <FormField v-slot="{ componentField }" name="name">
       <FormItem>
         <FormLabel>Nom</FormLabel>
@@ -65,6 +62,7 @@ const handleSubmit = form.handleSubmit(async (values) => {
       </FormItem>
     </FormField>
 
+    <!-- Postnom -->
     <FormField v-slot="{ componentField }" name="firstname">
       <FormItem>
         <FormLabel>Postnom</FormLabel>
@@ -75,6 +73,7 @@ const handleSubmit = form.handleSubmit(async (values) => {
       </FormItem>
     </FormField>
 
+    <!-- Téléphone -->
     <FormField v-slot="{ componentField }" name="phone">
       <FormItem>
         <FormLabel>Téléphone</FormLabel>
@@ -85,19 +84,20 @@ const handleSubmit = form.handleSubmit(async (values) => {
       </FormItem>
     </FormField>
 
+    <!-- Genre -->
     <FormField v-slot="{ componentField }" name="gender">
       <FormItem>
         <FormLabel>Genre</FormLabel>
         <FormControl>
           <Select v-bind="componentField">
             <SelectTrigger class="w-full">
-              <SelectValue placeholder="Selectionner un genre" />
+              <SelectValue placeholder="Sélectionner un genre" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectLabel> Genres </SelectLabel>
-                <SelectItem value="homme"> Homme </SelectItem>
-                <SelectItem value="femme"> Femme </SelectItem>
+                <SelectLabel>Genres</SelectLabel>
+                <SelectItem value="homme">Homme</SelectItem>
+                <SelectItem value="femme">Femme</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
@@ -106,6 +106,7 @@ const handleSubmit = form.handleSubmit(async (values) => {
       </FormItem>
     </FormField>
 
+    <!-- Département -->
     <FormField v-slot="{ componentField }" name="department_id">
       <FormItem>
         <FormLabel>Département</FormLabel>
@@ -115,7 +116,7 @@ const handleSubmit = form.handleSubmit(async (values) => {
               <SelectValue :placeholder="selectPlaceholder" />
             </SelectTrigger>
             <SelectContent>
-              <SelectGroup v-if="departments && departments.length > 0">
+              <SelectGroup v-if="departments?.length">
                 <SelectLabel>Départements disponibles</SelectLabel>
                 <SelectItem
                   v-for="department in departments"
@@ -135,6 +136,7 @@ const handleSubmit = form.handleSubmit(async (values) => {
       </FormItem>
     </FormField>
 
+    <!-- Submit -->
     <Button variant="secondary" type="submit" :disabled="isPending">
       <template v-if="isPending">
         <Loader type="spinner" text="Chargement..." color="secondary" />

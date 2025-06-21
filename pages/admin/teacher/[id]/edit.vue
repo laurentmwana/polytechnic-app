@@ -1,16 +1,17 @@
 <script setup lang="ts">
 import TeacherForm from "@/components/features/teacher/TeacherForm.vue";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import LoaderContainer from "@/components/LoaderContainer.vue";
 import { useAuth } from "@/composables/useAuth";
 import type { SchemaTeacherFormInfer } from "@/definitions/teacher";
 import { editTeacher, getItemTeacher } from "@/services/teacher";
 import type { TeacherModel } from "@/types/model";
 import type { StateActionModel, ValidatorErrorProps } from "@/types/util";
-import { User } from "lucide-vue-next";
+import { UserCog } from "lucide-vue-next";
 import { toast } from "vue-sonner";
 
 useHead({
-  title: "Edition d'un professeur - Polytechnic Application",
+  title: "Édition d'un professeur - Polytechnic Application",
 });
 
 definePageMeta({
@@ -36,8 +37,7 @@ const teacherId = parseInt(route.params.id as string);
 if (!teacherId || isNaN(teacherId)) {
   throw createError({
     statusCode: 400,
-    statusMessage:
-      "le ID du professeur est requis et doit être un nombre valide",
+    statusMessage: "L'ID du professeur est requis et doit être un nombre valide",
   });
 }
 
@@ -46,7 +46,7 @@ const fetchTeacher = async () => {
     isLoading.value = true;
 
     if (!auth.session.value?.accessToken) {
-      throw new Error("utilisateur non authentifié");
+      throw new Error("Utilisateur non authentifié");
     }
 
     const response = await getItemTeacher(
@@ -57,7 +57,7 @@ const fetchTeacher = async () => {
 
     if (response.ok) {
       teacher.value = (data as ModelDataResponse).data;
-    } else if (response.status == 401) {
+    } else if (response.status === 401) {
       toast.warning("Session", {
         description: "Votre session a expiré, merci de vous reconnecter",
       });
@@ -96,19 +96,18 @@ const onSubmit = async (values: SchemaTeacherFormInfer) => {
     if (response.ok) {
       const state = (data as StateActionModel).state;
       if (state) {
-        toast.success("Edition", {
-          description: `les informations du professeur ${teacherId} ont été modifiées`,
+        toast.success("Édition", {
+          description: `Les informations du professeur #${teacherId} ont été mises à jour`,
         });
-
-        router.push("/admin/teachergit ");
+        router.push("/admin/teacher");
       } else {
-        toast.error("Edition", {
-          description: `Nous n'avons pas pu effectuer cette action`,
+        toast.error("Échec", {
+          description: "Impossible de modifier le professeur.",
         });
       }
     } else if (response.status === 422) {
       validator.value = data as ValidatorErrorProps;
-    } else if (response.status == 401) {
+    } else if (response.status === 401) {
       toast.warning("Session", {
         description: "Votre session a expiré, merci de vous reconnecter",
       });
@@ -121,47 +120,47 @@ const onSubmit = async (values: SchemaTeacherFormInfer) => {
     }
   } catch (error) {
     toast.error("Erreur", {
-      description: `Impossible d'editer le professeur #${teacher.value?.id}`,
+      description: `Impossible d’éditer le professeur #${teacher.value?.id}`,
     });
   } finally {
     isEdit.value = false;
   }
 };
 
-onMounted(async () => {
-  await fetchTeacher();
-});
+onMounted(fetchTeacher);
 </script>
 
 <template>
   <div class="space-y-6">
-    <!-- Header avec bouton retour -->
     <GoBack back="/admin/teacher" />
 
     <!-- Loader -->
     <LoaderContainer v-if="isLoading" :isCard="true" />
 
+    <!-- Professeur non trouvé -->
     <Card v-else-if="!teacher">
       <CardContent class="text-center py-12">
-        <User class="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-        <p class="text-lg font-medium mb-2">Professur non trouvé</p>
+        <UserCog class="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+        <p class="text-lg font-medium mb-2">Professeur non trouvé</p>
         <p class="text-muted-foreground">
-          le professeur avec le ID {{ teacherId }} n'existe pas.
+          Le professeur avec l'ID {{ teacherId }} n'existe pas.
         </p>
       </CardContent>
     </Card>
 
+    <!-- Formulaire d'édition -->
     <div v-else class="w-full">
       <Card>
         <CardHeader>
           <CardTitle class="flex items-center gap-2">
-            Editer le professeur #{{ teacher.id }}
+            <UserCog class="w-5 h-5" />
+            Éditer le professeur #{{ teacher.id }}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div class="max-w-2xl space-y-5">
             <ValidatorError :validator="validator" />
-            <TeacherForm :teacher="teacher" :onSubmit="onSubmit" />
+            <TeacherForm :teacher="teacher" :onSubmit="onSubmit" :loading="isEdit" />
           </div>
         </CardContent>
       </Card>
