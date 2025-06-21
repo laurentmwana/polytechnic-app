@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from "vue";
 import CourseForm from "@/components/features/course/CourseForm.vue";
 import {
   Card,
@@ -21,12 +22,11 @@ definePageMeta({
   layout: "admin",
   middleware: ["admin", "verified"],
 });
-const validator = ref<ValidatorErrorProps | null>(null);
 
+const validator = ref<ValidatorErrorProps | null>(null);
 const auth = useAuth();
 const router = useRouter();
-
-const isLoading = ref<boolean>(true);
+const isLoading = ref(false);
 
 const onSubmit = async (values: SchemaCourseFormInfer) => {
   try {
@@ -34,7 +34,7 @@ const onSubmit = async (values: SchemaCourseFormInfer) => {
     validator.value = null;
 
     if (!auth.session.value?.accessToken) {
-      throw new Error("utilisateur non authentifié");
+      throw new Error("Utilisateur non authentifié");
     }
 
     const response = await createCourse(auth.session.value.accessToken, values);
@@ -46,16 +46,15 @@ const onSubmit = async (values: SchemaCourseFormInfer) => {
         toast.success("Création", {
           description: `Un cours a été créé`,
         });
-
         router.push("/admin/course");
       } else {
         toast.error("Création", {
-          description: `Nous n'avons pas pu effectuer cette action`,
+          description: "Nous n'avons pas pu effectuer cette action",
         });
       }
     } else if (response.status === 422) {
       validator.value = data as ValidatorErrorProps;
-    } else if (response.status == 401) {
+    } else if (response.status === 401) {
       toast.warning("Session", {
         description: "Votre session a expiré, merci de vous reconnecter",
       });
@@ -68,28 +67,28 @@ const onSubmit = async (values: SchemaCourseFormInfer) => {
     }
   } catch (error) {
     toast.error("Erreur", {
-      description: "Impossible de créer un cours, merci de réessayer (:",
+      description: "Impossible de créer un cours, merci de réessayer :)",
     });
+  } finally {
+    isLoading.value = false;
   }
 };
 </script>
 
 <template>
   <div class="space-y-6">
-    <GoBack back="/admin/student" />
+    <GoBack back="/admin/course" />
 
     <div class="w-full">
       <Card>
         <CardHeader>
-          <CardTitle class="flex items-center gap-2">
-            Création d'un cours
-          </CardTitle>
-          <CardDescription> </CardDescription>
+          <CardTitle class="flex items-center gap-2">Création d'un cours</CardTitle>
+          <CardDescription></CardDescription>
         </CardHeader>
         <CardContent>
           <div class="max-w-2xl space-y-4">
             <ValidatorError :validator="validator" />
-            <CourseForm :onSubmit="onSubmit" />
+            <CourseForm :onSubmit="onSubmit" :isLoading="isLoading" />
           </div>
         </CardContent>
       </Card>

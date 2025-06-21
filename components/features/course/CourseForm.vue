@@ -23,6 +23,11 @@ const { data: teachers, pending: teachersPending } = await useFetch<
   TeacherModel[]
 >(getRouteApi("&teacher"));
 
+const semesters = [
+  { id: "Semestre 1", label: "Semestre 1" },
+  { id: "Semestre 2", label: "Semestre 2" },
+];
+
 const isPending = ref(false);
 
 const formSchema = toTypedSchema(SchemaCourseForm);
@@ -35,6 +40,7 @@ const form = useForm({
     credits: props.course?.credits.toString() ?? "0",
     level_id: props.course?.level?.id?.toString() ?? "",
     teacher_id: props.course?.teacher.id.toString() ?? "",
+    semester: props.course?.semester ?? "",
   },
 });
 
@@ -105,7 +111,7 @@ const handleSubmit = form.handleSubmit(async (values) => {
                   :key="level.id"
                   :value="level.id.toString()"
                 >
-                  {{ level.alias }} - {{ level.option.alias }}
+                  {{ level.name }} - [{{ level.department.alias }}]
                 </SelectItem>
               </SelectGroup>
               <SelectGroup v-else-if="!levelsPending">
@@ -139,6 +145,33 @@ const handleSubmit = form.handleSubmit(async (values) => {
               </SelectGroup>
               <SelectGroup v-else-if="!teachersPending">
                 <SelectLabel>Aucune professeur trouvée</SelectLabel>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </FormControl>
+        <FormMessage />
+      </FormItem>
+    </FormField>
+
+    <!-- Nouveau champ Semestre -->
+    <FormField name="semester" v-slot="{ componentField }">
+      <FormItem>
+        <FormLabel>Semestre</FormLabel>
+        <FormControl>
+          <Select v-bind="componentField">
+            <SelectTrigger class="w-full">
+              <SelectValue placeholder="Sélectionner un semestre" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Semestres</SelectLabel>
+                <SelectItem
+                  v-for="sem in semesters"
+                  :key="sem.id"
+                  :value="sem.id"
+                >
+                  {{ sem.label }}
+                </SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>

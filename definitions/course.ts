@@ -18,12 +18,26 @@ export const SchemaCourseForm = z.object({
     .trim(),
 
   credits: z
-    .number({ invalid_type_error: "Le nombre de crédits doit être un nombre." })
-    .int("Le nombre de crédits doit être un entier.")
-    .min(1, "Le nombre de crédits doit être au moins 1.")
-    .max(30, "Le nombre de crédits ne peut pas dépasser 30."),
+    .string()
+    .min(1, "Le nombre de crédits est requis.")
+    .transform((val) => Number(val))
+    .refine((val) => Number.isInteger(val), {
+      message: "Le nombre de crédits doit être un entier.",
+    })
+    .refine((val) => val >= 1, {
+      message: "Le nombre de crédits doit être au moins 1.",
+    })
+    .refine((val) => val <= 30, {
+      message: "Le nombre de crédits ne peut pas dépasser 30.",
+    }),
 
   level_id: z.string().min(1, "Le niveau est requis."),
+
+  semester: z.enum(["Semestre 1", "Semestre 2"], {
+    errorMap: () => ({
+      message: "Le semestre doit être 'Semestre 1' ou 'Semestre 2'.",
+    }),
+  }),
 
   teacher_id: z.string().min(1, "Le professeur est requis."),
 });
