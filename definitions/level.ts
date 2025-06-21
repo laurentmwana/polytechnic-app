@@ -10,9 +10,7 @@ export const SchemaLevelForm = z.object({
     .string()
     .min(1, "L'alias est requis.")
     .max(100, "L'alias est trop long."),
-
-  programme: z.string(),
-
+    
   department_id: z.string().min(1, "Le départment est requis.").optional(),
 });
 

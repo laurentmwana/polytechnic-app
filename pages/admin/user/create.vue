@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ref } from "vue";
+import { useRouter } from "vue-router";
 import UserForm from "@/components/features/user/UserForm.vue";
 import {
   Card,
@@ -22,13 +24,13 @@ definePageMeta({
   layout: "admin",
   middleware: ["admin", "verified"],
 });
-const validator = ref<ValidatorErrorProps | null>(null);
 
+const validator = ref<ValidatorErrorProps | null>(null);
 const auth = useAuth();
 const router = useRouter();
 
 const user = ref<UserModel | null>(null);
-const isLoading = ref<boolean>(true);
+const isLoading = ref<boolean>(false);
 
 const onSubmit = async (values: SchemaUserFormInfer) => {
   try {
@@ -43,13 +45,13 @@ const onSubmit = async (values: SchemaUserFormInfer) => {
     const data = await response.json();
 
     if (response.ok) {
+      // On suppose que data a la forme { state: boolean }
       const state = (data as StateActionModel).state;
-      if (state) {
+      if (state === true) {
         toast.success("Création", {
           description: `Un utilisateur a été créé`,
         });
-
-        router.push("/admin/user");
+        await router.push("/admin/user");
       } else {
         toast.error("Création", {
           description: `Nous n'avons pas pu effectuer cette action`,
@@ -57,7 +59,7 @@ const onSubmit = async (values: SchemaUserFormInfer) => {
       }
     } else if (response.status === 422) {
       validator.value = data as ValidatorErrorProps;
-    } else if (response.status == 401) {
+    } else if (response.status === 401) {
       toast.warning("Session", {
         description: "Votre session a expiré, merci de vous reconnecter",
       });
@@ -68,10 +70,12 @@ const onSubmit = async (values: SchemaUserFormInfer) => {
           (data as { message: string }).message || "Une erreur est survenue",
       });
     }
-  } catch (error) {
+  } catch {
     toast.error("Erreur", {
-      description: `Impossible d'editer l'utilisateur #${user.value?.id}`,
+      description: "Impossible de créer l'utilisateur",
     });
+  } finally {
+    isLoading.value = false;
   }
 };
 </script>
@@ -86,12 +90,12 @@ const onSubmit = async (values: SchemaUserFormInfer) => {
           <CardTitle class="flex items-center gap-2">
             Création d'un utilisateur
           </CardTitle>
-          <CardDescription> </CardDescription>
+          <CardDescription></CardDescription>
         </CardHeader>
         <CardContent>
           <div class="max-w-2xl space-y-4">
             <ValidatorError :validator="validator" />
-            <UserForm :onSubmit="onSubmit" />
+            <UserForm :onSubmit="onSubmit" :loading="isLoading" />
           </div>
         </CardContent>
       </Card>

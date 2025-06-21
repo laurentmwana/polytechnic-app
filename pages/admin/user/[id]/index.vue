@@ -1,17 +1,19 @@
 <script setup lang="ts">
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { ref, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import {
+  Badge,
+  Button,
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@/components/ui"; // Si tu as un index qui exporte tout
 import { useAuth } from "@/composables/useAuth";
 import { ago } from "@/lib/date-time";
 import { isStudentAccountDisable } from "@/lib/role";
-import { getItemUsers } from "@/services/user"; // Supposons qu'il existe une fonction pour récupérer un utilisateur par ID
+import { getItemUsers } from "@/services/user";
 import type { UserModel } from "@/types/model";
 import {
   Calendar,
@@ -23,6 +25,8 @@ import {
   UserCheck,
 } from "lucide-vue-next";
 import { toast } from "vue-sonner";
+import LoaderContainer from "@/components/LoaderContainer.vue";
+import GoBack from "@/components/GoBack.vue";
 
 useHead({
   title: "Détails utilisateur - Polytechnic Application",
@@ -42,9 +46,9 @@ const route = useRoute();
 const router = useRouter();
 
 const user = ref<UserModel | null>(null);
-const isLoading = ref<boolean>(true);
+const isLoading = ref(true);
 
-const userId = parseInt(route.params.id as string);
+const userId = Number(route.params.id);
 
 if (!userId || isNaN(userId)) {
   throw createError({
@@ -67,7 +71,7 @@ const fetchUser = async () => {
 
     if (response.ok) {
       user.value = (data as ModelDataResponse).data;
-    } else if (response.status == 401) {
+    } else if (response.status === 401) {
       toast.warning("Session", {
         description: "Votre session a expiré, merci de vous reconnecter",
       });
@@ -75,10 +79,10 @@ const fetchUser = async () => {
     } else {
       toast.error("Erreur", {
         description:
-          (data as { message: string }).message || "Une erreur est survenue",
+          (data as { message?: string }).message || "Une erreur est survenue",
       });
     }
-  } catch (error) {
+  } catch {
     toast.error("Erreur", {
       description: "Impossible de charger l'utilisateur",
     });
@@ -105,7 +109,7 @@ onMounted(() => {
 
 <template>
   <div class="space-y-6">
-    <!-- Header avec bouton retour -->
+    <!-- Bouton retour -->
     <GoBack back="/admin/user" />
 
     <!-- Loader -->
@@ -122,9 +126,9 @@ onMounted(() => {
       </CardContent>
     </Card>
 
-    <!-- Détails de l'utilisateur -->
+    <!-- Détails utilisateur -->
     <div v-else class="grid gap-6 md:grid-cols-2">
-      <!-- Informations principales -->
+      <!-- Informations personnelles -->
       <Card>
         <CardHeader>
           <div class="flex items-center justify-between">
@@ -137,7 +141,7 @@ onMounted(() => {
                 Détails de l'utilisateur {{ user.name }} {{ user.firstname }}
               </CardDescription>
             </div>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" @click="$router.push(`/admin/user/${userId}/edit`)">
               <Edit class="h-4 w-4 mr-2" />
               Modifier
             </Button>
@@ -167,9 +171,7 @@ onMounted(() => {
               <UserCheck class="h-4 w-4 text-muted-foreground" />
               <div>
                 <p class="text-sm font-medium">Genre</p>
-                <p class="text-sm text-muted-foreground">
-                  {{ user.gender }}
-                </p>
+                <p class="text-sm text-muted-foreground">{{ user.gender }}</p>
               </div>
             </div>
 
@@ -177,9 +179,7 @@ onMounted(() => {
               <Calendar class="h-4 w-4 text-muted-foreground" />
               <div>
                 <p class="text-sm font-medium">Créé le</p>
-                <p class="text-sm text-muted-foreground">
-                  {{ ago(user.created_at) }}
-                </p>
+                <p class="text-sm text-muted-foreground">{{ ago(user.created_at) }}</p>
               </div>
             </div>
           </div>
@@ -193,7 +193,7 @@ onMounted(() => {
             <Shield class="h-5 w-5" />
             Statut et permissions
           </CardTitle>
-          <CardDescription> Rôles et état du compte </CardDescription>
+          <CardDescription>Rôles et état du compte</CardDescription>
         </CardHeader>
         <CardContent class="space-y-4">
           <div>
@@ -233,14 +233,14 @@ onMounted(() => {
         </CardContent>
       </Card>
 
-      <!-- Informations étudiant (si applicable) -->
+      <!-- Informations étudiant si applicables -->
       <Card v-if="user.student" class="md:col-span-2">
         <CardHeader>
           <CardTitle class="flex items-center gap-2">
             <UserCheck class="h-5 w-5" />
             Informations étudiant
           </CardTitle>
-          <CardDescription> Détails spécifiques à l'étudiant </CardDescription>
+          <CardDescription>Détails spécifiques à l'étudiant</CardDescription>
         </CardHeader>
         <CardContent>
           <div class="grid gap-4 md:grid-cols-2">
@@ -286,38 +286,6 @@ onMounted(() => {
           </div>
         </CardContent>
       </Card>
-
-      <!-- Actions -->
-      <!-- <Card class="md:col-span-2">
-        <CardHeader>
-          <CardTitle>Actions</CardTitle>
-          <CardDescription>
-            Actions disponibles pour cet utilisateur
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div class="flex flex-wrap gap-2">
-            <Button variant="outline">
-              <Edit class="h-4 w-4 mr-2" />
-              Modifier l'utilisateur
-            </Button>
-            <Button
-              :variant="
-                isStudentAccountDisable(user.roles) ? 'default' : 'destructive'
-              "
-            >
-              {{
-                isStudentAccountDisable(user.roles) ? "Débloquer" : "Bloquer"
-              }}
-              le compte
-            </Button>
-            <Button variant="outline">
-              <Mail class="h-4 w-4 mr-2" />
-              Renvoyer email de vérification
-            </Button>
-          </div>
-        </CardContent>
-      </Card> -->
     </div>
   </div>
 </template>

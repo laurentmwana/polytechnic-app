@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ref, watch, onMounted } from "vue";
+import { useRouter, useRoute } from "vue-router";
 import LoaderContainer from "@/components/LoaderContainer.vue";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -36,6 +38,7 @@ import {
 import type { UserModel } from "@/types/model";
 import type { PaginatedResponse } from "@/types/paginate";
 import type { StateActionModel } from "@/types/util";
+
 import {
   Edit,
   Eye,
@@ -61,12 +64,12 @@ const auth = useAuth();
 const router = useRouter();
 const route = useRoute();
 
-const numberPage = ref<number>(
+const numberPage = ref(
   route.query.page ? parseInt(route.query.page as string) : 1
 );
 
 const users = ref<UserCollectionProps | null>(null);
-const isLoading = ref<boolean>(true);
+const isLoading = ref(false);
 const showModalLockUserId = ref<number | null>(null);
 const showModalDeleteUserId = ref<number | null>(null);
 
@@ -86,7 +89,7 @@ const fetchUsers = async () => {
 
     if (response.ok) {
       users.value = data as UserCollectionProps;
-    } else if (response.status == 401) {
+    } else if (response.status === 401) {
       toast.warning("Session", {
         description: "Votre session a expiré, merci de vous reconnecter",
       });
@@ -97,7 +100,7 @@ const fetchUsers = async () => {
           (data as { message: string }).message || "Une erreur est survenue",
       });
     }
-  } catch (error) {
+  } catch {
     toast.error("Erreur", {
       description: "Impossible de charger les utilisateurs",
     });
@@ -107,8 +110,9 @@ const fetchUsers = async () => {
 };
 
 const onPage = async (page: number) => {
+  if (page === numberPage.value) return;
   numberPage.value = page;
-  await router.push(`/admin/user?page=${page}`);
+  await router.push({ path: "/admin/user", query: { page: page.toString() } });
   await fetchUsers();
 };
 
@@ -130,11 +134,9 @@ const onLockAndUnLock = async (userId: number) => {
       const state = data as StateActionModel;
 
       if (state) {
-        toast("Modification effectuée", {
+        toast.success("Modification effectuée", {
           description: `Le statut de l'utilisateur #${userId} a été modifié`,
         });
-
-        router.replace("/admin/user?page=1");
 
         await fetchUsers();
       } else {
@@ -142,7 +144,7 @@ const onLockAndUnLock = async (userId: number) => {
           description: `Nous n'avons pas pu modifier le statut de l'utilisateur #${userId}`,
         });
       }
-    } else if (response.status == 401) {
+    } else if (response.status === 401) {
       toast.warning("Session", {
         description: "Votre session a expiré, merci de vous reconnecter",
       });
@@ -153,7 +155,7 @@ const onLockAndUnLock = async (userId: number) => {
           (data as { message: string }).message || "Une erreur est survenue",
       });
     }
-  } catch (error) {
+  } catch {
     toast.error("Erreur", {
       description: `Impossible de changer le statut de l'utilisateur #${userId}`,
     });
@@ -178,19 +180,17 @@ const onDeleteUser = async (userId: number) => {
       const state = data as StateActionModel;
 
       if (state) {
-        toast("Suppression", {
+        toast.success("Suppression", {
           description: `L'utilisateur #${userId} a été supprimé`,
         });
-
-        router.replace("/admin/user?page=1");
 
         await fetchUsers();
       } else {
         toast.error("Suppression échouée", {
-          description: `Nous n'avons pas pu modifier supprimer  l'utilisateur #${userId}`,
+          description: `Nous n'avons pas pu supprimer l'utilisateur #${userId}`,
         });
       }
-    } else if (response.status == 401) {
+    } else if (response.status === 401) {
       toast.warning("Session", {
         description: "Votre session a expiré, merci de vous reconnecter",
       });
@@ -201,12 +201,12 @@ const onDeleteUser = async (userId: number) => {
           (data as { message: string }).message || "Une erreur est survenue",
       });
     }
-  } catch (error) {
+  } catch {
     toast.error("Erreur", {
-      description: `Impossible de changer le statut de l'utilisateur #${userId}`,
+      description: `Impossible de supprimer l'utilisateur #${userId}`,
     });
   } finally {
-    showModalLockUserId.value = null;
+    showModalDeleteUserId.value = null;
     isLoading.value = false;
   }
 };
@@ -233,25 +233,22 @@ onMounted(() => {
       <div class="flex items-center gap-4 justify-between">
         <div>
           <CardTitle>Gestion des utilisateurs</CardTitle>
-          <CardDescription>
-            Gérez les utilisateurs de votre application
-          </CardDescription>
+          <CardDescription
+            >Gérez les utilisateurs de votre application</CardDescription
+          >
         </div>
         <Button size="sm" asChild>
-          <NuxtLink to="/admin/user/create"> Créer </NuxtLink>
+          <NuxtLink to="/admin/user/create">Créer</NuxtLink>
         </Button>
       </div>
     </CardHeader>
     <CardContent>
-      <!-- Loader -->
       <LoaderContainer v-if="isLoading" />
 
-      <!-- Aucun utilisateur -->
       <div v-else-if="!users?.data?.length" class="text-center py-8">
         <p class="text-muted-foreground">Aucun utilisateur trouvé</p>
       </div>
 
-      <!-- Table des utilisateurs -->
       <div v-else class="space-y-4">
         <Table>
           <TableHeader>
@@ -267,28 +264,20 @@ onMounted(() => {
           </TableHeader>
           <TableBody>
             <TableRow v-for="user in users.data" :key="user.id">
-              <TableCell class="font-medium">
-                {{ user.name }}
-              </TableCell>
-
-              <TableCell class="font-medium">
-                {{ user.email }}
-              </TableCell>
-
+              <TableCell class="font-medium">{{ user.name }}</TableCell>
+              <TableCell class="font-medium">{{ user.email }}</TableCell>
               <TableCell>
                 <Badge
-                  :variant="!user.isEmailVerified ? 'destructive' : 'outline'"
+                  :variant="user.isEmailVerified ? 'outline' : 'destructive'"
                 >
                   {{ user.isEmailVerified ? "Oui" : "Non" }}
                 </Badge>
               </TableCell>
-
               <TableCell>
-                <Badge :variant="!user.student ? 'destructive' : 'outline'">
+                <Badge :variant="user.student ? 'outline' : 'destructive'">
                   {{ user.student ? "Oui" : "Non" }}
                 </Badge>
               </TableCell>
-
               <TableCell>
                 <Badge
                   :variant="
@@ -302,7 +291,6 @@ onMounted(() => {
                   }}
                 </Badge>
               </TableCell>
-
               <TableCell>
                 <p class="text-sm text-muted-foreground">
                   {{ ago(user.created_at) }}
@@ -311,9 +299,12 @@ onMounted(() => {
               <TableCell class="text-right">
                 <DropdownMenu>
                   <DropdownMenuTrigger as-child>
-                    <Button variant="ghost" size="sm">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      aria-label="Ouvrir le menu"
+                    >
                       <MoreHorizontal class="h-4 w-4" />
-                      <span class="sr-only">Ouvrir le menu</span>
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
@@ -322,8 +313,7 @@ onMounted(() => {
                         :to="`/admin/user/${user.id}`"
                         class="flex items-center gap-2"
                       >
-                        <Eye class="mr-2 h-4 w-4" />
-                        Voir
+                        <Eye class="mr-2 h-4 w-4" />Voir
                       </NuxtLink>
                     </DropdownMenuItem>
                     <DropdownMenuItem>
@@ -331,73 +321,59 @@ onMounted(() => {
                         :to="`/admin/user/${user.id}/edit`"
                         class="flex items-center gap-2"
                       >
-                        <Edit class="mr-2 h-4 w-4" />
-                        Modifier
+                        <Edit class="mr-2 h-4 w-4" />Modifier
                       </NuxtLink>
                     </DropdownMenuItem>
-                    <DropdownMenuItem @click="showModalLockUserId = user.id">
-                      <Unlock
-                        v-if="isStudentAccountDisable(user.roles)"
-                        class="mr-2 h-4 w-4"
-                      />
-                      <Lock v-else class="mr-2 h-4 w-4" />
-                      {{
-                        isStudentAccountDisable(user.roles)
-                          ? "Débloquer le compte"
-                          : "Bloquer le compte"
-                      }}
+                    <DropdownMenuItem
+                      class="flex items-center gap-2 cursor-pointer select-none"
+                      @click="showModalLockUserId = user.id"
+                    >
+                      <template v-if="isStudentAccountDisable(user.roles)">
+                        <Unlock class="mr-2 h-4 w-4" />
+                        Débloquer le compte
+                      </template>
+                      <template v-else>
+                        <Lock class="mr-2 h-4 w-4" />
+                        Bloquer le compte
+                      </template>
                     </DropdownMenuItem>
                     <DropdownMenuItem
-                      class="text-destructive"
+                      class="text-destructive flex items-center gap-2 cursor-pointer select-none"
                       @click="showModalDeleteUserId = user.id"
                     >
-                      <Trash2 class="mr-2 h-4 w-4" />
-                      Supprimer
+                      <Trash2 class="mr-2 h-4 w-4" />Supprimer
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
+
+                <!-- Dialogues de confirmation -->
                 <ConfirmationDialog
-                  :open="
-                    showModalLockUserId !== null &&
-                    showModalLockUserId === user.id
-                  "
+                  :open="showModalLockUserId === user.id"
                   variant="destructive"
-                  title="Modification du statut du compte de l'étudiant"
-                  description="Cette action est irréversible. L'élément sera définitivement supprimé de nos serveurs."
+                  title="Modification du statut du compte utilisateur"
+                  description="Cette action est irréversible. Le statut du compte sera modifié."
                   confirm-text="Changer le statut"
                   cancel-text="Annuler"
                   :loading="isLoading"
-                  @confirm="
-                    async () => {
-                      await onLockAndUnLock(user.id);
-                    }
-                  "
-                  @cancel="showModalLockUserId = null"
+                  @confirm="() => onLockAndUnLock(user.id)"
+                  @cancel="() => (showModalLockUserId = null)"
                 />
                 <ConfirmationDialog
-                  :open="
-                    showModalDeleteUserId !== null &&
-                    showModalDeleteUserId === user.id
-                  "
+                  :open="showModalDeleteUserId === user.id"
                   variant="destructive"
-                  title="Suppression compte de l'étudiant"
-                  description="Cette action est irréversible. L'élément sera définitivement supprimé de nos serveurs."
+                  title="Suppression du compte utilisateur"
+                  description="Cette action est irréversible. L'utilisateur sera définitivement supprimé."
                   confirm-text="Supprimer"
                   cancel-text="Annuler"
                   :loading="isLoading"
-                  @confirm="
-                    async () => {
-                      await onDeleteUser(user.id);
-                    }
-                  "
-                  @cancel="showModalDeleteUserId = null"
+                  @confirm="() => onDeleteUser(user.id)"
+                  @cancel="() => (showModalDeleteUserId = null)"
                 />
               </TableCell>
             </TableRow>
           </TableBody>
         </Table>
 
-        <!-- Pagination -->
         <Pagination v-if="users" :onPage="onPage" :meta="users" />
       </div>
     </CardContent>

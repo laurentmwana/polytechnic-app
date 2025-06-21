@@ -15,9 +15,9 @@ const props = defineProps<{
   level?: LevelModel;
 }>();
 
-const { data: departments, pending: departmentPending } = await useFetch<DepartmentModel[]>(
-  getRouteApi("&department")
-);
+const { data: departments, pending: departmentPending } = await useFetch<
+  DepartmentModel[]
+>(getRouteApi("&department"));
 
 const isPending = ref(false);
 
@@ -29,7 +29,7 @@ const form = useForm({
     name: props.level?.name ?? "",
     alias: props.level?.alias ?? "",
     programme: props.level?.programme ?? "",
-    department_id: props.level?.department?.id?.toString() ?? "", // conserve `option_id` si côté backend ça reste ainsi
+    department_id: props.level?.department?.id?.toString() ?? "", // conserve `department_id` si côté backend ça reste ainsi
   },
 });
 
@@ -77,7 +77,7 @@ const handleSubmit = form.handleSubmit(async (values) => {
     </FormField>
 
     <!-- Département -->
-    <FormField v-slot="{ componentField }" name="option_id">
+    <FormField v-slot="{ componentField }" name="department_id">
       <FormItem>
         <FormLabel>Département</FormLabel>
         <FormControl>
@@ -98,32 +98,6 @@ const handleSubmit = form.handleSubmit(async (values) => {
               </SelectGroup>
               <SelectGroup v-else-if="!departmentPending">
                 <SelectLabel>Aucun département trouvé</SelectLabel>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </FormControl>
-        <FormMessage />
-      </FormItem>
-    </FormField>
-
-    <!-- Programme -->
-    <FormField v-slot="{ componentField }" name="programme">
-      <FormItem>
-        <FormLabel>Programme</FormLabel>
-        <FormControl>
-          <Select v-bind="componentField">
-            <SelectTrigger class="w-full">
-              <SelectValue placeholder="Sélectionner un système" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Programme</SelectLabel>
-                <SelectItem value="nouveau système">
-                  Licence Master Doctorat (LMD)
-                </SelectItem>
-                <SelectItem value="ancien système">
-                  Graduat Licence Master Doctorat (GLMD)
-                </SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ref, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import UserForm from "@/components/features/user/UserForm.vue";
 import {
   Card,
@@ -14,6 +16,9 @@ import type { UserModel } from "@/types/model";
 import type { StateActionModel, ValidatorErrorProps } from "@/types/util";
 import { User } from "lucide-vue-next";
 import { toast } from "vue-sonner";
+import LoaderContainer from "@/components/LoaderContainer.vue";
+import GoBack from "@/components/GoBack.vue"; // Pense à importer ce composant s’il n’est pas global
+import ValidatorError from "@/components/ValidatorError.vue"; // Idem pour ce composant
 
 useHead({
   title: "Détails utilisateur - Polytechnic Application",
@@ -37,7 +42,7 @@ const isLoading = ref<boolean>(true);
 const isEdit = ref<boolean>(false);
 const validator = ref<ValidatorErrorProps | null>(null);
 
-const userId = parseInt(route.params.id as string);
+const userId = Number(route.params.id);
 
 if (!userId || isNaN(userId)) {
   throw createError({
@@ -50,6 +55,7 @@ if (!userId || isNaN(userId)) {
 const fetchUser = async () => {
   try {
     isLoading.value = true;
+    validator.value = null;
 
     if (!auth.session.value?.accessToken) {
       throw new Error("Utilisateur non authentifié");
@@ -60,7 +66,7 @@ const fetchUser = async () => {
 
     if (response.ok) {
       user.value = (data as ModelDataResponse).data;
-    } else if (response.status == 401) {
+    } else if (response.status === 401) {
       toast.warning("Session", {
         description: "Votre session a expiré, merci de vous reconnecter",
       });
@@ -71,7 +77,7 @@ const fetchUser = async () => {
           (data as { message: string }).message || "Une erreur est survenue",
       });
     }
-  } catch (error) {
+  } catch {
     toast.error("Erreur", {
       description: "Impossible de charger l'utilisateur",
     });
@@ -98,20 +104,19 @@ const onSubmit = async (values: SchemaUserFormInfer) => {
 
     if (response.ok) {
       const state = (data as StateActionModel).state;
-      if (state) {
+      if (state === true) {
         toast.success("Edition", {
-          description: `les informations de l'utilisateur ${userId} ont été modifiées`,
+          description: `Les informations de l'utilisateur #${userId} ont été modifiées`,
         });
-
-        router.push("/admin/user");
+        await router.push("/admin/user");
       } else {
         toast.error("Edition", {
-          description: `Nous n'avons pas pu effectuer cette action`,
+          description: "Nous n'avons pas pu effectuer cette action",
         });
       }
     } else if (response.status === 422) {
       validator.value = data as ValidatorErrorProps;
-    } else if (response.status == 401) {
+    } else if (response.status === 401) {
       toast.warning("Session", {
         description: "Votre session a expiré, merci de vous reconnecter",
       });
@@ -122,9 +127,9 @@ const onSubmit = async (values: SchemaUserFormInfer) => {
           (data as { message: string }).message || "Une erreur est survenue",
       });
     }
-  } catch (error) {
+  } catch {
     toast.error("Erreur", {
-      description: `Impossible d'editer l'utilisateur #${user.value?.id}`,
+      description: `Impossible d'éditer l'utilisateur #${userId}`,
     });
   } finally {
     isEdit.value = false;
@@ -138,7 +143,7 @@ onMounted(() => {
 
 <template>
   <div class="space-y-6">
-    <!-- Header avec bouton retour -->
+    <!-- Bouton retour -->
     <GoBack back="/admin/user" />
 
     <!-- Loader -->
@@ -155,11 +160,12 @@ onMounted(() => {
       </CardContent>
     </Card>
 
+    <!-- Formulaire édition -->
     <div v-else class="w-full">
       <Card>
         <CardHeader>
           <CardTitle class="flex items-center gap-2">
-            Editer l'utilisateur #{{ user.id }}
+            Éditer l'utilisateur #{{ user.id }}
           </CardTitle>
           <CardDescription>
             Détails de l'utilisateur {{ user.name }} {{ user.firstname }}
@@ -169,7 +175,7 @@ onMounted(() => {
           <div class="max-w-2xl space-y-5">
             <ValidatorError :validator="validator" />
 
-            <UserForm :user="user" :onSubmit="onSubmit" />
+            <UserForm :user="user" :onSubmit="onSubmit" :loading="isEdit" />
           </div>
         </CardContent>
       </Card>
