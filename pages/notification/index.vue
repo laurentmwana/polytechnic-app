@@ -174,7 +174,7 @@ onMounted(fetchNotifications);
               <div class="space-y-1">
                 <a
                   class="inline-flex items-center gap-2 text-sm font-medium h-10 px-4 py-2 w-full justify-start hover:bg-accent rounded-md"
-                  href="/notifications"
+                  href="/notification"
                 >
                   <Bell :size="15" />
                   Notifications
@@ -184,7 +184,7 @@ onMounted(fetchNotifications);
                 </a>
                 <a
                   class="inline-flex items-center gap-2 text-sm font-medium h-10 px-4 py-2 w-full justify-start hover:bg-accent rounded-md"
-                  href="/notifications?filter=unread"
+                  href="/notification?filter=unread"
                 >
                   <div class="h-4 w-4 mr-2" />
                   Non lues

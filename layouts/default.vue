@@ -1,7 +1,7 @@
 <script setup></script>
 
 <template>
-  <div class="h-full">
+  <div>
     <NavBar />
     <main>
       <slot />
