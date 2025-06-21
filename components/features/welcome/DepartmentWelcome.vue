@@ -9,7 +9,9 @@ const departments = ref<DepartmentModel[]>([]);
 
 const fetchDepartments = async () => {
   try {
-    isPending.value = true;
+    if (!isPending.value) {
+      isPending.value = true;
+    }
 
     const response = await getDepartmentLimit(2);
     const data = await response.json();

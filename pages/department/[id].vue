@@ -29,7 +29,9 @@ const department = ref<DepartmentModel>();
 
 const fetchDepartment = async () => {
   try {
-    isPending.value = true;
+    if (!isPending.value) {
+      isPending.value = true;
+    }
 
     const response = await getShowDepartment(departmentId);
     const data = await response.json();
@@ -97,9 +99,7 @@ onMounted(fetchDepartment);
       </Card>
 
       <div class="section-page-header">
-        <h2 class="section-page-title">
-          Les promotions
-        </h2>
+        <h2 class="section-page-title">Les promotions</h2>
       </div>
       <div>
         <Accordion

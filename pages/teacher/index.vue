@@ -25,7 +25,9 @@ const numberPage = ref<number>(
 
 const fetchTeacher = async () => {
   try {
-    isPending.value = true;
+    if (!isPending.value) {
+      isPending.value = true;
+    }
 
     const response = await getCollectionTeachers(numberPage.value);
     const data = await response.json();

@@ -1,7 +1,9 @@
 <script setup></script>
 <template>
-  <NavBar />
-  <main>
-    <slot />
-  </main>
+  <div class="max-h-screen">
+    <NavBar />
+    <main>
+      <slot />
+    </main>
+  </div>
 </template>

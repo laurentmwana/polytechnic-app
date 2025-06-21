@@ -10,7 +10,9 @@ const options = ref<OptionModel[]>([]);
 
 const fetchOptions = async () => {
   try {
-    isPending.value = true;
+    if (!isPending.value) {
+      isPending.value = true;
+    }
 
     const response = await getOptionLimit(6);
     const data = await response.json();

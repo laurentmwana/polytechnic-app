@@ -29,8 +29,13 @@ const ROUTES_API = {
   "*course.index": "/courses",
   "*course.show": "/course/:id",
 
-  // PROFILE
+  "*notification.index": "/notifications",
+  "*notification.last": "/last-notification",
+  "*notification.show": "/notification/:id",
+  "*notification.destroy": "/notification/:id/destroy",
+  "*notification.mark-as-read": "/mark-as-read/notification",
 
+  // PROFILE
   "profile.edit": "/profile/edit",
   "profile.password": "/profile/change-password",
 

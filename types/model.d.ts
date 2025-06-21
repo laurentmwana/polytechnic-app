@@ -72,7 +72,6 @@ export interface DepartmentModel {
   updated_at: string;
 }
 
-
 export interface LevelModel {
   id: number;
   name: string;
@@ -87,7 +86,7 @@ export interface CourseModel {
   name: string;
   code: string;
   credits: number;
-  semester: string
+  semester: string;
   level: LevelModel;
   teacher: TeacherModel;
   is_follow: boolean;
@@ -168,6 +167,30 @@ export interface ResultModel {
   file: string;
   student: StudentModel;
   deliberation: DeliberationModel;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface EventModel {
+  id: number;
+  title: string;
+  description: string;
+  content: string;
+  start_at: string;
+  tags: string[]; // "Horaire, etc"
+  level: LevelModel;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface NotificationModel {
+  id: string;
+  data: {
+    title: string;
+    description: string;
+    [key: string]: string | boolean | number;
+  };
+  read_at: string | null;
   created_at: string;
   updated_at: string;
 }

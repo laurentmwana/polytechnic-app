@@ -23,7 +23,9 @@ const router = useRouter();
 
 const fetchFolder = async () => {
   try {
-    isPending.value = true;
+    if (!isPending.value) {
+      isPending.value = true;
+    }
 
     if (!auth.session.value?.accessToken) {
       throw new Error("utilisateur non authentifié");

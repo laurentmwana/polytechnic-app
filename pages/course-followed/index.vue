@@ -32,7 +32,9 @@ const numberPage = ref(
 
 const fetchFollows = async () => {
   try {
-    isPending.value = true;
+    if (!isPending.value) {
+      isPending.value = true;
+    }
 
     const token = auth.session.value?.accessToken;
     if (!token) return;

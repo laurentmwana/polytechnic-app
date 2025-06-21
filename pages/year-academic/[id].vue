@@ -29,7 +29,9 @@ if (!yearId || isNaN(yearId)) {
 
 const fetchYear = async () => {
   try {
-    isPending.value = true;
+    if (!isPending.value) {
+      isPending.value = true;
+    }
 
     const response = await getShowYear(yearId);
     const data = await response.json();

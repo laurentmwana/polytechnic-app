@@ -33,7 +33,7 @@ import type { PaginatedResponse } from "@/types/paginate";
 import type { StateActionModel } from "@/types/util";
 import { Edit, Eye, MoreHorizontal, Trash2 } from "lucide-vue-next";
 import { toast } from "vue-sonner";
-import { getCollectionCourses } from "../../../services/course";
+import { getCollectionCourses } from "@/services/course";
 
 useHead({
   title: "Gestion des cours - Polytechnic Application",

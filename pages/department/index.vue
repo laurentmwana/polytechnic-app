@@ -25,7 +25,9 @@ const numberPage = ref<number>(
 
 const fetchDepartments = async () => {
   try {
-    isPending.value = true;
+    if (!isPending.value) {
+      isPending.value = true;
+    }
 
     const response = await getCollectionDepartments(numberPage.value);
     const data = await response.json();

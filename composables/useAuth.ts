@@ -11,7 +11,9 @@ export const useAuth = () => {
   const router = useRouter();
 
   const initializeAuth = () => {
-    isPending.value = true;
+    if (!isPending.value) {
+      isPending.value = true;
+    }
     error.value = null;
 
     try {

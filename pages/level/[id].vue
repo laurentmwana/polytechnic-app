@@ -33,7 +33,9 @@ const level = ref<LevelModel>();
 
 const fetchLevel = async () => {
   try {
-    isPending.value = true;
+    if (!isPending.value) {
+      isPending.value = true;
+    }
 
     const response = await getShowLevel(levelId);
     const data = await response.json();
@@ -86,7 +88,7 @@ onMounted(fetchLevel);
             {{ level.alias }}
           </CardTitle>
           <CardDescription class="text-base">
-            {{ level.name }}  {{  level.department.name ?? "" }}
+            {{ level.name }} {{ level.department.name ?? "" }}
           </CardDescription>
         </CardHeader>
         <CardFooter

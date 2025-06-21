@@ -42,7 +42,9 @@ const fetchDashboard = async () => {
   }
 
   try {
-    isPending.value = true;
+    if (!isPending.value) {
+      isPending.value = true;
+    }
     const response = await getDashboard(auth.session.value.accessToken);
     if (response.ok) {
       dashboard.value = await response.json();

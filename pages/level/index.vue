@@ -28,7 +28,9 @@ const numberPage = ref(
 
 const fetchLevels = async () => {
   try {
-    isPending.value = true;
+    if (!isPending.value) {
+      isPending.value = true;
+    }
 
     const response = await getCollectionLevels(numberPage.value);
     const data = await response.json();
@@ -79,52 +81,49 @@ onMounted(fetchLevels);
 
     <div v-else-if="!isPending && levels">
       <div>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>#</TableHead>
-            <TableHead>Nom</TableHead>
-            <TableHead>Alias</TableHead>
-            <TableHead>Département</TableHead>
-            <TableHead class="text-end">
-              Action
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          <TableRow v-for="level in levels.data">
-            <TableCell>
-              #{{ level.id }}
-            </TableCell>
-            <TableCell>
-              {{ level.name }}
-            </TableCell>
-            <TableCell>
-              {{ level.alias }}
-            </TableCell>
-            <TableCell>
-              <TextLink v-if="level.department" :href="`/department/${level.department.id}`">
-                {{ level.department.name }}
-              </TextLink>
-              <p v-else>
-                ---
-              </p>
-            </TableCell>
-            <TableCell>
-              <div clas="flex items-center justify-end">
-                <Button variant="outline" size="sm" :as-child="true">
-                  <NuxtLink :to="`/level/${level.id}`">
-                    <Eye :size="15" />
-                  </NuxtLink>
-                </Button>
-              </div>
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-    </div>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>#</TableHead>
+              <TableHead>Nom</TableHead>
+              <TableHead>Alias</TableHead>
+              <TableHead>Département</TableHead>
+              <TableHead class="text-end"> Action </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            <TableRow v-for="level in levels.data">
+              <TableCell> #{{ level.id }} </TableCell>
+              <TableCell>
+                {{ level.name }}
+              </TableCell>
+              <TableCell>
+                {{ level.alias }}
+              </TableCell>
+              <TableCell>
+                <TextLink
+                  v-if="level.department"
+                  :href="`/department/${level.department.id}`"
+                >
+                  {{ level.department.name }}
+                </TextLink>
+                <p v-else>---</p>
+              </TableCell>
+              <TableCell>
+                <div clas="flex items-center justify-end">
+                  <Button variant="outline" size="sm" :as-child="true">
+                    <NuxtLink :to="`/level/${level.id}`">
+                      <Eye :size="15" />
+                    </NuxtLink>
+                  </Button>
+                </div>
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </div>
 
-    <Pagination :onPage="onPage" :meta="levels" />
+      <Pagination :onPage="onPage" :meta="levels" />
     </div>
   </div>
 </template>
