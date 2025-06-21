@@ -1,4 +1,4 @@
-import z from "zod";
+import { z } from "zod";
 
 export const SchemaStudentForm = z.object({
   name: z
@@ -14,23 +14,17 @@ export const SchemaStudentForm = z.object({
   gender: z
     .string()
     .min(1, "Le genre est requis.")
-    .refine(
-      (val) => ["masculin", "féminin", "autre"].includes(val.toLowerCase()),
-      {
-        message: "Le genre doit être 'masculin', 'féminin' ou 'autre'.",
-      }
-    ),
+    .refine((val) => ["homme", "femme"].includes(val.toLowerCase()), {
+      message: "Le genre doit être 'homme', 'femme'.",
+    }),
 
   phone: z
     .string()
-    .min(
-      8,
-      "Le numéro de téléphone est requis et doit contenir au moins 8 chiffres."
-    )
+    .min(8, "Le numéro de téléphone doit contenir au moins 8 chiffres.")
     .max(15, "Le numéro de téléphone est trop long.")
     .regex(
       /^\+?\d+$/,
-      "Le numéro de téléphone doit contenir uniquement des chiffres et un + optionnel au début."
+      "Le numéro de téléphone doit contenir uniquement des chiffres, avec un '+' optionnel au début."
     ),
 
   level_id: z.string().min(1, "Le niveau est requis."),
@@ -42,12 +36,11 @@ export type SchemaStudentFormInfer = z.infer<typeof SchemaStudentForm>;
 
 export const SchemaStudentExcelForm = z.object({
   file: z
-    .instanceof(File)
+    .instanceof(File, { message: "Le fichier est requis." })
     .refine(
-      (file) =>
-        file && (file.name.endsWith(".xlsx") || file.name.endsWith(".xls")),
+      (file) => file.name.endsWith(".xlsx") || file.name.endsWith(".xls"),
       {
-        message: "Le fichier doit être un Excel (.xlsx ou .xls)",
+        message: "Le fichier doit être un Excel (.xlsx ou .xls).",
       }
     ),
 });

@@ -16,9 +16,9 @@ const { data: delibes, pending: delibePending } = await useFetch<{
   data: DeliberationModel[];
 }>(getRouteApi("&delibe"));
 
-const { data: teachers, pending: teacherPending } = await useFetch<
-  TeacherModel[]
->(getRouteApi("&teacher"));
+const { data: teachers, pending: teacherPending } = await useFetch<TeacherModel[]>(
+  getRouteApi("&teacher")
+);
 
 const isPending = ref(false);
 
@@ -32,15 +32,13 @@ const form = useForm({
   },
 });
 
-const selectTeacherPlaceholder = computed(() => {
-  if (teacherPending.value) return "Chargement...";
-  return "Sélectionner un professeur";
-});
+const selectTeacherPlaceholder = computed(() =>
+  teacherPending.value ? "Chargement..." : "Sélectionner un professeur"
+);
 
-const selectDelibePlaceholder = computed(() => {
-  if (delibePending.value) return "Chargement...";
-  return "Sélectionner une délibération";
-});
+const selectDelibePlaceholder = computed(() =>
+  delibePending.value ? "Chargement..." : "Sélectionner une délibération"
+);
 
 const handleSubmit = form.handleSubmit(async (values) => {
   isPending.value = true;
@@ -67,17 +65,14 @@ const handleSubmit = form.handleSubmit(async (values) => {
               <SelectValue :placeholder="selectDelibePlaceholder" />
             </SelectTrigger>
             <SelectContent>
-              <SelectGroup
-                v-if="delibes && delibes.data && delibes.data.length > 0"
-              >
-                <SelectLabel>Promotion disponibles</SelectLabel>
+              <SelectGroup v-if="delibes && delibes.data && delibes.data.length > 0">
+                <SelectLabel>Promotions disponibles</SelectLabel>
                 <SelectItem
                   v-for="delibe in delibes.data"
                   :key="delibe.id"
                   :value="delibe.id.toString()"
                 >
-                  {{ delibe.level.name }} [{{ delibe.year.name }}] pour
-                  {{ delibe.start_at }}
+                  {{ delibe.level.name }} [{{ delibe.year.name }}] - début : {{ delibe.start_at }}
                 </SelectItem>
               </SelectGroup>
               <SelectGroup v-else-if="!delibePending">
@@ -92,7 +87,7 @@ const handleSubmit = form.handleSubmit(async (values) => {
 
     <FormField v-slot="{ componentField }" name="teacher_id">
       <FormItem>
-        <FormLabel>Professeurs</FormLabel>
+        <FormLabel>Professeur</FormLabel>
         <FormControl>
           <Select v-bind="componentField" :disabled="teacherPending">
             <SelectTrigger class="w-full">
@@ -100,7 +95,7 @@ const handleSubmit = form.handleSubmit(async (values) => {
             </SelectTrigger>
             <SelectContent>
               <SelectGroup v-if="teachers && teachers.length > 0">
-                <SelectLabel>Professeur disponibles</SelectLabel>
+                <SelectLabel>Professeurs disponibles</SelectLabel>
                 <SelectItem
                   v-for="teacher in teachers"
                   :key="teacher.id"
@@ -110,7 +105,7 @@ const handleSubmit = form.handleSubmit(async (values) => {
                 </SelectItem>
               </SelectGroup>
               <SelectGroup v-else-if="!teacherPending">
-                <SelectLabel>Aucun professeur trouvée</SelectLabel>
+                <SelectLabel>Aucun professeur trouvé</SelectLabel>
               </SelectGroup>
             </SelectContent>
           </Select>

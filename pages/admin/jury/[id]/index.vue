@@ -4,11 +4,11 @@ import { useAuth } from "@/composables/useAuth";
 import { ago } from "@/lib/date-time";
 import { Calendar, Mail, User } from "lucide-vue-next";
 import { toast } from "vue-sonner";
-import { getItemJury } from "../../../../services/jury";
-import type { JuryModel } from "../../../../types/model";
+import { getItemJury } from "@/services/jury";
+import type { JuryModel } from "@/types/model";
 
 useHead({
-  title: "Détails d'un jurie - Polytechnic Application",
+  title: "Détails d'un jury - Polytechnic Application",
 });
 
 definePageMeta({
@@ -31,7 +31,7 @@ const juryId = parseInt(route.params.id as string);
 if (!juryId || isNaN(juryId)) {
   throw createError({
     statusCode: 400,
-    statusMessage: "L'ID de le jurie est requis et doit être un nombre valide",
+    statusMessage: "L'ID du jury est requis et doit être un nombre valide",
   });
 }
 
@@ -40,7 +40,7 @@ const fetchJury = async () => {
     isLoading.value = true;
 
     if (!auth.session.value?.accessToken) {
-      throw new Error("utilisateur non authentifié");
+      throw new Error("Utilisateur non authentifié");
     }
 
     const response = await getItemJury(auth.session.value.accessToken, juryId);
@@ -48,7 +48,7 @@ const fetchJury = async () => {
 
     if (response.ok) {
       jury.value = (data as ModelDataResponse).data;
-    } else if (response.status == 401) {
+    } else if (response.status === 401) {
       toast.warning("Session", {
         description: "Votre session a expiré, merci de vous reconnecter",
       });
@@ -61,7 +61,7 @@ const fetchJury = async () => {
     }
   } catch (error) {
     toast.error("Erreur", {
-      description: "Impossible de charger le jurie",
+      description: "Impossible de charger le jury",
     });
   } finally {
     isLoading.value = false;
@@ -81,25 +81,25 @@ onMounted(async () => {
     <!-- Loader -->
     <LoaderContainer v-if="isLoading" :isCard="true" />
 
-    <!-- jurie non trouvé -->
+    <!-- Jury non trouvé -->
     <Card v-else-if="!jury">
       <CardContent class="text-center py-12">
         <User class="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-        <p class="text-lg font-medium mb-2">jurie non trouvé</p>
+        <p class="text-lg font-medium mb-2">Jury non trouvé</p>
         <p class="text-muted-foreground">
-          Le jurie avec l'ID {{ juryId }} n'existe pas.
+          Le jury avec l'ID {{ juryId }} n'existe pas.
         </p>
       </CardContent>
     </Card>
 
-    <!-- Détails de le jurie -->
+    <!-- Détails du jury -->
     <div v-else class="grid gap-6 md:grid-cols-2">
       <!-- Informations principales -->
       <Card>
         <CardHeader>
           <CardTitle class="flex items-center gap-2">
             <User class="h-5 w-5" />
-            Informations du jurie
+            Informations du jury
           </CardTitle>
         </CardHeader>
         <CardContent class="space-y-4">
@@ -119,9 +119,7 @@ onMounted(async () => {
               <div>
                 <p class="text-sm font-medium">Délibération</p>
                 <p class="text-sm text-muted-foreground">
-                  {{ jury.deliberation.level.name }} [{{
-                    jury.deliberation.year.name
-                  }}]
+                  {{ jury.deliberation.level.name }} [{{ jury.deliberation.year.name }}]
                 </p>
               </div>
             </div>

@@ -8,7 +8,7 @@ export const SchemaDepartmentForm = z.object({
 
   alias: z
     .string()
-    .min(2, "L'alias est requis.")
+    .min(1, "L'alias est requis.") // Min 1 caractère pour être plus souple
     .max(20, "L'alias est trop long."),
 });
 

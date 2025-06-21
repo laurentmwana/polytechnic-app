@@ -39,7 +39,7 @@ if (!teacherId || isNaN(teacherId)) {
   throw createError({
     statusCode: 400,
     statusMessage:
-      "le ID de le professeur est requis et doit être un nombre valide",
+      "L'ID du professeur est requis et doit être un nombre valide",
   });
 }
 
@@ -48,7 +48,7 @@ const fetchTeacher = async () => {
     isLoading.value = true;
 
     if (!auth.session.value?.accessToken) {
-      throw new Error("utilisateur non authentifié");
+      throw new Error("Utilisateur non authentifié");
     }
 
     const response = await getItemTeacher(
@@ -59,7 +59,7 @@ const fetchTeacher = async () => {
 
     if (response.ok) {
       teacher.value = (data as ModelDataResponse).data;
-    } else if (response.status == 401) {
+    } else if (response.status === 401) {
       toast.warning("Session", {
         description: "Votre session a expiré, merci de vous reconnecter",
       });
@@ -79,9 +79,7 @@ const fetchTeacher = async () => {
   }
 };
 
-onMounted(async () => {
-  await fetchTeacher();
-});
+onMounted(fetchTeacher);
 </script>
 
 <template>
@@ -92,20 +90,19 @@ onMounted(async () => {
     <!-- Loader -->
     <LoaderContainer v-if="isLoading" :isCard="true" />
 
-    <!-- professeur non trouvé -->
+    <!-- Professeur non trouvé -->
     <Card v-else-if="!teacher">
       <CardContent class="text-center py-12">
         <User class="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-        <p class="text-lg font-medium mb-2">professeur non trouvé</p>
+        <p class="text-lg font-medium mb-2">Professeur non trouvé</p>
         <p class="text-muted-foreground">
-          le professeur avec le ID {{ teacherId }} n'existe pas.
+          Le professeur avec l'ID {{ teacherId }} n'existe pas.
         </p>
       </CardContent>
     </Card>
 
-    <!-- Détails de le professeur -->
+    <!-- Détails du professeur -->
     <div v-else class="grid gap-6 md:grid-cols-2">
-      <!-- Informations principales -->
       <Card>
         <CardHeader>
           <CardTitle class="flex items-center gap-2">
@@ -113,7 +110,7 @@ onMounted(async () => {
             Informations personnelles
           </CardTitle>
           <CardDescription>
-            Détails de le professeur {{ teacher.name }} {{ teacher.firstname }}
+            Détails du professeur {{ teacher.name }} {{ teacher.firstname }}
           </CardDescription>
         </CardHeader>
         <CardContent class="space-y-4">
@@ -131,7 +128,7 @@ onMounted(async () => {
             <div class="flex items-center gap-3">
               <Mail class="h-4 w-4 text-muted-foreground" />
               <div>
-                <p class="text-sm font-medium">Télpéhone</p>
+                <p class="text-sm font-medium">Téléphone</p>
                 <p class="text-sm text-muted-foreground">{{ teacher.phone }}</p>
               </div>
             </div>

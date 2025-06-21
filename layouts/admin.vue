@@ -29,10 +29,6 @@ const items = [
         title: "Département",
         url: "/admin/department",
       },
-      {
-        title: "Option",
-        url: "/admin/option",
-      },
     ],
   },
 

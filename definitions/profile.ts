@@ -4,8 +4,8 @@ export const SchemaProfileInfo = z.object({
   name: z.string().min(1, "Le nom est requis."),
   email: z
     .string()
-    .email("Adresse e-mail invalide.")
-    .min(1, "L’email est requis."),
+    .min(1, "L’email est requis.")
+    .email("Adresse e-mail invalide."),
 });
 
 export type SchemaProfileInfoInfer = z.infer<typeof SchemaProfileInfo>;
@@ -14,10 +14,10 @@ export const SchemaProfilePassword = z
   .object({
     current_password: z
       .string()
-      .min(8, "Le mot de passe doit contenir au moins 8 caractères."),
+      .min(8, "Le mot de passe actuel doit contenir au moins 8 caractères."),
     password: z
       .string()
-      .min(8, "Le mot de passe doit contenir au moins 8 caractères."),
+      .min(8, "Le nouveau mot de passe doit contenir au moins 8 caractères."),
     password_confirmation: z
       .string()
       .min(8, "La confirmation du mot de passe est requise."),

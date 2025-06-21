@@ -21,13 +21,14 @@ definePageMeta({
   layout: "admin",
   middleware: ["admin", "verified"],
 });
+
 const validator = ref<ValidatorErrorProps | null>(null);
 
 const auth = useAuth();
 const router = useRouter();
 
 const user = ref<UserModel | null>(null);
-const isLoading = ref<boolean>(true);
+const isLoading = ref<boolean>(false);
 
 const onSubmit = async (file: File) => {
   try {
@@ -52,7 +53,7 @@ const onSubmit = async (file: File) => {
       const state = (data as StateActionModel).state;
       if (state) {
         toast.success("Création", {
-          description: `Un étudiant a été créé`,
+          description: `Les étudiants ont été créés avec succès.`,
         });
 
         router.push("/admin/student");
@@ -76,8 +77,10 @@ const onSubmit = async (file: File) => {
     }
   } catch (error) {
     toast.error("Erreur", {
-      description: `Impossible d'editer l'étudiant #${user.value?.id}`,
+      description: `Impossible de créer les étudiants`,
     });
+  } finally {
+    isLoading.value = false;
   }
 };
 </script>
@@ -92,12 +95,24 @@ const onSubmit = async (file: File) => {
           <CardTitle class="flex items-center gap-2">
             Création d'étudiants par fichier Excel
           </CardTitle>
-          <CardDescription> </CardDescription>
+          <CardDescription></CardDescription>
         </CardHeader>
         <CardContent>
           <div class="max-w-2xl space-y-4">
             <ValidatorError :validator="validator" />
-            <StudentExcelForm :onSubmit="onSubmit" />
+
+            <p class="text-sm text-muted-foreground mb-4">
+              Vous pouvez
+              <a
+                href="/exemples/exemple_etudiants.xlsx"
+                target="_blank"
+                class="text-primary underline"
+                >télécharger un exemplaire du fichier Excel</a
+              >
+              pour voir le format attendu.
+            </p>
+
+            <StudentExcelForm :onSubmit="onSubmit" :loading="isLoading" />
           </div>
         </CardContent>
       </Card>

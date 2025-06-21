@@ -1,4 +1,4 @@
-import z from "zod";
+import { z } from "zod";
 
 export const SchemaTeacherForm = z.object({
   name: z
@@ -15,19 +15,16 @@ export const SchemaTeacherForm = z.object({
     .string()
     .min(1, "Le genre est requis.")
     .refine((val) => ["homme", "femme"].includes(val.toLowerCase()), {
-      message: "Le genre doit être 'masculin', 'féminin' ou 'autre'.",
+      message: "Le genre doit être 'homme' ou 'femme'.",
     }),
 
   phone: z
     .string()
-    .min(
-      8,
-      "Le numéro de téléphone est requis et doit contenir au moins 8 chiffres."
-    )
+    .min(8, "Le numéro de téléphone doit contenir au moins 8 chiffres.")
     .max(15, "Le numéro de téléphone est trop long.")
     .regex(
       /^\+?\d+$/,
-      "Le numéro de téléphone doit contenir uniquement des chiffres et un + optionnel au début."
+      "Le numéro de téléphone doit contenir uniquement des chiffres et un '+' optionnel au début."
     ),
 
   department_id: z.string().min(1, "Le département est requis."),

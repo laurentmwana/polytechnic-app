@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import { ref, watch, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { useHead } from "#imports";
+
 import LoaderContainer from "@/components/LoaderContainer.vue";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,6 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import Pagination from "@/components/ui/pagination/Pagination.vue";
 import {
   Table,
@@ -17,6 +22,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+
 import { useAuth } from "@/composables/useAuth";
 import { ago } from "@/lib/date-time";
 import { excerpt } from "@/lib/utils";
@@ -24,10 +30,10 @@ import type { DepartmentModel } from "@/types/model";
 import type { PaginatedResponse } from "@/types/paginate";
 import { Eye, Pen } from "lucide-vue-next";
 import { toast } from "vue-sonner";
-import { getCollectionDepartments } from "../../../services/department";
+import { getCollectionDepartments } from "@/services/department";
 
 useHead({
-  title: "Gestion des cours - Polytechnic Application",
+  title: "Gestion des départements - Polytechnic Application",
 });
 
 definePageMeta({
@@ -46,38 +52,40 @@ const numberPage = ref<number>(
 );
 
 const departments = ref<ModelCollectionProps | null>(null);
-const isLoading = ref<boolean>(true);
+const isLoading = ref(true);
 
 const fetchDepartments = async () => {
   try {
     isLoading.value = true;
 
     if (!auth.session.value?.accessToken) {
-      throw new Error("utilisateur non authentifié");
+      throw new Error("Utilisateur non authentifié");
     }
 
     const response = await getCollectionDepartments(
       auth.session.value.accessToken,
       numberPage.value
     );
+
     const data = await response.json();
 
     if (response.ok) {
       departments.value = data as ModelCollectionProps;
-    } else if (response.status == 401) {
+    } else if (response.status === 401) {
       toast.warning("Session", {
-        description: "Votre session a expiré, merci de vous reconnecter",
+        description: "Votre session a expiré, merci de vous reconnecter.",
       });
       auth.logout();
     } else {
       toast.error("Erreur", {
         description:
-          (data as { message: string }).message || "Une erreur est survenue",
+          (data as { message?: string }).message ??
+          "Une erreur est survenue.",
       });
     }
-  } catch (error) {
+  } catch {
     toast.error("Erreur", {
-      description: "Impossible de charger les cours",
+      description: "Impossible de charger les départements.",
     });
   } finally {
     isLoading.value = false;
@@ -101,40 +109,39 @@ watch(
   }
 );
 
-onMounted(async () => {
-  await fetchDepartments();
-});
+onMounted(fetchDepartments);
 </script>
 
 <template>
   <Card>
     <CardHeader>
-      <div class="flex items-center gap-4 justify-between">
+      <div class="flex items-center justify-between gap-4">
         <div>
           <CardTitle>Gestion des départements</CardTitle>
           <CardDescription>
-            Gérez les départments de la faculté de polytechinique
+            Gérez les départements de la faculté de polytechnique
           </CardDescription>
         </div>
       </div>
     </CardHeader>
+
     <CardContent>
       <!-- Loader -->
       <LoaderContainer v-if="isLoading" />
 
-      <!-- Aucun cours -->
-      <div v-else-if="!departments?.data?.length" class="text-center py-8">
+      <!-- Aucun département -->
+      <div v-else-if="!departments?.data?.length" class="py-8 text-center">
         <p class="text-muted-foreground">Aucun département trouvé</p>
       </div>
 
-      <!-- Table des cours -->
+      <!-- Table des départements -->
       <div v-else class="space-y-4">
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead>Nom</TableHead>
               <TableHead>Alias</TableHead>
-              <TableHead>Options</TableHead>
+              <TableHead>Promotions</TableHead>
               <TableHead>Création</TableHead>
               <TableHead class="text-right">Actions</TableHead>
             </TableRow>
@@ -154,7 +161,7 @@ onMounted(async () => {
 
               <TableCell class="font-medium">
                 <Badge variant="outline">
-                  {{ department.options.length }}
+                  {{ department.levels.length }}
                 </Badge>
               </TableCell>
 
@@ -167,12 +174,12 @@ onMounted(async () => {
               <TableCell>
                 <div class="flex items-center gap-4 lg:justify-end">
                   <Button size="sm" variant="outline" :as-child="true">
-                    <NuxtLink :href="`/admin/department/${department.id}/edit`">
+                    <NuxtLink :to="`/admin/department/${department.id}/edit`">
                       <Pen :size="15" />
                     </NuxtLink>
                   </Button>
                   <Button size="sm" variant="secondary" :as-child="true">
-                    <NuxtLink :href="`/admin/department/${department.id}`">
+                    <NuxtLink :to="`/admin/department/${department.id}`">
                       <Eye :size="15" />
                     </NuxtLink>
                   </Button>

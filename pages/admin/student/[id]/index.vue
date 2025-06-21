@@ -7,19 +7,23 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import LoaderContainer from "@/components/LoaderContainer.vue";
 import { useAuth } from "@/composables/useAuth";
 import { ago } from "@/lib/date-time";
 import { isStudentAccountDisable } from "@/lib/role";
 import { getItemStudent } from "@/services/student";
 import type { StudentModel } from "@/types/model";
 import {
+  BadgeAlertIcon,
   Calendar,
+  Fingerprint,
   Mail,
   Phone,
   Send,
   Shield,
   User,
   UserCheck,
+  VenetianMask,
 } from "lucide-vue-next";
 import { toast } from "vue-sonner";
 
@@ -43,7 +47,7 @@ const router = useRouter();
 const student = ref<StudentModel | null>(null);
 const isLoading = ref<boolean>(true);
 
-const studentId = parseInt(route.params.id as string);
+const studentId = parseInt(route.params.id as string, 10);
 
 if (!studentId || isNaN(studentId)) {
   throw createError({
@@ -58,7 +62,7 @@ const fetchStudent = async () => {
     isLoading.value = true;
 
     if (!auth.session.value?.accessToken) {
-      throw new Error("utilisateur non authentifié");
+      throw new Error("Utilisateur non authentifié");
     }
 
     const response = await getItemStudent(
@@ -69,7 +73,7 @@ const fetchStudent = async () => {
 
     if (response.ok) {
       student.value = (data as ModelDataResponse).data;
-    } else if (response.status == 401) {
+    } else if (response.status === 401) {
       toast.warning("Session", {
         description: "Votre session a expiré, merci de vous reconnecter",
       });
@@ -105,28 +109,26 @@ onMounted(() => {
 });
 </script>
 
+<!-- ...inchangé : imports + script... -->
+
 <template>
   <div class="space-y-6">
-    <!-- Header avec bouton retour -->
     <GoBack back="/admin/student" />
 
-    <!-- Loader -->
     <LoaderContainer v-if="isLoading" :isCard="true" />
 
-    <!-- étudiant non trouvé -->
     <Card v-else-if="!student">
       <CardContent class="text-center py-12">
         <User class="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-        <p class="text-lg font-medium mb-2">étudiant non trouvé</p>
+        <p class="text-lg font-medium mb-2">Étudiant non trouvé</p>
         <p class="text-muted-foreground">
           L'étudiant avec l'ID {{ studentId }} n'existe pas.
         </p>
       </CardContent>
     </Card>
 
-    <!-- Détails de l'étudiant -->
     <div v-else class="grid gap-6 md:grid-cols-2">
-      <!-- Informations principales -->
+      <!-- Informations personnelles -->
       <Card>
         <CardHeader>
           <CardTitle class="flex items-center gap-2">
@@ -150,15 +152,15 @@ onMounted(() => {
             </div>
 
             <div class="flex items-center gap-3">
-              <Mail class="h-4 w-4 text-muted-foreground" />
+              <Phone class="h-4 w-4 text-muted-foreground" />
               <div>
-                <p class="text-sm font-medium">Télpéhone</p>
+                <p class="text-sm font-medium">Téléphone</p>
                 <p class="text-sm text-muted-foreground">{{ student.phone }}</p>
               </div>
             </div>
 
             <div class="flex items-center gap-3">
-              <UserCheck class="h-4 w-4 text-muted-foreground" />
+              <VenetianMask class="h-4 w-4 text-muted-foreground" />
               <div>
                 <p class="text-sm font-medium">Genre</p>
                 <p class="text-sm text-muted-foreground">
@@ -168,7 +170,7 @@ onMounted(() => {
             </div>
 
             <div class="flex items-center gap-3">
-              <UserCheck class="h-4 w-4 text-muted-foreground" />
+              <Fingerprint class="h-4 w-4 text-muted-foreground" />
               <div>
                 <p class="text-sm font-medium">Matricule</p>
                 <p class="text-sm text-muted-foreground">
@@ -197,61 +199,70 @@ onMounted(() => {
             <Shield class="h-5 w-5" />
             Statut et permissions
           </CardTitle>
-          <CardDescription> Rôles et état du compte </CardDescription>
+          <CardDescription>Rôles et état du compte</CardDescription>
         </CardHeader>
         <CardContent class="space-y-4">
-          <div>
-            <p class="text-sm font-medium mb-2">Vérification email</p>
-            <Badge
-              :variant="
-                student.user.isEmailVerified ? 'default' : 'destructive'
-              "
-            >
-              {{
-                student.user.isEmailVerified
-                  ? "Email vérifié"
-                  : "Email non vérifié"
-              }}
-            </Badge>
-          </div>
-
-          <div>
-            <p class="text-sm font-medium mb-2">Statut du compte</p>
-            <Badge
-              :variant="
-                isStudentAccountDisable(student.user.roles)
-                  ? 'destructive'
-                  : 'default'
-              "
-            >
-              {{
-                isStudentAccountDisable(student.user.roles)
-                  ? "Compte bloqué"
-                  : "Compte actif"
-              }}
-            </Badge>
-          </div>
-
-          <div>
-            <p class="text-sm font-medium mb-2">Rôles</p>
-            <div class="flex flex-wrap gap-2">
+          <div class="flex items-center gap-3">
+            <Mail class="h-4 w-4 text-muted-foreground" />
+            <div>
+              <p class="text-sm font-medium">Vérification email</p>
               <Badge
-                v-for="role in getRoleLabels(student.user.roles)"
-                :key="role"
-                variant="outline"
+                :variant="
+                  student.user.isEmailVerified ? 'default' : 'destructive'
+                "
               >
-                {{ role }}
+                {{
+                  student.user.isEmailVerified
+                    ? "Email vérifié"
+                    : "Email non vérifié"
+                }}
               </Badge>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <Shield class="h-4 w-4 text-muted-foreground" />
+            <div>
+              <p class="text-sm font-medium">Statut du compte</p>
+              <Badge
+                :variant="
+                  isStudentAccountDisable(student.user.roles)
+                    ? 'destructive'
+                    : 'default'
+                "
+              >
+                {{
+                  isStudentAccountDisable(student.user.roles)
+                    ? "Compte bloqué"
+                    : "Compte actif"
+                }}
+              </Badge>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-3">
+            <Badge class="h-4 w-4 text-muted-foreground" />
+            <div>
+              <p class="text-sm font-medium mb-2">Rôles</p>
+              <div class="flex flex-wrap gap-2">
+                <BadgeAlertIcon
+                  v-for="role in getRoleLabels(student.user.roles)"
+                  :key="role"
+                  variant="outline"
+                >
+                  {{ role }}
+                </BadgeAlertIcon>
+              </div>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      <!-- Informations étudiant (si applicable) -->
+      <!-- Informations du compte -->
       <Card v-if="student.user" class="md:col-span-2">
         <CardHeader>
           <CardTitle class="flex items-center gap-2">
-            <UserCheck class="h-5 w-5" />
+            <IdBadge class="h-5 w-5" />
             Informations du compte
           </CardTitle>
         </CardHeader>
@@ -278,7 +289,7 @@ onMounted(() => {
             </div>
 
             <div class="flex items-center gap-3">
-              <Phone class="h-4 w-4 text-muted-foreground" />
+              <Shield class="h-4 w-4 text-muted-foreground" />
               <div>
                 <p class="text-sm font-medium">Rôle</p>
                 <p class="text-sm text-muted-foreground">
@@ -289,38 +300,6 @@ onMounted(() => {
           </div>
         </CardContent>
       </Card>
-
-      <!-- Actions -->
-      <!-- <Card class="md:col-span-2">
-        <CardHeader>
-          <CardTitle>Actions</CardTitle>
-          <CardDescription>
-            Actions disponibles pour cet étudiant
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div class="flex flex-wrap gap-2">
-            <Button variant="outline">
-              <Edit class="h-4 w-4 mr-2" />
-              Modifier l'étudiant
-            </Button>
-            <Button
-              :variant="
-                isStudentAccountDisable(user.roles) ? 'default' : 'destructive'
-              "
-            >
-              {{
-                isStudentAccountDisable(user.roles) ? "Débloquer" : "Bloquer"
-              }}
-              le compte
-            </Button>
-            <Button variant="outline">
-              <Mail class="h-4 w-4 mr-2" />
-              Renvoyer email de vérification
-            </Button>
-          </div>
-        </CardContent>
-      </Card> -->
     </div>
   </div>
 </template>

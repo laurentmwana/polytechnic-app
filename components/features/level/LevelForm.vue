@@ -4,7 +4,7 @@ import {
   type SchemaLevelFormInfer,
 } from "@/definitions/level";
 import { getRouteApi } from "@/lib/route";
-import type { LevelModel, OptionModel } from "@/types/model";
+import type { LevelModel, DepartmentModel } from "@/types/model";
 import { toTypedSchema } from "@vee-validate/zod";
 import { useForm } from "vee-validate";
 import { computed, ref } from "vue";
@@ -15,9 +15,9 @@ const props = defineProps<{
   level?: LevelModel;
 }>();
 
-const { data: options, pending: optionPending } = await useFetch<OptionModel[]>(
-  getRouteApi("&option")
-);
+const { data: departments, pending: departmentPending } = await useFetch<
+  DepartmentModel[]
+>(getRouteApi("&department"));
 
 const isPending = ref(false);
 
@@ -29,13 +29,13 @@ const form = useForm({
     name: props.level?.name ?? "",
     alias: props.level?.alias ?? "",
     programme: props.level?.programme ?? "",
-    option_id: props.level?.option?.id?.toString() ?? "",
+    department_id: props.level?.department?.id?.toString() ?? "", // conserve `department_id` si côté backend ça reste ainsi
   },
 });
 
 const selectPlaceholder = computed(() => {
-  if (optionPending.value) return "Chargement...";
-  return "Sélectionner une option";
+  if (departmentPending.value) return "Chargement...";
+  return "Sélectionner un département";
 });
 
 const handleSubmit = form.handleSubmit(async (values) => {
@@ -54,6 +54,7 @@ const handleSubmit = form.handleSubmit(async (values) => {
 
 <template>
   <form @submit.prevent="handleSubmit" class="space-y-7">
+    <!-- Nom -->
     <FormField v-slot="{ componentField }" name="name">
       <FormItem>
         <FormLabel>Nom</FormLabel>
@@ -64,6 +65,7 @@ const handleSubmit = form.handleSubmit(async (values) => {
       </FormItem>
     </FormField>
 
+    <!-- Alias -->
     <FormField v-slot="{ componentField }" name="alias">
       <FormItem>
         <FormLabel>Alias</FormLabel>
@@ -74,52 +76,28 @@ const handleSubmit = form.handleSubmit(async (values) => {
       </FormItem>
     </FormField>
 
-    <FormField v-slot="{ componentField }" name="option_id">
+    <!-- Département -->
+    <FormField v-slot="{ componentField }" name="department_id">
       <FormItem>
-        <FormLabel>Option</FormLabel>
+        <FormLabel>Département</FormLabel>
         <FormControl>
-          <Select v-bind="componentField" :disabled="optionPending">
+          <Select v-bind="componentField" :disabled="departmentPending">
             <SelectTrigger class="w-full">
               <SelectValue :placeholder="selectPlaceholder" />
             </SelectTrigger>
             <SelectContent>
-              <SelectGroup v-if="options && options.length > 0">
-                <SelectLabel>Options disponibles</SelectLabel>
+              <SelectGroup v-if="departments?.length">
+                <SelectLabel>Départements disponibles</SelectLabel>
                 <SelectItem
-                  v-for="option in options"
-                  :key="option.id"
-                  :value="option.id.toString()"
+                  v-for="department in departments"
+                  :key="department.id"
+                  :value="department.id.toString()"
                 >
-                  {{ option.name }}
+                  {{ department.name }}
                 </SelectItem>
               </SelectGroup>
-              <SelectGroup v-else-if="!optionPending">
-                <SelectLabel>Aucune option trouvée</SelectLabel>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </FormControl>
-        <FormMessage />
-      </FormItem>
-    </FormField>
-
-    <FormField v-slot="{ componentField }" name="programme">
-      <FormItem>
-        <FormLabel>Programme</FormLabel>
-        <FormControl>
-          <Select v-bind="componentField">
-            <SelectTrigger class="w-full">
-              <SelectValue placeholder="Selectionner un système" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel> Programme </SelectLabel>
-                <SelectItem value="nouveau système">
-                  Licence Master Doctorat (LMD)
-                </SelectItem>
-                <SelectItem value="ancien système">
-                  Graduat Licence Master Doctorat (GLMD)
-                </SelectItem>
+              <SelectGroup v-else-if="!departmentPending">
+                <SelectLabel>Aucun département trouvé</SelectLabel>
               </SelectGroup>
             </SelectContent>
           </Select>
@@ -128,6 +106,7 @@ const handleSubmit = form.handleSubmit(async (values) => {
       </FormItem>
     </FormField>
 
+    <!-- Bouton -->
     <Button variant="secondary" type="submit" :disabled="isPending">
       <template v-if="isPending">
         <Loader type="spinner" text="Chargement..." color="secondary" />

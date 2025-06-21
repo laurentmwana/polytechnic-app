@@ -35,7 +35,7 @@ import { Edit, Eye, MoreHorizontal, Trash2 } from "lucide-vue-next";
 import { toast } from "vue-sonner";
 
 useHead({
-  title: "Gestion des cours - Polytechnic Application",
+  title: "Gestion des promotions - Polytechnic Application",
 });
 
 definePageMeta({
@@ -49,43 +49,36 @@ const auth = useAuth();
 const router = useRouter();
 const route = useRoute();
 
-const numberPage = ref<number>(
-  route.query.page ? parseInt(route.query.page as string) : 1
-);
+const numberPage = ref(route.query.page ? parseInt(route.query.page as string) : 1);
 
 const levels = ref<ModelCollectionProps | null>(null);
-const isLoading = ref<boolean>(true);
-const showModalLocklevelId = ref<number | null>(null);
-const showModalDeletelevelId = ref<number | null>(null);
+const isLoading = ref(true);
+const showModalDeleteLevelId = ref<number | null>(null);
 
 const fetchLevels = async () => {
   try {
     isLoading.value = true;
 
     if (!auth.session.value?.accessToken) {
-      throw new Error("utilisateur non authentifié");
+      throw new Error("Utilisateur non authentifié");
     }
 
-    const response = await getCollectionLevels(
-      auth.session.value.accessToken,
-      numberPage.value
-    );
+    const response = await getCollectionLevels(auth.session.value.accessToken, numberPage.value);
     const data = await response.json();
 
     if (response.ok) {
       levels.value = data as ModelCollectionProps;
-    } else if (response.status == 401) {
-      toast.warning("Session", {
-        description: "Votre session a expiré, merci de vous reconnecter",
+    } else if (response.status === 401) {
+      toast.warning("Session expirée", {
+        description: "Merci de vous reconnecter",
       });
       auth.logout();
     } else {
       toast.error("Erreur", {
-        description:
-          (data as { message: string }).message || "Une erreur est survenue",
+        description: (data as { message: string }).message || "Une erreur est survenue",
       });
     }
-  } catch (error) {
+  } catch {
     toast.error("Erreur", {
       description: "Impossible de charger les promotions",
     });
@@ -113,37 +106,33 @@ const onDeleteLevel = async (levelId: number) => {
 
     if (response.ok) {
       const state = data as StateActionModel;
-
       if (state) {
-        toast("Suppression", {
-          description: `La promotion #${levelId} a été supprimé`,
+        toast.success("Suppression", {
+          description: `La promotion #${levelId} a été supprimée.`,
         });
-
         router.replace("/admin/level?page=1");
-
         await fetchLevels();
       } else {
         toast.error("Suppression échouée", {
-          description: `Nous n'avons pas pu modifier supprimer  la promotion #${levelId}`,
+          description: `Impossible de supprimer la promotion #${levelId}.`,
         });
       }
-    } else if (response.status == 401) {
-      toast.warning("Session", {
-        description: "Votre session a expiré, merci de vous reconnecter",
+    } else if (response.status === 401) {
+      toast.warning("Session expirée", {
+        description: "Merci de vous reconnecter",
       });
       auth.logout();
     } else {
       toast.error("Erreur", {
-        description:
-          (data as { message: string }).message || "Une erreur est survenue",
+        description: (data as { message: string }).message || "Une erreur est survenue",
       });
     }
-  } catch (error) {
+  } catch {
     toast.error("Erreur", {
-      description: `Impossible de changer le statut de la promotion #${levelId}`,
+      description: `Impossible de supprimer la promotion #${levelId}`,
     });
   } finally {
-    showModalLocklevelId.value = null;
+    showModalDeleteLevelId.value = null;
     isLoading.value = false;
   }
 };
@@ -159,19 +148,16 @@ watch(
   }
 );
 
-onMounted(async () => {
-  await fetchLevels();
-});
+onMounted(fetchLevels);
 </script>
-
 <template>
   <Card>
     <CardHeader>
-      <div class="flex items-center gap-4 justify-between">
+      <div class="flex items-center justify-between gap-4">
         <div>
           <CardTitle>Gestion des promotions</CardTitle>
           <CardDescription>
-            Gérez les promotions de la faculté de polytechinique
+            Gérez les promotions de la faculté de polytechnique
           </CardDescription>
         </div>
         <Button asChild variant="outline" size="sm">
@@ -181,16 +167,14 @@ onMounted(async () => {
         </Button>
       </div>
     </CardHeader>
+
     <CardContent>
-      <!-- Loader -->
       <LoaderContainer v-if="isLoading" />
 
-      <!-- Aucun cours -->
       <div v-else-if="!levels?.data?.length" class="text-center py-8">
-        <p class="text-muted-foreground">Aucune promotion trouvé</p>
+        <p class="text-muted-foreground">Aucune promotion trouvée</p>
       </div>
 
-      <!-- Table des cours -->
       <div v-else class="space-y-4">
         <Table>
           <TableHeader>
@@ -198,38 +182,17 @@ onMounted(async () => {
               <TableHead>#</TableHead>
               <TableHead>Nom</TableHead>
               <TableHead>Alias</TableHead>
-              <TableHead>Option</TableHead>
-              <TableHead>Programme</TableHead>
               <TableHead>Création</TableHead>
               <TableHead class="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             <TableRow v-for="level in levels.data" :key="level.id">
-              <TableCell class="font-medium"> #{{ level.id }} </TableCell>
-
-              <TableCell class="font-medium">
-                {{ excerpt(level.name, 30) }}
-              </TableCell>
-
-              <TableCell class="font-medium">
-                {{ excerpt(level.alias, 20) }}
-              </TableCell>
-
+              <TableCell class="font-medium">#{{ level.id }}</TableCell>
+              <TableCell class="font-medium">{{ excerpt(level.name, 30) }}</TableCell>
+              <TableCell class="font-medium">{{ excerpt(level.alias, 20) }}</TableCell>
               <TableCell>
-                <TextLink :href="`/admin/option/${level.option.id}`">
-                  {{ excerpt(level.option.name, 20) }}
-                </TextLink>
-              </TableCell>
-
-              <TableCell>
-                {{ excerpt(level.programme) }}
-              </TableCell>
-
-              <TableCell>
-                <p class="text-sm text-muted-foreground">
-                  {{ ago(level.created_at) }}
-                </p>
+                <p class="text-sm text-muted-foreground">{{ ago(level.created_at) }}</p>
               </TableCell>
               <TableCell class="text-right">
                 <DropdownMenu>
@@ -241,57 +204,43 @@ onMounted(async () => {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
                     <DropdownMenuItem>
-                      <NuxtLink
-                        :to="`/admin/level/${level.id}`"
-                        class="flex items-center gap-2"
-                      >
-                        <Eye class="mr-2 h-4 w-4" />
+                      <NuxtLink :to="`/admin/level/${level.id}`" class="flex items-center gap-2">
+                        <Eye class="h-4 w-4 mr-2" />
                         Voir
                       </NuxtLink>
                     </DropdownMenuItem>
                     <DropdownMenuItem>
-                      <NuxtLink
-                        :to="`/admin/level/${level.id}/edit`"
-                        class="flex items-center gap-2"
-                      >
-                        <Edit class="mr-2 h-4 w-4" />
+                      <NuxtLink :to="`/admin/level/${level.id}/edit`" class="flex items-center gap-2">
+                        <Edit class="h-4 w-4 mr-2" />
                         Modifier
                       </NuxtLink>
                     </DropdownMenuItem>
-
                     <DropdownMenuItem
                       class="text-destructive"
-                      @click="showModalDeletelevelId = level.id"
+                      @click="showModalDeleteLevelId = level.id"
                     >
-                      <Trash2 class="mr-2 h-4 w-4" />
+                      <Trash2 class="h-4 w-4 mr-2" />
                       Supprimer
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
+
                 <ConfirmationDialog
-                  :open="
-                    showModalDeletelevelId !== null &&
-                    showModalDeletelevelId === level.id
-                  "
+                  :open="showModalDeleteLevelId === level.id"
                   variant="destructive"
                   title="Suppression de la promotion"
                   description="Cette action est irréversible. L'élément sera définitivement supprimé de nos serveurs."
                   confirm-text="Supprimer"
                   cancel-text="Annuler"
                   :loading="isLoading"
-                  @confirm="
-                    async () => {
-                      await onDeleteLevel(level.id);
-                    }
-                  "
-                  @cancel="showModalDeletelevelId = null"
+                  @confirm="() => onDeleteLevel(level.id)"
+                  @cancel="showModalDeleteLevelId = null"
                 />
               </TableCell>
             </TableRow>
           </TableBody>
         </Table>
 
-        <!-- Pagination -->
         <Pagination v-if="levels" :onPage="onPage" :meta="levels" />
       </div>
     </CardContent>

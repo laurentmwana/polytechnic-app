@@ -15,10 +15,10 @@ const props = defineProps<{
   student?: StudentModel;
 }>();
 
+// Chargement des niveaux et années
 const { data: levels, pending: levelsPending } = await useFetch<LevelModel[]>(
   getRouteApi("&level")
 );
-
 const { data: years, pending: yearsPending } = await useFetch<YearModel[]>(
   getRouteApi("&year")
 );
@@ -34,20 +34,19 @@ const form = useForm({
     firstname: props.student?.firstname ?? "",
     gender: props.student?.gender ?? "",
     phone: props.student?.phone ?? "",
-    level_id: props.student?.actual_level.level?.id?.toString() ?? "",
-    year_academic_id: props.student?.actual_level.year?.id?.toString() ?? "",
+    level_id: props.student?.actual_level?.level?.id?.toString() ?? "",
+    year_academic_id: props.student?.actual_level?.year?.id?.toString() ?? "",
   },
 });
 
-// Computed pour le texte du placeholder du select
+// Placeholder dynamique pour les selects
 const selectPlaceholder = computed(() => {
-  if (levelsPending.value) return "Chargement...";
+  if (levelsPending.value || yearsPending.value) return "Chargement...";
   return "Sélectionner une promotion";
 });
 
 const handleSubmit = form.handleSubmit(async (values) => {
   isPending.value = true;
-
   try {
     await props.onSubmit(values);
   } catch (error) {
@@ -61,7 +60,7 @@ const handleSubmit = form.handleSubmit(async (values) => {
 
 <template>
   <form @submit.prevent="handleSubmit" class="space-y-7">
-    <FormField v-slot="{ componentField }" name="name">
+    <FormField name="name" v-slot="{ componentField }">
       <FormItem>
         <FormLabel>Nom</FormLabel>
         <FormControl>
@@ -71,7 +70,7 @@ const handleSubmit = form.handleSubmit(async (values) => {
       </FormItem>
     </FormField>
 
-    <FormField v-slot="{ componentField }" name="firstname">
+    <FormField name="firstname" v-slot="{ componentField }">
       <FormItem>
         <FormLabel>Postnom</FormLabel>
         <FormControl>
@@ -81,7 +80,7 @@ const handleSubmit = form.handleSubmit(async (values) => {
       </FormItem>
     </FormField>
 
-    <FormField v-slot="{ componentField }" name="phone">
+    <FormField name="phone" v-slot="{ componentField }">
       <FormItem>
         <FormLabel>Téléphone</FormLabel>
         <FormControl>
@@ -91,19 +90,19 @@ const handleSubmit = form.handleSubmit(async (values) => {
       </FormItem>
     </FormField>
 
-    <FormField v-slot="{ componentField }" name="gender">
+    <FormField name="gender" v-slot="{ componentField }">
       <FormItem>
         <FormLabel>Genre</FormLabel>
         <FormControl>
           <Select v-bind="componentField">
             <SelectTrigger class="w-full">
-              <SelectValue placeholder="Selectionner un genre" />
+              <SelectValue placeholder="Sélectionner un genre" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectLabel> Genres </SelectLabel>
-                <SelectItem value="homme"> Homme </SelectItem>
-                <SelectItem value="femme"> Femme </SelectItem>
+                <SelectLabel>Genres</SelectLabel>
+                <SelectItem value="homme">Homme</SelectItem>
+                <SelectItem value="femme">Femme</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
@@ -112,7 +111,7 @@ const handleSubmit = form.handleSubmit(async (values) => {
       </FormItem>
     </FormField>
 
-    <FormField v-slot="{ componentField }" name="level_id">
+    <FormField name="level_id" v-slot="{ componentField }">
       <FormItem>
         <FormLabel>Promotion</FormLabel>
         <FormControl>
@@ -128,7 +127,7 @@ const handleSubmit = form.handleSubmit(async (values) => {
                   :key="level.id"
                   :value="level.id.toString()"
                 >
-                  {{ level.alias }} - {{ level.option.alias }}
+                  {{ level.alias }} - [{{ level.department.alias }}]
                 </SelectItem>
               </SelectGroup>
               <SelectGroup v-else-if="!levelsPending">
@@ -141,7 +140,7 @@ const handleSubmit = form.handleSubmit(async (values) => {
       </FormItem>
     </FormField>
 
-    <FormField v-slot="{ componentField }" name="year_academic_id">
+    <FormField name="year_academic_id" v-slot="{ componentField }">
       <FormItem>
         <FormLabel>Année académique</FormLabel>
         <FormControl>

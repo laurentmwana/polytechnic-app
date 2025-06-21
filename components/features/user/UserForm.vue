@@ -12,13 +12,27 @@ const props = defineProps<{
   user?: UserModel;
 }>();
 
-// Correction: useFetch doit être dans un composable ou une fonction async
-const { data: students, pending: studentsPending } = await useFetch<
-  StudentModel[]
->(getRouteApi("&student"));
 
-const isPending = ref(false);
+const students = ref<StudentModel[] | null>(null);
+const studentsPending = ref(true);
 
+import { onMounted } from "vue";
+
+onMounted(async () => {
+  studentsPending.value = true;
+  try {
+    const { data, error } = await useFetch<StudentModel[]>(getRouteApi("&student"));
+    if (data) {
+      students.value = data.value ?? [];
+    }
+  } catch (e) {
+    toast.error("Erreur lors du chargement des étudiants.");
+  } finally {
+    studentsPending.value = false;
+  }
+});
+
+// Schéma de validation typed
 const formSchema = toTypedSchema(SchemaUserForm);
 
 const form = useForm({
@@ -26,25 +40,25 @@ const form = useForm({
   initialValues: {
     name: props.user?.name ?? "",
     email: props.user?.email ?? "",
-    // Correction: convertir en string pour le select
-    student_id: props.user?.student?.id?.toString() ?? "",
+    // Convertir student_id en string pour le Select
+    student_id: props.user?.student?.id ? props.user.student.id.toString() : "",
     password: "",
     password_confirmation: "",
   },
 });
 
-// Computed pour le texte du placeholder du select
+// Texte placeholder du select
 const selectPlaceholder = computed(() => {
   if (studentsPending.value) return "Chargement...";
   return "Sélectionner un étudiant";
 });
 
+const isPending = ref(false);
+
 const handleSubmit = form.handleSubmit(async (values) => {
   isPending.value = true;
-
   try {
     await props.onSubmit(values);
-
     form.resetField("password", { value: "" });
     form.resetField("password_confirmation", { value: "" });
   } catch (error) {
@@ -58,7 +72,7 @@ const handleSubmit = form.handleSubmit(async (values) => {
 
 <template>
   <form @submit.prevent="handleSubmit" class="space-y-7">
-    <FormField v-slot="{ componentField }" name="name">
+    <FormField name="name" v-slot="{ componentField }">
       <FormItem>
         <FormLabel>Nom d'utilisateur</FormLabel>
         <FormControl>
@@ -68,7 +82,7 @@ const handleSubmit = form.handleSubmit(async (values) => {
       </FormItem>
     </FormField>
 
-    <FormField v-slot="{ componentField }" name="email">
+    <FormField name="email" v-slot="{ componentField }">
       <FormItem>
         <FormLabel>Adresse e-mail</FormLabel>
         <FormControl>
@@ -78,7 +92,7 @@ const handleSubmit = form.handleSubmit(async (values) => {
       </FormItem>
     </FormField>
 
-    <FormField v-slot="{ componentField }" name="student_id">
+    <FormField name="student_id" v-slot="{ componentField }">
       <FormItem>
         <FormLabel>Étudiant</FormLabel>
         <FormControl>
@@ -107,21 +121,21 @@ const handleSubmit = form.handleSubmit(async (values) => {
       </FormItem>
     </FormField>
 
-    <FormField v-slot="{ componentField }" name="password">
+    <FormField name="password" v-slot="{ componentField }">
       <FormItem>
         <FormLabel>Mot de passe</FormLabel>
         <FormControl>
-          <Input type="password" v-bind="componentField" />
+          <Input type="password" v-bind="componentField" autocomplete="new-password" />
         </FormControl>
         <FormMessage />
       </FormItem>
     </FormField>
 
-    <FormField v-slot="{ componentField }" name="password_confirmation">
+    <FormField name="password_confirmation" v-slot="{ componentField }">
       <FormItem>
         <FormLabel>Confirmation de mot de passe</FormLabel>
         <FormControl>
-          <Input type="password" v-bind="componentField" />
+          <Input type="password" v-bind="componentField" autocomplete="new-password" />
         </FormControl>
         <FormMessage />
       </FormItem>
