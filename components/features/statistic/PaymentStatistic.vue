@@ -3,27 +3,36 @@
     <!-- Carte principale -->
     <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
       <!-- En-tête -->
+
       <div
-        class="flex items-center gap-2 space-y-0 border-b py-5 px-6 sm:flex-row"
+        class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b py-5 px-6"
       >
-        <div class="grid flex-1 gap-1 text-center sm:text-left">
-          <div class="flex items-center gap-2">
+        <!-- Titre + date + description -->
+        <div class="flex-1 text-center sm:text-left">
+          <div
+            class="flex flex-wrap items-center justify-center sm:justify-start gap-2"
+          >
             <h3 class="text-2xl font-semibold leading-none tracking-tight">
               {{ title }}
             </h3>
             <span
-              class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80 ml-2"
+              class="inline-flex items-center rounded-full border border-transparent bg-secondary px-2.5 py-0.5 text-xs font-semibold text-secondary-foreground transition-colors hover:bg-secondary/80 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ml-2"
             >
-              Dernière mise à jour: {{ getMostRecentDate() }}
+              Mise à jour: {{ getMostRecentDate() }}
             </span>
           </div>
-          <p class="text-sm text-muted-foreground">{{ description }}</p>
+          <p
+            class="mt-1 text-sm text-muted-foreground max-w-lg mx-auto sm:mx-0"
+          >
+            {{ description }}
+          </p>
         </div>
 
-        <div class="flex flex-col gap-2 sm:flex-row">
+        <!-- Controls (view mode + select) -->
+        <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
           <!-- Onglets Mode -->
           <div
-            class="inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground w-[200px]"
+            class="inline-flex h-10 w-full max-w-xs items-center justify-center rounded-md bg-muted p-1 text-muted-foreground sm:w-auto"
           >
             <button
               @click="viewMode = 'recent'"
@@ -50,10 +59,13 @@
           </div>
 
           <!-- Sélecteur de période -->
-          <div v-if="viewMode === 'recent'" class="relative">
+          <div
+            v-if="viewMode === 'recent'"
+            class="relative w-full max-w-xs sm:w-auto"
+          >
             <select
               v-model="timeRange"
-              class="flex h-10 w-[160px] items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             >
               <option value="7d">Derniers 7 jours</option>
               <option value="30d">Derniers 30 jours</option>
@@ -685,11 +697,8 @@ watch(viewMode, () => {
   redrawChart();
 });
 
-// Initialiser le graphique après le montage du composant
 onMounted(() => {
   redrawChart();
-
-  // Redessiner le graphique lors du redimensionnement de la fenêtre
   window.addEventListener("resize", redrawChart);
 });
 </script>
