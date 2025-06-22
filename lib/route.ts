@@ -26,6 +26,9 @@ const ROUTES_API = {
   "*teacher.index": "/teachers",
   "*teacher.show": "/teacher/:id",
 
+  "*event.index": "/events",
+  "*event.show": "/event/:id",
+
   "*course.index": "/courses",
   "*course.show": "/course/:id",
 
@@ -60,9 +63,7 @@ const ROUTES_API = {
   "&delibe": "/data-select/deliberations",
   "&contact": "/contact",
 
-  // ADMIN
-
-  // USER
+  // EVENT
 
   "~user.index": "/admin/user",
   "~user.store": "/admin/user",
@@ -70,6 +71,14 @@ const ROUTES_API = {
   "~user.update": "/admin/user/:id",
   "~user.delete": "/admin/user/:id",
   "~user.lock": "/admin/user/:id/lock",
+
+  "~event.index": "/admin/event",
+  "~event.store": "/admin/event",
+  "~event.show": "/admin/event/:id",
+  "~event.update": "/admin/event/:id",
+  "~event.delete": "/admin/event/:id",
+
+  // ADMIN
 
   // STUDENT
   "~student.index": "/admin/student",

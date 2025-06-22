@@ -27,8 +27,7 @@ import {
 import { useAuth } from "@/composables/useAuth";
 import { ago } from "@/lib/date-time";
 import { excerpt } from "@/lib/utils";
-import { deleteOption, getCollectionOptions } from "@/services/option";
-import type { OptionModel, ResultModel } from "@/types/model";
+import type { ResultModel } from "@/types/model";
 import type { PaginatedResponse } from "@/types/paginate";
 import type { StateActionModel } from "@/types/util";
 import { Edit, Eye, MoreHorizontal, Trash2 } from "lucide-vue-next";

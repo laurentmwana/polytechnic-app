@@ -51,7 +51,7 @@ onMounted(fetchLastNotification);
 
 <template>
   <div>
-    <DropdownMenu v-if="auth.session.value">
+    <DropdownMenu or v-if="auth.session.value">
       <DropdownMenuTrigger as-child>
         <Button variant="outline" size="icon" class="relative" aria-label="Notifications">
           <Bell :size="16" />
@@ -67,7 +67,7 @@ onMounted(fetchLastNotification);
         </Button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent class="w-[250px] lg:w-[380px]">
+      <DropdownMenuContent align="end" class="w-[280px] lg:w-[380px]">
         <DropdownMenuLabel>Notifications</DropdownMenuLabel>
         <DropdownMenuSeparator />
 

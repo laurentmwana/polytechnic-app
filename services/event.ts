@@ -1,8 +1,8 @@
-import type { SchemaOptionFormInfer } from "../definitions/option";
+import type { SchemaEventFormInfer } from "@/definitions/event";
 import { getRouteApi } from "../lib/route";
 
-export const getCollectionOptions = async (token: string, page: number) => {
-  return await fetch(getRouteApi("~option.index", { page }), {
+export const getCollectionEvents = async (token: string, page: number) => {
+  return await fetch(getRouteApi("~event.index", { page }), {
     headers: {
       Accept: "application/json",
       Authorization: `Bearer ${token}`,
@@ -10,8 +10,8 @@ export const getCollectionOptions = async (token: string, page: number) => {
   });
 };
 
-export const getItemOption = async (token: string, userId: number) => {
-  return await fetch(getRouteApi("~option.show", { id: userId }), {
+export const getItemEvent= async (token: string, userId: number) => {
+  return await fetch(getRouteApi("~event.show", { id: userId }), {
     headers: {
       Accept: "application/json",
       Authorization: `Bearer ${token}`,
@@ -19,12 +19,12 @@ export const getItemOption = async (token: string, userId: number) => {
   });
 };
 
-export const editOption = async (
+export const editEvent= async (
   token: string,
   userId: number,
-  values: SchemaOptionFormInfer
+  values: SchemaEventFormInfer
 ) => {
-  return await fetch(getRouteApi("~option.update", { id: userId }), {
+  return await fetch(getRouteApi("~event.update", { id: userId }), {
     method: "PUT",
     body: JSON.stringify({
       ...values,
@@ -38,11 +38,11 @@ export const editOption = async (
   });
 };
 
-export const createOption = async (
+export const createEvent= async (
   token: string,
-  values: SchemaOptionFormInfer
+  values: SchemaEventFormInfer
 ) => {
-  return await fetch(getRouteApi("~option.store"), {
+  return await fetch(getRouteApi("~event.store"), {
     method: "POST",
     body: JSON.stringify(values),
     headers: {
@@ -53,8 +53,8 @@ export const createOption = async (
   });
 };
 
-export const deleteOption = async (token: string, userId: number) => {
-  return await fetch(getRouteApi("~option.delete", { id: userId }), {
+export const deleteEvent= async (token: string, userId: number) => {
+  return await fetch(getRouteApi("~event.delete", { id: userId }), {
     method: "DELETE",
     headers: {
       Accept: "application/json",

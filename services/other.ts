@@ -275,3 +275,21 @@ export const markAsReadNotification = async (token: string) => {
     },
   });
 };
+
+
+// EVENT
+export const getCollectionEvents = async (page: number) => {
+  return await fetch(getRouteApi("*event.index", { page }), {
+    headers: {
+      Accept: "application/json",
+    },
+  });
+};
+
+export const getShowEvent = async (eventId: number) => {
+  return await fetch(getRouteApi("*event.show", { id: eventId }), {
+    headers: {
+      Accept: "application/json",
+    },
+  });
+};
