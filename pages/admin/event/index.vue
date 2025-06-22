@@ -180,7 +180,7 @@ onMounted(fetchEvents);
               <TableCell>{{ event.year?.name ?? "—" }}</TableCell>
               <TableCell>
                 <p class="text-sm text-muted-foreground">
-                  {{ ago(event.start_at) }}
+                  {{ event.start_at }}
                 </p>
               </TableCell>
               <TableCell>

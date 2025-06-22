@@ -26,7 +26,7 @@ const route = useRoute();
 const eventData = ref<EventModel | null>(null);
 const isLoading = ref<boolean>(true);
 
-const eventId = parseInt(route.params.id as string);
+const eventId = parseInt(route.params.id as string); 
 
 if (!eventId || isNaN(eventId)) {
   throw createError({

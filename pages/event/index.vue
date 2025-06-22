@@ -27,6 +27,7 @@ import { toast } from "vue-sonner";
 import { getCollectionEvents } from "@/services/other";
 import { onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import EventWithCountDown from "~/components/features/event/EventWithCountDown.vue";
 
 useHead({
   title: "Evènements - Polytechnic Application",
@@ -36,7 +37,9 @@ definePageMeta({
   layout: "default",
 });
 
-type ModelCollectionProps = PaginatedResponse<EventModel[]>;
+type ModelCollectionProps = PaginatedResponse<EventModel[]> & {
+  lastEvent?: EventModel | null;
+};
 
 const router = useRouter();
 const route = useRoute();
@@ -51,13 +54,12 @@ const isLoading = ref<boolean>(true);
 const fetchEvents = async () => {
   try {
     isLoading.value = true;
-    const response = await getCollectionEvents(numberPage.value
-    );
+    const response = await getCollectionEvents(numberPage.value);
     const data = await response.json();
 
     if (response.ok) {
       events.value = data as ModelCollectionProps;
-    }  else {
+    } else {
       toast.error("Erreur", {
         description: (data as { message: string }).message || "Erreur serveur",
       });
@@ -104,6 +106,7 @@ onMounted(fetchEvents);
     </div>
 
     <div v-else class="space-y-4">
+      <EventWithCountDown :eventData="events.lastEvent" />
       <Table>
         <TableHeader>
           <TableRow>
@@ -124,7 +127,7 @@ onMounted(fetchEvents);
             <TableCell>{{ event.year?.name ?? "—" }}</TableCell>
             <TableCell>
               <p class="text-sm text-muted-foreground">
-                {{ ago(event.start_at) }}
+                {{ event.start_at }}
               </p>
             </TableCell>
             <TableCell>
