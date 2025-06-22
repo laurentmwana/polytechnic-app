@@ -63,7 +63,7 @@ const fetchResults = async () => {
     isLoading.value = true;
 
     if (!auth.session.value?.accessToken) {
-      throw new Error("utilisateur non authentifié");
+      throw new Error("Utilisateur non authentifié");
     }
 
     const response = await getCollectionResults(
@@ -74,20 +74,20 @@ const fetchResults = async () => {
 
     if (response.ok) {
       results.value = data as ModelCollectionProps;
-    } else if (response.status == 401) {
-      toast.warning("Session", {
-        description: "Votre session a expiré, merci de vous reconnecter",
+    } else if (response.status === 401) {
+      toast.warning("Session expirée", {
+        description: "Votre session a expiré, veuillez vous reconnecter.",
       });
       auth.logout();
     } else {
       toast.error("Erreur", {
         description:
-          (data as { message: string }).message || "Une erreur est survenue",
+          (data as { message: string }).message || "Une erreur est survenue.",
       });
     }
   } catch (error) {
     toast.error("Erreur", {
-      description: "Impossible de charger les options",
+      description: "Impossible de charger les résultats.",
     });
   } finally {
     isLoading.value = false;
@@ -118,32 +118,31 @@ const onDeleteResult = async (resultId: number) => {
       const state = data as StateActionModel;
 
       if (state) {
-        toast("Suppression", {
-          description: `Le résultat #${resultId} a été supprimé`,
+        toast("Suppression réussie", {
+          description: `Le résultat #${resultId} a été supprimé.`,
         });
 
         router.replace("/admin/result?page=1");
-
         await fetchResults();
       } else {
-        toast.error("Suppression échouée", {
-          description: `Nous n'avons pas pu modifier supprimer  le résultat #${resultId}`,
+        toast.error("Échec de la suppression", {
+          description: `Impossible de supprimer le résultat #${resultId}.`,
         });
       }
-    } else if (response.status == 401) {
-      toast.warning("Session", {
-        description: "Votre session a expiré, merci de vous reconnecter",
+    } else if (response.status === 401) {
+      toast.warning("Session expirée", {
+        description: "Votre session a expiré, veuillez vous reconnecter.",
       });
       auth.logout();
     } else {
       toast.error("Erreur", {
         description:
-          (data as { message: string }).message || "Une erreur est survenue",
+          (data as { message: string }).message || "Une erreur est survenue.",
       });
     }
   } catch (error) {
     toast.error("Erreur", {
-      description: `Impossible de changer le statut de le options #${resultId}`,
+      description: `Impossible de supprimer le résultat #${resultId}.`,
     });
   } finally {
     isLoading.value = false;
@@ -191,14 +190,14 @@ onMounted(async () => {
         <p class="text-muted-foreground">Aucun résultat trouvé</p>
       </div>
 
-      <!-- Table des options -->
+      <!-- Table des résultats -->
       <div v-else class="space-y-4">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Etudiant</TableHead>
+              <TableHead>Étudiant</TableHead>
               <TableHead>Délibération</TableHead>
-              <TableHead>Eligibilité</TableHead>
+              <TableHead>Éligibilité</TableHead>
               <TableHead>Création</TableHead>
               <TableHead class="text-right">Actions</TableHead>
             </TableRow>
@@ -243,15 +242,6 @@ onMounted(async () => {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
-                    <DropdownMenuItem>
-                      <NuxtLink
-                        :to="`/admin/result/${result.id}`"
-                        class="flex items-center gap-2"
-                      >
-                        <Eye class="mr-2 h-4 w-4" />
-                        Voir
-                      </NuxtLink>
-                    </DropdownMenuItem>
                     <DropdownMenuItem
                       class="text-destructive"
                       @click="showModalDeleteResultId = result.id"
@@ -267,16 +257,12 @@ onMounted(async () => {
                     showModalDeleteResultId === result.id
                   "
                   variant="destructive"
-                  title="Suppression compte de le options"
+                  title="Suppression du résultat"
                   description="Cette action est irréversible. L'élément sera définitivement supprimé de nos serveurs."
                   confirm-text="Supprimer"
                   cancel-text="Annuler"
                   :loading="isLoading"
-                  @confirm="
-                    async () => {
-                      await onDeleteResult(result.id);
-                    }
-                  "
+                  @confirm="async () => { await onDeleteResult(result.id); }"
                   @cancel="showModalDeleteResultId = null"
                 />
               </TableCell>

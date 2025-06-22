@@ -12,6 +12,11 @@ import { toast } from "vue-sonner";
 import { Bell } from "lucide-vue-next";
 import { getInitials } from "@/lib/utils";
 import { ago } from "@/lib/date-time";
+import { useAuth } from "@/composables/useAuth";
+import LoaderContainer from "@/components/LoaderContainer.vue";
+import Separator from "@/components/ui/separator/Separator.vue";
+import { Button } from "@/components/ui/button";
+import Pagination from "@/components/ui/pagination/Pagination.vue";
 
 useHead({
   title: "Notifications - Polytechnic Application",
@@ -48,7 +53,7 @@ const fetchNotifications = async () => {
     const data = await response.json();
 
     if (response.ok) {
-      notifications.value = data as NotificationPaginateProps;
+      notifications.value = data as NotificationPaginateProps & { total: number; unread: number };
     } else {
       toast.error("Erreur", {
         description:
@@ -197,7 +202,7 @@ onMounted(fetchNotifications);
               <Separator class="my-4" />
 
               <Button :onclick="onMarkAsRead" class="w-full" variant="secondary">
-                {{ isPending ? "Chargement..." : "Tout marquer comme lues" }}
+                {{ isPending ? "Chargement..." : "Toutes marquer comme lues" }}
               </Button>
             </div>
           </div>
@@ -209,10 +214,7 @@ onMounted(fetchNotifications);
             <div
               v-for="notification in notifications?.data"
               :key="notification.id"
-              :class="[
-                'p-4 rounded-lg border flex items-start gap-4',
-                notification.read_at ? '' : 'border-primary/60'
-              ]"
+              :class="[ 'p-4 rounded-lg border flex items-start gap-4', notification.read_at ? '' : 'border-primary/60' ]"
             >
               <span class="relative flex shrink-0 overflow-hidden rounded-full h-10 w-10">
                 <span class="flex h-full w-full items-center justify-center rounded-full bg-muted">
@@ -235,14 +237,12 @@ onMounted(fetchNotifications);
               </div>
             </div>
 
-            <!-- Aucune notification -->
             <div v-if="notifications?.data?.length === 0" class="text-center text-muted-foreground mt-8">
-              Aucune notification à afficher.
+              Vous n'avez aucune notification pour le moment.
             </div>
           </div>
 
-          <!-- Pagination -->
-          <Pagination :onPage="onPage" :meta="notifications" />
+          <Pagination v-if="notifications && notifications.meta" :onPage="onPage" :meta="notifications" />
         </div>
       </div>
     </div>
