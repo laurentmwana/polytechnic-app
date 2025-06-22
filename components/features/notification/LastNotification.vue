@@ -67,7 +67,7 @@ onMounted(fetchLastNotification);
         </Button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent class="w-[380px]">
+      <DropdownMenuContent class="w-[250px] lg:w-[380px]">
         <DropdownMenuLabel>Notifications</DropdownMenuLabel>
         <DropdownMenuSeparator />
 

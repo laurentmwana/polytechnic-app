@@ -8,6 +8,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import LastNotification from "../components/features/notification/LastNotification.vue";
 
 const route = useRoute();
 
@@ -133,14 +134,14 @@ const isActive = (href?: string): boolean => {
     </Sidebar>
     <SidebarInset>
       <header
-        class="flex sticky top-0 bg-background/95 z-50 border-border h-12 shrink-0 items-center justify-between gap-2 border-b px-4"
+        class="flex sticky top-0 bg-background z-50 border-border h-12 shrink-0 items-center justify-between gap-2 border-b px-4"
       >
-        <div class="flex items-center gap-2">
+        <div class="flex gap-3">
           <SidebarTrigger class="-ml-1" />
           <Separator orientation="vertical" />
         </div>
-        <div class="flex gap-2">
-          <ThemeToggle />
+        <div class="flex items-center gap-4">
+          <LastNotification />
           <AvatarAdmin />
         </div>
       </header>
