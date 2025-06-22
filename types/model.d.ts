@@ -179,6 +179,8 @@ export interface EventModel {
   start_at: string;
   tags: string[]; // "Horaire, etc"
   level: LevelModel;
+  year: YearModel | null;
+  url: string | null;
   created_at: string;
   updated_at: string;
 }

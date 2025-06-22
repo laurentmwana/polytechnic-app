@@ -1,16 +1,18 @@
 <script setup lang="ts">
-import DepartmentForm from "@/components/features/department/DepartmentForm.vue";
+import EventForm from "@/components/features/event/EventForm.vue";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import LoaderContainer from "@/components/LoaderContainer.vue";
+import GoBack from "@/components/GoBack.vue";
 import { useAuth } from "@/composables/useAuth";
-import type { SchemaDepartmentFormInfer } from "@/definitions/department";
-import { editDepartment, getItemDepartment } from "@/services/department";
-import type { DepartmentModel } from "@/types/model";
+import type { SchemaEventFormInfer } from "@/definitions/event";
+import { editEvent, getItemEvent } from "@/services/event";
+import type { EventModel } from "@/types/model";
 import type { StateActionModel, ValidatorErrorProps } from "@/types/util";
 import { User } from "lucide-vue-next";
 import { toast } from "vue-sonner";
 
 useHead({
-  title: "Edition d'une département - Polytechnic Application",
+  title: "Édition d’un évènement - Polytechnic Application",
 });
 
 definePageMeta({
@@ -19,65 +21,60 @@ definePageMeta({
 });
 
 interface ModelResponse {
-  data: DepartmentModel;
+  data: EventModel;
 }
 
 const auth = useAuth();
 const route = useRoute();
 const router = useRouter();
 
-const department = ref<DepartmentModel | null>(null);
-const isLoading = ref<boolean>(true);
-const isEdit = ref<boolean>(false);
+const eventData = ref<EventModel | null>(null);
+const isLoading = ref(true);
+const isEdit = ref(false);
 const validator = ref<ValidatorErrorProps | null>(null);
 
-const departmentId = parseInt(route.params.id as string);
+const eventId = parseInt(route.params.id as string);
 
-if (!departmentId || isNaN(departmentId)) {
+if (!eventId || isNaN(eventId)) {
   throw createError({
     statusCode: 400,
-    statusMessage:
-      "L'ID de le département est requis et doit être un nombre valide",
+    statusMessage: "L’ID de l’évènement est requis et doit être un nombre valide",
   });
 }
 
-const fetchDepartment = async () => {
+const fetchEvent = async () => {
   try {
     isLoading.value = true;
 
     if (!auth.session.value?.accessToken) {
-      throw new Error("utilisateur non authentifié");
+      throw new Error("Utilisateur non authentifié");
     }
 
-    const response = await getItemDepartment(
-      auth.session.value.accessToken,
-      departmentId
-    );
+    const response = await getItemEvent(auth.session.value.accessToken, eventId);
     const data = await response.json();
 
     if (response.ok) {
-      department.value = (data as ModelResponse).data;
-    } else if (response.status == 401) {
-      toast.warning("Session", {
-        description: "Votre session a expiré, merci de vous reconnecter",
+      eventData.value = (data as ModelResponse).data;
+    } else if (response.status === 401) {
+      toast.warning("Session expirée", {
+        description: "Merci de vous reconnecter",
       });
       auth.logout();
     } else {
       toast.error("Erreur", {
-        description:
-          (data as { message: string }).message || "Une erreur est survenue",
+        description: (data as { message: string }).message || "Une erreur est survenue",
       });
     }
-  } catch (error) {
+  } catch {
     toast.error("Erreur", {
-      description: "Impossible de charger le département",
+      description: "Impossible de charger l’évènement",
     });
   } finally {
     isLoading.value = false;
   }
 };
 
-const onSubmit = async (values: SchemaDepartmentFormInfer) => {
+const onSubmit = async (values: SchemaEventFormInfer) => {
   try {
     isEdit.value = true;
     validator.value = null;
@@ -86,83 +83,76 @@ const onSubmit = async (values: SchemaDepartmentFormInfer) => {
       throw new Error("Utilisateur non authentifié");
     }
 
-    const response = await editDepartment(
-      auth.session.value.accessToken,
-      departmentId,
-      values
-    );
+    const response = await editEvent(auth.session.value.accessToken, eventId, values);
     const data = await response.json();
 
     if (response.ok) {
       const state = (data as StateActionModel).state;
       if (state) {
-        toast.success("Edition", {
-          description: `les informations du département ${departmentId} ont été modifiées`,
+        toast.success("Édition réussie", {
+          description: `Les informations de l’évènement #${eventId} ont été modifiées.`,
         });
-
-        router.push("/admin/department");
+        await router.push("/admin/event");
       } else {
-        toast.error("Edition", {
-          description: `Nous n'avons pas pu effectuer cette action`,
+        toast.error("Édition échouée", {
+          description: "L’action n’a pas pu être complétée.",
         });
       }
     } else if (response.status === 422) {
       validator.value = data as ValidatorErrorProps;
-    } else if (response.status == 401) {
-      toast.warning("Session", {
-        description: "Votre session a expiré, merci de vous reconnecter",
+    } else if (response.status === 401) {
+      toast.warning("Session expirée", {
+        description: "Merci de vous reconnecter",
       });
       auth.logout();
     } else {
       toast.error("Erreur", {
-        description:
-          (data as { message: string }).message || "Une erreur est survenue",
+        description: (data as { message: string }).message || "Une erreur est survenue",
       });
     }
-  } catch (error) {
+  } catch {
     toast.error("Erreur", {
-      description: `Impossible d'editer le départment #${departmentId}`,
+      description: `Impossible d’éditer l’évènement #${eventId}`,
     });
   } finally {
     isEdit.value = false;
   }
 };
 
-onMounted(async () => {
-  await fetchDepartment();
-});
+onMounted(fetchEvent);
 </script>
 
 <template>
   <div class="space-y-6">
-    <!-- Header avec bouton retour -->
-    <GoBack back="/admin/department" />
+    <!-- Bouton retour -->
+    <GoBack back="/admin/event" />
 
     <!-- Loader -->
     <LoaderContainer v-if="isLoading" :isCard="true" />
 
-    <!-- Utilisateur non trouvé -->
-    <Card v-else-if="!department">
+    <!-- Évènement non trouvé -->
+    <Card v-else-if="!eventData">
       <CardContent class="text-center py-12">
         <User class="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-        <p class="text-lg font-medium mb-2">département non trouvé</p>
+        <p class="text-lg font-medium mb-2">Évènement non trouvé</p>
         <p class="text-muted-foreground">
-          Le département avec l'ID {{ departmentId }} n'existe pas.
+          L’évènement avec l’ID {{ eventId }} n’existe pas.
         </p>
       </CardContent>
     </Card>
 
-    <div v-else class="w-full">
+    <!-- Formulaire d'édition -->
+    <div v-else class="w-full max-w-4xl mx-auto">
       <Card>
         <CardHeader>
           <CardTitle class="flex items-center gap-2">
-            Editer le département #{{ department.id }}
+            Éditer l’évènement #{{ eventData.id }}
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div class="max-w-2xl space-y-5">
+          <div class="space-y-5">
             <ValidatorError :validator="validator" />
-            <DepartmentForm :department="department" :onSubmit="onSubmit" />
+            <EventForm :event="eventData" :onSubmit="onSubmit" :loading="isEdit" />
           </div>
         </CardContent>
       </Card>
