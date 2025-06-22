@@ -34,7 +34,6 @@ const navItems = computed<NavItem[]>(() => [
   {
     label: "Académique",
     children: [
-      { label: "Départments", href: "/department" },
       { label: "Promotion", href: "/level" },
       { label: "Cours", href: "/course" },
       { label: "Année académique", href: "/year-academic" },

@@ -19,7 +19,7 @@ import GoBack from "@/components/GoBack.vue";
 import ValidatorError from "@/components/ValidatorError.vue";
 
 useHead({
-  title: "Création d'étudiants par fichier excel - Polytechnic Application",
+  title: "Publication des résultats - Polytechnic Application",
 });
 
 definePageMeta({
@@ -28,10 +28,8 @@ definePageMeta({
 });
 
 const validator = ref<ValidatorErrorProps | null>(null);
-
 const auth = useAuth();
 const router = useRouter();
-
 const user = ref<UserModel | null>(null);
 const isLoading = ref(false);
 
@@ -70,7 +68,7 @@ const onSubmit = async (values: SchemaResultFormInfer) => {
       validator.value = data as ValidatorErrorProps;
     } else if (response.status === 401) {
       toast.warning("Session expirée", {
-        description: "Votre session a expiré, merci de vous reconnecter.",
+        description: "Votre session a expiré, veuillez vous reconnecter.",
       });
       auth.logout();
     } else {

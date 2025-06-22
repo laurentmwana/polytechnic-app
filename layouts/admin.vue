@@ -144,7 +144,7 @@ const isActive = (href?: string): boolean => {
           <AvatarAdmin />
         </div>
       </header>
-      <div class="flex flex-1 flex-col gap-4 p-4">
+      <div class="flex flex-1 flex-col gap-4 px-2 py-4 lg:p-4">
         <slot />
       </div>
     </SidebarInset>
