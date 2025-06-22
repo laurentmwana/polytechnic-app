@@ -1,7 +1,11 @@
 <script setup lang="ts">
+import { ref, onMounted } from "vue";
+import { useRoute } from "vue-router";
+import { createError } from "h3";
+import { toast } from "vue-sonner";
+
 import { getShowYear } from "@/services/other";
 import type { YearModel } from "@/types/model";
-import { toast } from "vue-sonner";
 import YearDetails from "@/components/features/year/YearDetails.vue";
 import GoBack from "@/components/GoBack.vue";
 
@@ -14,9 +18,6 @@ definePageMeta({
 });
 
 const route = useRoute();
-const isPending = ref(true);
-const year = ref<YearModel>();
-
 const yearId = parseInt(route.params.id as string);
 
 if (!yearId || isNaN(yearId)) {
@@ -27,12 +28,12 @@ if (!yearId || isNaN(yearId)) {
   });
 }
 
-const fetchYear = async () => {
-  try {
-    if (!isPending.value) {
-      isPending.value = true;
-    }
+const isPending = ref(true);
+const year = ref<YearModel | null>(null);
 
+const fetchYear = async () => {
+  isPending.value = true;
+  try {
     const response = await getShowYear(yearId);
     const data = await response.json();
 
@@ -41,21 +42,19 @@ const fetchYear = async () => {
     } else {
       toast.error("Erreur", {
         description:
-          (data as { message: string }).message || "Une erreur est survenue",
+          (data as { message?: string }).message || "Une erreur est survenue",
       });
     }
   } catch (error) {
     toast.error("Erreur", {
-      description: `Impossible de récupèrer l'année académique #${yearId}`,
+      description: `Impossible de récupérer l'année académique #${yearId}.`,
     });
   } finally {
     isPending.value = false;
   }
 };
 
-onMounted(() => {
-  fetchYear();
-});
+onMounted(fetchYear);
 </script>
 
 <template>
@@ -70,12 +69,11 @@ onMounted(() => {
 
     <LoaderContainer v-if="isPending" :is-card="true" />
 
-    <div v-else-if="year">
-      <YearDetails :year="year" />
-    </div>
-
-    <p v-else class="text-gray-500">
-      Aucune donnée trouvée pour cette année académique.
-    </p>
+    <template v-else>
+      <YearDetails v-if="year" :year="year" />
+      <p v-else class="text-center text-gray-500 py-8">
+        Aucune donnée trouvée pour cette année académique.
+      </p>
+    </template>
   </div>
 </template>

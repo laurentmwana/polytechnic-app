@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ref, onMounted, watch } from "vue";
+import { useRouter, useRoute } from "vue-router";
 import { ago } from "@/lib/date-time";
 import { getCollectionTeachers } from "@/services/other";
 import type { TeacherModel } from "@/types/model";
@@ -8,27 +10,25 @@ import { toast } from "vue-sonner";
 useHead({
   title: "Nos professeurs - Polytechnic Application",
 });
+
 definePageMeta({
   layout: "default",
 });
 
 type TeacherPaginateProps = PaginatedResponse<TeacherModel[]>;
 
-const isPending = ref<boolean>(true);
+const isPending = ref(true);
 const teachers = ref<TeacherPaginateProps>();
 const router = useRouter();
 const route = useRoute();
 
-const numberPage = ref<number>(
+const numberPage = ref(
   route.query.page ? parseInt(route.query.page as string) : 1
 );
 
 const fetchTeacher = async () => {
+  isPending.value = true;
   try {
-    if (!isPending.value) {
-      isPending.value = true;
-    }
-
     const response = await getCollectionTeachers(numberPage.value);
     const data = await response.json();
 
@@ -37,12 +37,12 @@ const fetchTeacher = async () => {
     } else {
       toast.error("Erreur", {
         description:
-          (data as { message: string }).message || "Une erreur est survenue",
+          (data as { message?: string }).message || "Une erreur est survenue",
       });
     }
   } catch (error) {
     toast.error("Erreur", {
-      description: `Impossible de récupèrer les professeurs`,
+      description: "Impossible de récupérer les professeurs",
     });
   } finally {
     isPending.value = false;
@@ -79,7 +79,10 @@ onMounted(() => {
 
     <LoaderContainer v-if="isPending" :is-card="true" />
 
-    <p v-else-if="!teachers || teachers.data.length === 0">
+    <p
+      v-else-if="!teachers || teachers.data.length === 0"
+      class="text-center py-8 text-gray-500"
+    >
       Pas de professeurs
     </p>
 
@@ -101,14 +104,14 @@ onMounted(() => {
             <TableCell>{{ teacher.name }}</TableCell>
             <TableCell>{{ teacher.firstname }}</TableCell>
             <TableCell>{{ teacher.gender }}</TableCell>
-            <TableCell>{{ teacher.department.name }}</TableCell>
+            <TableCell>{{ teacher.department?.name || "---" }}</TableCell>
             <TableCell>
               <Badge>{{ teacher.courses.length }}</Badge>
             </TableCell>
             <TableCell>{{ ago(teacher.created_at) }}</TableCell>
             <TableCell>
               <div class="flex items-center justify-end">
-                <NuxtLink :href="`/teacher/${teacher.id}`">
+                <NuxtLink :to="`/teacher/${teacher.id}`">
                   <Button variant="secondary">En savoir plus</Button>
                 </NuxtLink>
               </div>

@@ -138,10 +138,10 @@ const activeTab = ref("history");
               </Badge>
             </div>
             <div>
-              <p class="text-sm font-medium">Option:</p>
-              <p class="text-sm">{{ folder.actual_level.level.option.name }}</p>
+              <p class="text-sm font-medium">Département:</p>
+              <p class="text-sm">{{ folder.actual_level.level.department.name }}</p>
               <p class="text-xs text-muted-foreground">
-                Alias: {{ folder.actual_level.level.option.alias }}
+                Alias: {{ folder.actual_level.level.department.alias }}
               </p>
             </div>
           </div>
@@ -184,16 +184,13 @@ const activeTab = ref("history");
                       </div>
                       <Badge variant="secondary">{{ history.year.name }}</Badge>
                     </div>
-                    <p class="text-sm text-muted-foreground mt-1">
-                      {{ history.level.programme }}
-                    </p>
                     <div class="mt-2">
                       <p class="text-sm">
-                        <span class="font-medium">Option:</span>
-                        {{ history.level.option.name }}
+                        <span class="font-medium">Départment :</span>
+                        {{ history.level.department.name }}
                       </p>
                       <p class="text-xs text-muted-foreground">
-                        Alias: {{ history.level.option.alias }}
+                        Alias: {{ history.level.department.alias }}
                       </p>
                     </div>
                   </div>

@@ -7,6 +7,16 @@ import type { PaginatedResponse } from "@/types/paginate";
 import { toast } from "vue-sonner";
 import { Eye } from "lucide-vue-next";
 
+import {
+  Table,
+  TableHeader,
+  TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+
 useHead({
   title: "Promotions - Polytechnic Application",
 });
@@ -28,9 +38,7 @@ const numberPage = ref(
 
 const fetchLevels = async () => {
   try {
-    if (!isPending.value) {
-      isPending.value = true;
-    }
+    isPending.value = true;
 
     const response = await getCollectionLevels(numberPage.value);
     const data = await response.json();
@@ -71,59 +79,58 @@ watch(
 
 onMounted(fetchLevels);
 </script>
+
 <template>
   <div class="container my-12">
-    <div class="section-page-header">
+    <div class="section-page-header mb-6">
       <h2 class="section-page-title">Promotions</h2>
     </div>
 
     <LoaderContainer :is-card="true" v-if="isPending" />
 
-    <div v-else-if="!isPending && levels">
-      <div>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>#</TableHead>
-              <TableHead>Nom</TableHead>
-              <TableHead>Alias</TableHead>
-              <TableHead>Département</TableHead>
-              <TableHead class="text-end"> Action </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            <TableRow v-for="level in levels.data">
-              <TableCell> #{{ level.id }} </TableCell>
-              <TableCell>
-                {{ level.name }}
-              </TableCell>
-              <TableCell>
-                {{ level.alias }}
-              </TableCell>
-              <TableCell>
-                <TextLink
-                  v-if="level.department"
-                  :href="`/department/${level.department.id}`"
-                >
-                  {{ level.department.name }}
-                </TextLink>
-                <p v-else>---</p>
-              </TableCell>
-              <TableCell>
-                <div clas="flex items-center justify-end">
-                  <Button variant="outline" size="sm" :as-child="true">
-                    <NuxtLink :to="`/level/${level.id}`">
-                      <Eye :size="15" />
-                    </NuxtLink>
-                  </Button>
-                </div>
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </div>
+    <div v-else-if="levels && levels.data?.length > 0">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>#</TableHead>
+            <TableHead>Nom</TableHead>
+            <TableHead>Alias</TableHead>
+            <TableHead>Département</TableHead>
+            <TableHead class="text-end">Action</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <TableRow v-for="level in levels.data" :key="level.id">
+            <TableCell>#{{ level.id }}</TableCell>
+            <TableCell>{{ level.name }}</TableCell>
+            <TableCell>{{ level.alias }}</TableCell>
+            <TableCell>
+              <TextLink
+                v-if="level.department"
+                :href="`/department/${level.department.id}`"
+              >
+                {{ level.department.name }}
+              </TextLink>
+              <p v-else>—</p>
+            </TableCell>
+            <TableCell>
+              <div class="flex items-center justify-end">
+                <Button variant="outline" size="sm" as-child>
+                  <NuxtLink :to="`/level/${level.id}`">
+                    <Eye :size="15" />
+                  </NuxtLink>
+                </Button>
+              </div>
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
 
-      <Pagination :onPage="onPage" :meta="levels" />
+      <Pagination :onPage="onPage" :meta="levels" class="mt-6" />
+    </div>
+
+    <div v-else class="text-center text-muted-foreground py-12">
+      Aucune promotion trouvée.
     </div>
   </div>
 </template>

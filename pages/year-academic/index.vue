@@ -1,12 +1,15 @@
 <script setup lang="ts">
+import { ref, watch, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { toast } from "vue-sonner";
+
 import YearCard from "@/components/features/year/YearCard.vue";
 import { getCollectionYears } from "@/services/other";
 import type { YearModel } from "@/types/model";
 import type { PaginatedResponse } from "@/types/paginate";
-import { toast } from "vue-sonner";
 
 useHead({
-  title: "Les années académiques - Polytechnic Application",
+  title: "Années académiques - Polytechnic Application",
 });
 
 definePageMeta({
@@ -26,9 +29,8 @@ const numberPage = ref(
 
 const fetchYears = async () => {
   try {
-    if (!isPending.value) {
-      isPending.value = true;
-    }
+    isPending.value = true;
+
     const response = await getCollectionYears(numberPage.value);
     const data = await response.json();
 
@@ -37,12 +39,12 @@ const fetchYears = async () => {
     } else {
       toast.error("Erreur", {
         description:
-          (data as { message: string }).message || "Une erreur est survenue",
+          (data as { message?: string }).message || "Une erreur est survenue lors du chargement.",
       });
     }
   } catch (error) {
     toast.error("Erreur", {
-      description: "Impossible de récupèrer les années académiques",
+      description: "Impossible de récupérer les années académiques.",
     });
   } finally {
     isPending.value = false;
@@ -66,32 +68,35 @@ watch(
   }
 );
 
-onMounted(() => {
-  fetchYears();
-});
+onMounted(fetchYears);
 </script>
-
 <template>
-  <div class="container my-12">
+  <div class="container my-12 space-y-8">
     <div class="section-page-header">
-      <h2 class="section-page-title">Les années académiques</h2>
+      <h2 class="section-page-title text-2xl md:text-3xl font-semibold text-primary">
+        Années académiques
+      </h2>
+      <p class="text-muted-foreground mt-1">
+        Liste des années académiques disponibles à la Faculté Polytechnique.
+      </p>
     </div>
 
+    <!-- Chargement -->
     <LoaderContainer v-if="isPending" :is-card="true" />
 
-    <div v-else-if="!years || years.data.length === 0">
-      <p>Pas d'année académique</p>
+    <!-- Aucun résultat -->
+    <div v-else-if="!years || years.data.length === 0" class="text-center text-muted-foreground py-10">
+      Aucune année académique disponible pour le moment.
     </div>
 
+    <!-- Résultat -->
     <div v-else>
-      <div
-        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-center"
-      >
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <YearCard v-for="year in years.data" :key="year.id" :year="year" />
       </div>
 
       <!-- Pagination -->
-      <Pagination :onPage="onPage" :meta="years" />
+      <Pagination :onPage="onPage" :meta="years" class="mt-8" />
     </div>
   </div>
 </template>
