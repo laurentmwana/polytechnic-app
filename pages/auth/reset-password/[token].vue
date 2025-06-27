@@ -6,6 +6,7 @@ import type { ValidatorErrorProps } from "@/types/util";
 import { ref } from "vue";
 import { useRoute } from "vue-router";
 import { toast } from "vue-sonner";
+import type { ResetPasswordSchemaInfer } from "~/definitions/auth";
 
 useHead({
   title: "Réinitialisation de mot de passe - Polytechnic Application",
@@ -24,11 +25,7 @@ const email = route.query.email as string;
 const validator = ref<ValidatorErrorProps | null>(null);
 const redirecting = ref(false);
 
-const onSubmit = async (values: {
-  email: string;
-  password: string;
-  password_confirmation: string;
-}) => {
+const onSubmit = async (values: ResetPasswordSchemaInfer) => {
   validator.value = null;
 
   const response = await resetPasswordUser({ ...values, token });

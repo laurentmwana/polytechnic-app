@@ -3,7 +3,7 @@ import "vue-sonner/style.css";
 </script>
 
 <template>
-  <NuxtLoadingIndicator color="#4F46E5" />
+  <NuxtLoadingIndicator color="# " />
   <NuxtLayout>
     <NuxtPage />
     <Toaster position="top-center" :expand="true" />

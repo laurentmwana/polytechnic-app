@@ -28,9 +28,7 @@ const fetchLastNotification = async () => {
   try {
     isPending.value = true;
 
-    if (!auth.session.value?.accessToken) {
-      throw new Error("Utilisateur non authentifié");
-    }
+    if (!auth.session.value?.accessToken) return
 
     const response = await getLastNotifications(auth.session.value.accessToken);
     const data = await response.json();

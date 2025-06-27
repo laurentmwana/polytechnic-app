@@ -6,6 +6,7 @@ import {
 import { toTypedSchema } from "@vee-validate/zod";
 import { useForm } from "vee-validate";
 import { toast } from "vue-sonner";
+import PasswordInput from "~/components/ui/input/PasswordInput.vue";
 
 const props = defineProps<{
   onSubmit: (values: SchemaProfilePasswordInfer) => Promise<void>;
@@ -47,7 +48,13 @@ const handleSubmit = form.handleSubmit(async (values) => {
       <FormItem>
         <FormLabel> Ancient mot de mot de passe </FormLabel>
         <FormControl>
-          <Input type="password" v-bind="componentField" />
+          <PasswordInput
+            id="current-password"
+            placeholder="Entrez votre mot de passe"
+            autocomplete="current-password"
+            v-bind="componentField"
+            :disabled="isPending"
+          />
         </FormControl>
         <FormMessage />
       </FormItem>
@@ -55,9 +62,16 @@ const handleSubmit = form.handleSubmit(async (values) => {
 
     <FormField v-slot="{ componentField }" name="password">
       <FormItem>
-        <FormLabel>Nouveau mot de passe</FormLabel>
+        <FormLabel> Nouveau mot de passe </FormLabel>
         <FormControl>
-          <Input type="password" v-bind="componentField" />
+          <PasswordInput
+            id="new-password"
+            :show-strength-indicator="true"
+            :show-criteria="true"
+            autocomplete="new-password"
+            v-bind="componentField"
+            :disabled="isPending"
+          />
         </FormControl>
         <FormMessage />
       </FormItem>
@@ -65,9 +79,16 @@ const handleSubmit = form.handleSubmit(async (values) => {
 
     <FormField v-slot="{ componentField }" name="password_confirmation">
       <FormItem>
-        <FormLabel> Confirmation du nouveau mot de passe </FormLabel>
+        <FormLabel>Confirmation du nouveau mot de passe</FormLabel>
         <FormControl>
-          <Input type="password" v-bind="componentField" />
+          <PasswordInput
+            id="password-confirmation"
+            :show-strength-indicator="true"
+            :show-criteria="true"
+            autocomplete="password-confirmation"
+            v-bind="componentField"
+            :disabled="isPending"
+          />
         </FormControl>
         <FormMessage />
       </FormItem>

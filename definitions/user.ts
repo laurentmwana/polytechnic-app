@@ -10,10 +10,15 @@ export const SchemaUserForm = z
     student_id: z.string().optional(), // facultatif, sinon préciser dans message
     password: z
       .string()
-      .min(8, "Le mot de passe doit contenir au moins 8 caractères."), // corrigé de 6 à 8 dans message
-    password_confirmation: z
-      .string()
-      .min(8, "La confirmation du mot de passe est requise."),
+      .min(8, "Le mot de passe doit contenir au moins 8 caractères.")
+      .regex(/[A-Z]/, "Le mot de passe doit contenir au moins une majuscule.")
+      .regex(/[a-z]/, "Le mot de passe doit contenir au moins une minuscule.")
+      .regex(/\d/, "Le mot de passe doit contenir au moins un chiffre.")
+      .regex(
+        /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/,
+        "Le mot de passe doit contenir au moins un caractère spécial."
+      ),
+    password_confirmation: z.string(),
   })
   .refine((data) => data.password === data.password_confirmation, {
     message: "Les mots de passe ne correspondent pas.",
