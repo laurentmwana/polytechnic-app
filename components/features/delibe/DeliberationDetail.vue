@@ -99,10 +99,6 @@
                   <UsersIcon class="w-5 h-5 mr-2" />
                   Composition du jury ({{ deliberation?.juries?.length || 0 }})
                 </div>
-                <Button variant="outline" size="sm">
-                  <PlusIcon class="w-4 h-4 mr-2" />
-                  Ajouter un jury
-                </Button>
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -148,11 +144,10 @@
                     </div>
                   </div>
                   <div class="flex items-center space-x-2">
-                    <Button variant="ghost" size="sm">
-                      <EditIcon class="w-4 h-4" />
-                    </Button>
-                    <Button variant="ghost" size="sm">
-                      <MoreVerticalIcon class="w-4 h-4" />
+                    <Button variant="ghost" size="sm" as-child>
+                      <NuxtLink :href="`/teacher/${jury.teacher.id}`">
+                        <Eye class="w-4 h-4" />
+                      </NuxtLink>
                     </Button>
                   </div>
                 </div>
@@ -246,6 +241,7 @@
 <script setup lang="ts">
 import type { DeliberationModel } from "@/types/model";
 import {
+  Eye,
   ClipboardListIcon,
   EditIcon,
   InfoIcon,

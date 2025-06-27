@@ -29,6 +29,7 @@ const filters = ref([
     title: "Semestre",
     label: "Par semestre",
     options: {
+      all: "",
       s1: "Semestre 1",
       s2: "Semestre 2",
     },
@@ -223,7 +224,7 @@ onMounted(fetchCourses);
             v-model="search"
             @keyup.enter="onSearchChange"
           />
-          <Button  variant="outline" @click="onSearchChange">
+          <Button :disable="!search"  variant="outline" @click="onSearchChange">
             <Search :size="15" />
           </Button>
         </div>

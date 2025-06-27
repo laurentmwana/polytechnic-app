@@ -164,7 +164,5 @@ const displayInfo = computed(() => {
   <div
     v-else-if="meta.meta.total === 0"
     class="flex items-center justify-center py-6"
-  >
-    <p class="text-sm text-muted-foreground">Aucun résultat à afficher</p>
-  </div>
+  ></div>
 </template>
