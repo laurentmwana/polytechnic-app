@@ -186,8 +186,20 @@ export const getDashboard = async (token: string) => {
 };
 
 // DELIBE
-export const getCollectionDelibes = async (page: number) => {
-  return await fetch(getRouteApi("*delibe.index", { page }), {
+export const getCollectionDelibes = async (page: number, bySemester ?: string | null, search?: string | null) => {
+    const params: Record<string, string | number> = { page };
+
+    const semesters = ["s1", "s2"];
+
+    if (bySemester && semesters.includes(bySemester)) {
+      params.semester = bySemester;
+    }
+
+    if (search && search.length > 0) {
+      params.search = search;
+    }
+
+  return await fetch(getRouteApi("*delibe.index", params), {
     headers: {
       Accept: "application/json",
     },
