@@ -33,4 +33,14 @@ export default defineNuxtConfig({
       ],
     },
   },
+  image: {
+    // Important : permet de servir les images du dossier /public/
+    screens: {
+      sm: 320,
+      md: 640,
+      lg: 1024,
+      xl: 1280,
+      xxl: 1536,
+    },
+  },
 });
