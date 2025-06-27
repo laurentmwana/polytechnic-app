@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { NuxtImg } from '#components';
+
 useHead({
   title: "À propos - Polytechnic Application",
 });
@@ -6,10 +8,46 @@ useHead({
 definePageMeta({
   layouts: ["default"],
 });
+
+// Images du carousel des laboratoires
+const laboratoryImages = [
+  {
+    src: "/images/labo/1.png",
+    alt: "Laboratoire de Génie Électrique - Image 1",
+    title: "Laboratoire de Génie Électrique",
+    description:
+      "Poste de travail équipé pour l'étude des circuits et systèmes électroniques.",
+  },
+  {
+    src: "/images/labo/2.png",
+    alt: "Laboratoire de Génie Électrique - Image 2",
+    title: "Laboratoire de Génie Électrique",
+    description:
+      "Appareils de mesure et instruments modernes pour les expérimentations électriques.",
+  },
+  {
+    src: "/images/labo/3.png",
+    alt: "Laboratoire de Génie Électrique - Image 3",
+    title: "Laboratoire de Génie Électrique",
+    description:
+      "Tables d’expérimentation pour l’analyse des réseaux électriques et l’électronique de puissance.",
+  },
+  {
+    src: "/images/labo/4.png",
+    alt: "Laboratoire de Génie Électrique - Image 4",
+    title: "Laboratoire de Génie Électrique",
+    description:
+      "Environnement pédagogique dédié à la formation pratique des futurs ingénieurs électriciens.",
+  },
+];
+
 </script>
 
 <template>
   <div class="container py-12" id="container-about">
+    <div class="section-page-header">
+      <h2 class="section-page-title">A propos</h2>
+    </div>
     <div class="relative mt-12">
       <!-- Effets visuels de fond -->
       <div
@@ -26,36 +64,40 @@ definePageMeta({
             <p class="leading-relaxed">
               Depuis sa création en 1955, la
               <span class="text-primary font-medium">
-                Faculté Polytechnique de l’Université de Kinshasa
+                Faculté Polytechnique de l'Université de Kinshasa
               </span>
-              s’impose comme un pilier de l’enseignement supérieur en République
+              s'impose comme un pilier de l'enseignement supérieur en République
               Démocratique du Congo. Initialement rattachée à la Faculté des
               Sciences, elle est devenue une entité autonome en 1960, avec pour
               vocation première de former des ingénieurs civils capables de
               répondre aux enjeux techniques, économiques et sociétaux du pays.
             </p>
+
             <p class="leading-relaxed">
-              Forte d’une longue tradition d’excellence, la Faculté demeure
-              aujourd’hui la référence nationale en matière de formation
-              d’ingénieurs de haut niveau, engagés dans le développement durable
-              et l’innovation technologique.
+              Forte d'une longue tradition d'excellence, la Faculté demeure
+              aujourd'hui la référence nationale en matière de formation
+              d'ingénieurs de haut niveau, engagés dans le développement durable
+              et l'innovation technologique.
             </p>
+
             <blockquote
               class="pl-4 border-l-4 border-primary/70 italic my-6 text-slate-600 dark:text-slate-400"
             >
-              « Former les ingénieurs qui construiront l’avenir de la République
+              « Former les ingénieurs qui construiront l'avenir de la République
               Démocratique du Congo. »
             </blockquote>
+
             <p class="leading-relaxed">
               Notre mission est de fournir une formation rigoureuse, alliant
               théorie et pratique, afin de préparer les étudiants à relever les
-              défis complexes de l’ingénierie moderne. Nous encourageons
+              défis complexes de l'ingénierie moderne. Nous encourageons
               également la recherche appliquée et la collaboration avec les
               industries locales et internationales.
             </p>
+
             <p class="leading-relaxed">
               En rejoignant la Faculté Polytechnique, vous intégrez une
-              communauté dynamique, tournée vers l’avenir et soucieuse de
+              communauté dynamique, tournée vers l'avenir et soucieuse de
               contribuer activement au progrès de la RDC.
             </p>
           </div>
@@ -71,7 +113,7 @@ definePageMeta({
                 src="/images/home.jpg"
                 width="800"
                 height="530"
-                alt="Faculté Polytechnique de l’Université de Kinshasa"
+                alt="Faculté Polytechnique de l'Université de Kinshasa"
                 class="object-cover w-full h-auto"
               />
             </div>
@@ -116,7 +158,94 @@ definePageMeta({
             </div>
           </div>
         </div>
-        <!-- Fin image -->
+      </div>
+    </div>
+
+    <!-- Section Laboratoires -->
+    <div class="mt-24">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold text-foreground mb-4">
+          Nos Laboratoires d'Excellence
+        </h2>
+        <p class="text-lg text-muted-foreground max-w-3xl mx-auto">
+          La Faculté Polytechnique dispose d'infrastructures modernes et
+          d'équipements de pointe pour offrir une formation pratique de qualité
+          à nos étudiants.
+        </p>
+      </div>
+
+      <!-- Carousel des images de laboratoires -->
+      <div class="mb-16">
+        <Carousel class="w-full max-w-5xl mx-auto">
+          <CarouselContent>
+            <CarouselItem
+              v-for="(image, index) in laboratoryImages"
+              :key="index"
+              class="md:basis-1/2 lg:basis-1/3"
+            >
+              <div class="p-1">
+                <Card class="border-0 shadow-lg">
+                  <CardContent class="p-0">
+                    <div class="relative overflow-hidden rounded-lg">
+                      <NuxtImg
+                        :src="image.src"
+                        :alt="image.alt"
+                        width="400"
+                        height="400"
+                        class="object-cover w-full h-64 transition-transform duration-300 hover:scale-105"
+                        format="raw"
+                      />
+                      <div
+                        class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"
+                      >
+                        <div
+                          class="absolute bottom-4 left-4 right-4 text-white"
+                        >
+                          <h3 class="font-semibold text-lg mb-1">
+                            {{ image.title }}
+                          </h3>
+                          <p class="text-sm opacity-90">
+                            {{ image.description }}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </CarouselItem>
+          </CarouselContent>
+          <CarouselPrevious class="left-4" />
+          <CarouselNext class="right-4" />
+        </Carousel>
+      </div>
+
+      <!-- Section statistiques -->
+      <div class="mt-16 bg-muted/30 rounded-2xl p-8">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+          <div>
+            <div class="text-3xl font-bold text-primary mb-2">4</div>
+            <div class="text-sm text-muted-foreground">
+              Laboratoires Principaux
+            </div>
+          </div>
+          <div>
+            <div class="text-3xl font-bold text-primary mb-2">150+</div>
+            <div class="text-sm text-muted-foreground">
+              Équipements Modernes
+            </div>
+          </div>
+          <div>
+            <div class="text-3xl font-bold text-primary mb-2">100+</div>
+            <div class="text-sm text-muted-foreground">Étudiants Formés/An</div>
+          </div>
+          <div>
+            <div class="text-3xl font-bold text-primary mb-2">25+</div>
+            <div class="text-sm text-muted-foreground">
+              Projets de Recherche
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
