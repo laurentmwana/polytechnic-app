@@ -9,7 +9,7 @@ import { courseFollow, getCollectionCourses } from "@/services/other";
 import type { CourseModel } from "@/types/model";
 import type { PaginatedResponse } from "@/types/paginate";
 import type { StateActionModel } from "@/types/util";
-import { CheckCheck, Eye, Plus } from "lucide-vue-next";
+import { CheckCheck, Eye, Plus, Search } from "lucide-vue-next";
 import { toast } from "vue-sonner";
 
 useHead({
@@ -24,23 +24,40 @@ const auth = useAuth();
 
 type CoursePaginateProps = PaginatedResponse<CourseModel[]>;
 
+const filters = ref([
+  {
+    title: "Semestre",
+    label: "Par semestre",
+    options: {
+      s1: "Semestre 1",
+      s2: "Semestre 2",
+    },
+  },
+]);
+
+const route = useRoute();
+const router = useRouter();
+
+const selectedSemester = ref<string | null>(
+  (route.query.semester as string) || null
+);
+const search = ref<string>((route.query.search as string) || "");
 const isPending = ref(true);
 const courses = ref<CoursePaginateProps>();
 const showModalFollowId = ref<number | null>(null);
-const router = useRouter();
-const route = useRoute();
-
 const numberPage = ref(
   route.query.page ? parseInt(route.query.page as string, 10) : 1
 );
 
 const fetchCourses = async () => {
   try {
-    if (!isPending.value) {
-      isPending.value = true;
-    }
+    if (!isPending.value) isPending.value = true;
 
-    const response = await getCollectionCourses(numberPage.value);
+    const response = await getCollectionCourses(
+      numberPage.value,
+      selectedSemester.value,
+      search.value
+    );
     const data = await response.json();
 
     if (response.ok) {
@@ -60,17 +77,46 @@ const fetchCourses = async () => {
   }
 };
 
+const updateQuery = async () => {
+  await router.push({
+    path: "/course",
+    query: {
+      page: numberPage.value,
+      semester: selectedSemester.value ?? undefined,
+      search: search.value || undefined,
+    },
+  });
+  await fetchCourses();
+};
+
+const resetFilters = async () => {
+  search.value = "";
+  selectedSemester.value = null;
+  numberPage.value = 1;
+
+  await router.push({ path: "/course" });
+  await fetchCourses();
+};
+
 const onPage = async (page: number) => {
   numberPage.value = page;
-  await router.push(`/course?page=${page}`);
-  await fetchCourses();
+  await updateQuery();
+};
+
+const onFilterChange = async (value: string) => {
+  selectedSemester.value = value;
+  numberPage.value = 1;
+  await updateQuery();
+};
+
+const onSearchChange = async () => {
+  numberPage.value = 1;
+  await updateQuery();
 };
 
 const onFollowCourse = async (courseId: number) => {
   try {
-    if (!isPending.value) {
-      isPending.value = true;
-    }
+    if (!isPending.value) isPending.value = true;
 
     const token = auth.session.value?.accessToken;
     if (!token) throw new Error("Utilisateur non authentifié");
@@ -87,8 +133,7 @@ const onFollowCourse = async (courseId: number) => {
           : `Vous ne suivez plus le cours #${courseId}.`,
       });
 
-      router.replace("/course?page=1");
-      await fetchCourses();
+      await updateQuery();
     } else if (response.status === 401) {
       toast.warning("Session expirée", {
         description: "Merci de vous reconnecter.",
@@ -138,6 +183,29 @@ onMounted(fetchCourses);
     <div class="section-page-header">
       <h2 class="section-page-title">Les cours</h2>
     </div>
+    <!-- Résumé des filtres actifs -->
+    <div
+      v-if="selectedSemester || search"
+      class="flex items-center justify-between p-3 bg-muted border text-sm rounded mb-4"
+    >
+      <div>
+        Résultats
+        <span v-if="search"
+          >pour la recherche "<strong>{{ excerpt(search, 20) }}</strong
+          >"</span
+        >
+        <span v-if="selectedSemester">
+          {{ excerpt(search, 20) ? "et" : "filtrés" }} par "<strong>{{
+            filters[0].options[selectedSemester]
+          }}</strong
+          >"
+        </span>
+      </div>
+      <Button variant="outline" size="sm" @click="resetFilters"
+        >Tout afficher</Button
+      >
+    </div>
+
     <p>Aucun cours trouvé.</p>
   </div>
 
@@ -146,6 +214,69 @@ onMounted(fetchCourses);
       <h2 class="section-page-title">Les cours</h2>
     </div>
 
+    <!-- Filtres -->
+    <div class="flex gap-3 justify-between flex-wrap mb-4">
+      <div class="w-full md:w-56">
+        <div class="flex gap-2">
+          <Input
+            placeholder="Recherche..."
+            v-model="search"
+            @keyup.enter="onSearchChange"
+          />
+          <Button  variant="outline" @click="onSearchChange">
+            <Search :size="15" />
+          </Button>
+        </div>
+      </div>
+      <Select
+        @update:modelValue="onFilterChange"
+        :modelValue="selectedSemester"
+      >
+        <SelectTrigger class="w-full md:w-56">
+          <SelectValue
+            :placeholder="filters[0].label"
+            :value="selectedSemester"
+          />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup v-for="filter in filters" :key="filter.title">
+            <SelectLabel>{{ filter.label }}</SelectLabel>
+            <SelectItem
+              v-for="(value, key) in filter.options"
+              :key="key"
+              :value="key"
+            >
+              {{ value }}
+            </SelectItem>
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+    </div>
+
+    <!-- Résumé des filtres actifs -->
+    <div
+      v-if="selectedSemester || search"
+      class="flex items-center justify-between px-2 py-3 bg-muted border text-sm rounded mb-4"
+    >
+      <div>
+        Résultats
+        <span v-if="search"
+          >pour la recherche "<strong>{{ search }}</strong
+          >"</span
+        >
+        <span v-if="selectedSemester">
+          {{ search ? "et" : "filtrés" }} par "<strong>{{
+            filters[0].options[selectedSemester]
+          }}</strong
+          >"
+        </span>
+      </div>
+      <Button variant="outline" size="sm" @click="resetFilters"
+        >Tout afficher</Button
+      >
+    </div>
+
+    <!-- Table -->
     <Table>
       <TableHeader>
         <TableRow>

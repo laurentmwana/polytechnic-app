@@ -8,7 +8,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Input, PasswordInput } from "@/components/ui/input";
 import { toTypedSchema } from "@vee-validate/zod";
 import { useForm } from "vee-validate";
 import { ref } from "vue";
@@ -22,18 +22,11 @@ const props = defineProps<{
 
 const isPending = ref(false);
 
-// Schéma de validation
+// Schéma de validation pour CONNEXION
 const formSchema = toTypedSchema(
   z.object({
-    email: z
-      .string()
-      .email("Veuillez entrer une adresse e-mail valide.")
-      .min(2, "L'adresse e-mail est trop courte.")
-      .max(50, "L'adresse e-mail est trop longue."),
-    password: z
-      .string()
-      .min(2, "Le mot de passe est trop court.")
-      .max(50, "Le mot de passe est trop long."),
+    email: z.string().email("Veuillez entrer une adresse e-mail valide.").min(1, "L'adresse e-mail est requise."),
+    password: z.string().min(1, "Le mot de passe est requis."),
   })
 );
 
@@ -74,6 +67,7 @@ const handleSubmit = form.handleSubmit(async (values) => {
             v-bind="componentField"
             :disabled="isPending"
             placeholder="exemple@domaine.com"
+            autocomplete="email"
           />
         </FormControl>
         <FormMessage />
@@ -84,9 +78,11 @@ const handleSubmit = form.handleSubmit(async (values) => {
       <FormItem>
         <FormLabel>Mot de passe</FormLabel>
         <FormControl>
-          <Input
-            type="password"
-            v-bind="componentField"
+          <PasswordInput 
+            id="login-password"
+            placeholder="Entrez votre mot de passe"
+            autocomplete="current-password"
+            v-bind="componentField" 
             :disabled="isPending"
           />
         </FormControl>
@@ -98,9 +94,7 @@ const handleSubmit = form.handleSubmit(async (values) => {
       <template v-if="isPending">
         <Loader type="spinner" text="Connexion en cours..." color="secondary" />
       </template>
-      <template v-else>
-        Connexion
-      </template>
+      <template v-else> Se connecter </template>
     </Button>
   </form>
 </template>

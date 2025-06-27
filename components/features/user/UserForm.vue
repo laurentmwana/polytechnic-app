@@ -12,7 +12,6 @@ const props = defineProps<{
   user?: UserModel;
 }>();
 
-
 const students = ref<StudentModel[] | null>(null);
 const studentsPending = ref(true);
 
@@ -21,7 +20,9 @@ import { onMounted } from "vue";
 onMounted(async () => {
   studentsPending.value = true;
   try {
-    const { data, error } = await useFetch<StudentModel[]>(getRouteApi("&student"));
+    const { data, error } = await useFetch<StudentModel[]>(
+      getRouteApi("&student")
+    );
     if (data) {
       students.value = data.value ?? [];
     }
@@ -121,21 +122,35 @@ const handleSubmit = form.handleSubmit(async (values) => {
       </FormItem>
     </FormField>
 
-    <FormField name="password" v-slot="{ componentField }">
+    <FormField v-slot="{ componentField }" name="password">
       <FormItem>
-        <FormLabel>Mot de passe</FormLabel>
+        <FormLabel> Nouveau mot de passe </FormLabel>
         <FormControl>
-          <Input type="password" v-bind="componentField" autocomplete="new-password" />
+          <PasswordInput
+            id="new-password"
+            :show-strength-indicator="true"
+            :show-criteria="true"
+            autocomplete="new-password"
+            v-bind="componentField"
+            :disabled="isPending"
+          />
         </FormControl>
         <FormMessage />
       </FormItem>
     </FormField>
 
-    <FormField name="password_confirmation" v-slot="{ componentField }">
+    <FormField v-slot="{ componentField }" name="password_confirmation">
       <FormItem>
-        <FormLabel>Confirmation de mot de passe</FormLabel>
+        <FormLabel>Confirmation du nouveau mot de passe</FormLabel>
         <FormControl>
-          <Input type="password" v-bind="componentField" autocomplete="new-password" />
+          <PasswordInput
+            id="password-confirmation"
+            :show-strength-indicator="true"
+            :show-criteria="true"
+            autocomplete="password-confirmation"
+            v-bind="componentField"
+            :disabled="isPending"
+          />
         </FormControl>
         <FormMessage />
       </FormItem>

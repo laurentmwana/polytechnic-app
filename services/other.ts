@@ -107,8 +107,26 @@ export const getShowYear = async (id: number) => {
 
 // COURSE
 
-export const getCollectionCourses = async (page: number) => {
-  return await fetch(getRouteApi("*course.index", { page }), {
+export const getCollectionCourses = async (
+  page: number,
+  bySemester?: string | null,
+  search?: string | null
+) => {
+  const params: Record<string, string | number> = { page };
+
+  const semesters = ["s1", "s2"];
+
+  if (bySemester && semesters.includes(bySemester)) {
+    params.semester = bySemester;
+  }
+
+  if (search && search.length > 0) {
+    params.search = search;
+  }
+
+  const route = getRouteApi("*course.index", params);
+
+  return await fetch(route, {
     headers: {
       Accept: "application/json",
     },
@@ -246,8 +264,11 @@ export const getShowNotification = async (token: string, id: string) => {
   });
 };
 
-export const getCollectionNotifications = async (token: string, page: number) => {
-  return await fetch(getRouteApi("*notification.index", {page}), {
+export const getCollectionNotifications = async (
+  token: string,
+  page: number
+) => {
+  return await fetch(getRouteApi("*notification.index", { page }), {
     headers: {
       Accept: "application/json",
       Authorization: `Bearer ${token}`,
@@ -265,7 +286,6 @@ export const deleteNotification = async (token: string, id: string) => {
   });
 };
 
-
 export const markAsReadNotification = async (token: string) => {
   return await fetch(getRouteApi("*notification.mark-as-read"), {
     method: "PUT",
@@ -275,7 +295,6 @@ export const markAsReadNotification = async (token: string) => {
     },
   });
 };
-
 
 // EVENT
 export const getCollectionEvents = async (page: number) => {

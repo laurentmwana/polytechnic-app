@@ -8,43 +8,22 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Input, PasswordInput } from "@/components/ui/input";
 import { toTypedSchema } from "@vee-validate/zod";
 import { useForm } from "vee-validate";
 import { ref } from "vue";
 import { toast } from "vue-sonner";
 import z from "zod";
+import { ResetPasswordSchema, type ResetPasswordSchemaInfer } from "~/definitions/auth";
 
 const props = defineProps<{
-  onSubmit: (values: {
-    email: string;
-    password: string;
-    password_confirmation: string;
-  }) => Promise<boolean>;
+  onSubmit: (values: ResetPasswordSchemaInfer) => Promise<boolean>;
   email: string;
 }>();
 
 const isPending = ref(false);
 
-const formSchema = toTypedSchema(
-  z
-    .object({
-      email: z
-        .string()
-        .email("Adresse e-mail invalide.")
-        .min(1, "L’email est requis."),
-      password: z
-        .string()
-        .min(8, "Le mot de passe doit contenir au moins 6 caractères."),
-      password_confirmation: z
-        .string()
-        .min(8, "La confirmation du mot de passe est requise."),
-    })
-    .refine((data) => data.password === data.password_confirmation, {
-      message: "Les mots de passe ne correspondent pas.",
-      path: ["password_confirmation"],
-    })
-);
+const formSchema = toTypedSchema(ResetPasswordSchema);
 
 const form = useForm({
   validationSchema: formSchema,
@@ -86,7 +65,14 @@ const handleSubmit = form.handleSubmit(async (values) => {
       <FormItem>
         <FormLabel> Nouveau mot de passe </FormLabel>
         <FormControl>
-          <Input type="password" v-bind="componentField" />
+          <PasswordInput
+            id="new-password"
+            :show-strength-indicator="true"
+            :show-criteria="true"
+            autocomplete="new-password"
+            v-bind="componentField"
+            :disabled="isPending"
+          />
         </FormControl>
         <FormMessage />
       </FormItem>
@@ -96,7 +82,14 @@ const handleSubmit = form.handleSubmit(async (values) => {
       <FormItem>
         <FormLabel>Confirmation du nouveau mot de passe</FormLabel>
         <FormControl>
-          <Input type="password_confirmation" v-bind="componentField" />
+          <PasswordInput
+            id="password-confirmation"
+            :show-strength-indicator="true"
+            :show-criteria="true"
+            autocomplete="password-confirmation"
+            v-bind="componentField"
+            :disabled="isPending"
+          />
         </FormControl>
         <FormMessage />
       </FormItem>
