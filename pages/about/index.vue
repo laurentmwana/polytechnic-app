@@ -184,7 +184,7 @@ const laboratoryImages = [
               class="md:basis-1/2 lg:basis-1/3"
             >
               <div class="p-1">
-                <Card class="border-0 shadow-lg">
+                <Card class="border-0 shadow-none">
                   <CardContent class="p-0">
                     <div class="relative overflow-hidden rounded-lg">
                       <NuxtImg
