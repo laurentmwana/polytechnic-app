@@ -9,7 +9,7 @@ definePageMeta({
   layouts: ["default"],
 });
 
-// Images du carousel des laboratoires
+// Images des laboratoires
 const laboratoryImages = [
   {
     src: "/images/labo/1.png",
@@ -30,7 +30,7 @@ const laboratoryImages = [
     alt: "Laboratoire de Génie Électrique - Image 3",
     title: "Laboratoire de Génie Électrique",
     description:
-      "Tables d’expérimentation pour l’analyse des réseaux électriques et l’électronique de puissance.",
+      "Tables d'expérimentation pour l'analyse des réseaux électriques et l'électronique de puissance.",
   },
   {
     src: "/images/labo/4.png",
@@ -40,7 +40,6 @@ const laboratoryImages = [
       "Environnement pédagogique dédié à la formation pratique des futurs ingénieurs électriciens.",
   },
 ];
-
 </script>
 
 <template>
@@ -48,6 +47,7 @@ const laboratoryImages = [
     <div class="section-page-header">
       <h2 class="section-page-title">A propos</h2>
     </div>
+
     <div class="relative mt-12">
       <!-- Effets visuels de fond -->
       <div
@@ -163,80 +163,63 @@ const laboratoryImages = [
 
     <!-- Section Laboratoires -->
     <div class="mt-24">
-      <div class="text-center mb-16">
-        <h2 class="text-3xl md:text-4xl font-bold text-foreground mb-4">
-          Nos Laboratoires d'Excellence
+      <div class="section-page-header">
+        <h2 class="section-page-title">
+          Nos Laboratoires
         </h2>
-        <p class="text-lg text-muted-foreground max-w-3xl mx-auto">
-          La Faculté Polytechnique dispose d'infrastructures modernes et
-          d'équipements de pointe pour offrir une formation pratique de qualité
-          à nos étudiants.
-        </p>
       </div>
 
-      <!-- Carousel des images de laboratoires -->
+      <!-- Grille des images de laboratoires (2 par ligne) -->
       <div class="mb-16">
-        <Carousel class="w-full max-w-5xl mx-auto">
-          <CarouselContent>
-            <CarouselItem
-              v-for="(image, index) in laboratoryImages"
-              :key="index"
-              class="md:basis-1/2 lg:basis-1/3"
-            >
-              <div class="p-1">
-                <Card class="border-0 shadow-none">
-                  <CardContent class="p-0">
-                    <div class="relative overflow-hidden rounded-lg">
-                      <NuxtImg
-                        :src="image.src"
-                        :alt="image.alt"
-                        width="400"
-                        height="400"
-                        class="object-cover w-full h-64 transition-transform duration-300 hover:scale-105"
-                        format="raw"
-                      />
-                      <div
-                        class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"
-                      >
-                        <div
-                          class="absolute bottom-4 left-4 right-4 text-white"
-                        >
-                          <h3 class="font-semibold text-lg mb-1">
-                            {{ image.title }}
-                          </h3>
-                          <p class="text-sm opacity-90">
-                            {{ image.description }}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div
+            v-for="(image, index) in laboratoryImages"
+            :key="index"
+            class="group"
+          >
+            <div class="relative overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-all duration-300">
+              <NuxtImg
+                :src="image.src"
+                :alt="image.alt"
+                width="500"
+                height="400"
+                class="object-cover w-full h-64 transition-transform duration-300 group-hover:scale-105"
+                format="raw"
+              />
+              <div
+                class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-300"
+              >
+                <div class="absolute bottom-4 left-4 right-4 text-white">
+                  <h3 class="font-semibold text-lg mb-2">
+                    {{ image.title }}
+                  </h3>
+                  <p class="text-sm opacity-90 leading-relaxed">
+                    {{ image.description }}
+                  </p>
+                </div>
               </div>
-            </CarouselItem>
-          </CarouselContent>
-          <CarouselPrevious class="left-4" />
-          <CarouselNext class="right-4" />
-        </Carousel>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Section statistiques -->
       <div class="mt-16 bg-muted/30 rounded-2xl p-8">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
           <div>
-            <div class="text-3xl font-bold text-primary mb-2">4</div>
+            <div class="text-3xl font-bold text-primary mb-2">+2</div>
             <div class="text-sm text-muted-foreground">
               Laboratoires Principaux
             </div>
           </div>
           <div>
-            <div class="text-3xl font-bold text-primary mb-2">150+</div>
+            <div class="text-3xl font-bold text-primary mb-2">10+</div>
             <div class="text-sm text-muted-foreground">
               Équipements Modernes
             </div>
           </div>
           <div>
-            <div class="text-3xl font-bold text-primary mb-2">100+</div>
+            <div class="text-3xl font-bold text-primary mb-2">30+</div>
             <div class="text-sm text-muted-foreground">Étudiants Formés/An</div>
           </div>
           <div>

@@ -29,6 +29,11 @@ const ROUTES_API = {
   "*event.index": "/events",
   "*event.show": "/event/:id",
 
+  "*actuality.index": "/actualities",
+  "*actuality.show": "/actuality/:id",
+  "*actuality.comment": "/actuality/:id/comment",
+  "*actuality.like": "/actuality/:id/like",
+
   "*course.index": "/courses",
   "*course.show": "/course/:id",
 

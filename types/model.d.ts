@@ -196,3 +196,22 @@ export interface NotificationModel {
   created_at: string;
   updated_at: string;
 }
+
+export interface CommentModel {
+  id: number;
+  message: string;
+  username: string;
+  user: UserModel | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ActualityModel {
+  id: number;
+  title: string;
+  description: string;
+  comments: CommentModel[];
+  is_user_like: boolean | null
+  created_at: string;
+  updated_at: string;
+}

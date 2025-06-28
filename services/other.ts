@@ -1,3 +1,4 @@
+import type { SchemaCommentFormInfer } from "~/definitions/actuality";
 import type { SchemaContactFormInfer } from "../definitions/other";
 import { getRouteApi } from "../lib/route";
 
@@ -321,6 +322,58 @@ export const getShowEvent = async (eventId: number) => {
   return await fetch(getRouteApi("*event.show", { id: eventId }), {
     headers: {
       Accept: "application/json",
+    },
+  });
+};
+
+
+
+// ACTUALITY
+export const getCollectionActualities = async (
+  page: number,
+  order?: string | null,
+  search?: string | null
+) => {
+  const params: Record<string, string | number> = { page };
+
+  const orders = ["asc", "desc"];
+
+  if (order && orders.includes(order)) {
+    params.order = order;
+  }
+
+  if (search && search.length > 0) {
+    params.search = search;
+  }
+
+  return await fetch(getRouteApi("*actuality.index", params), {
+    headers: {
+      Accept: "application/json",
+    },
+  });
+};
+
+export const getShowActuality = async (id: number) => {
+  return await fetch(getRouteApi("*actuality.show", { id}), {
+    headers: {
+      Accept: "application/json",
+    },
+  });
+};
+
+
+export const commentActuality = async (
+  token: string | null | undefined,
+  id: number,
+  values: SchemaCommentFormInfer
+) => {
+  return await fetch(getRouteApi("*actuality.comment", { id }), {
+    method: "POST",
+    body: JSON.stringify(values),
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
     },
   });
 };
