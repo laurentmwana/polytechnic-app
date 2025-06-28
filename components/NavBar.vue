@@ -42,6 +42,7 @@ const navItems = computed<NavItem[]>(() => [
   },
   { label: "Délibération", href: "/deliberation" },
   { label: "Evènements", href: "/event" },
+  { label: "Actualité", href: "/actuality" },
 ]);
 
 const isActive = (href?: string): boolean => {
