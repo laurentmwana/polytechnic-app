@@ -104,7 +104,7 @@ const onSubmit = async (file: File) => {
             <p class="text-sm text-muted-foreground mb-4">
               Vous pouvez
               <a
-                href="/exemples/exemple_etudiants.xlsx"
+                href="/exemples/etudiant-exemple.xlsx"
                 target="_blank"
                 class="text-primary underline"
                 >télécharger un exemplaire du fichier Excel</a
