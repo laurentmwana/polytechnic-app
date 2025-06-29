@@ -28,17 +28,18 @@ import { useAuth } from "@/composables/useAuth";
 import { ago } from "@/lib/date-time";
 import { excerpt } from "@/lib/utils";
 import {
-  deleteDeliberation,
-  getCollectionDeliberations,
-} from "@/services/deliberation";
-import type { DeliberationModel } from "@/types/model";
+  deleteActuality,
+  getCollectionActualities,
+} from "@/services/actuality";
+import type { ActualityModel } from "@/types/model";
 import type { PaginatedResponse } from "@/types/paginate";
 import type { StateActionModel } from "@/types/util";
 import { Edit, Eye, MoreHorizontal, Trash2 } from "lucide-vue-next";
 import { toast } from "vue-sonner";
+import { useRouter, useRoute } from "vue-router"; // Ajouté
 
 useHead({
-  title: "Gestion des délibérations - Polytechnic Application",
+  title: "Gestion des actualités - Polytechnic Application",
 });
 
 definePageMeta({
@@ -46,29 +47,29 @@ definePageMeta({
   middleware: ["admin", "verified"],
 });
 
-type ModelCollectionProps = PaginatedResponse<DeliberationModel[]>;
+type ModelCollectionProps = PaginatedResponse<ActualityModel[]>;
 
 const auth = useAuth();
 const router = useRouter();
 const route = useRoute();
 
 const numberPage = ref<number>(parseInt(route.query.page as string) || 1);
-const deliberations = ref<ModelCollectionProps | null>(null);
+const actualities = ref<ModelCollectionProps | null>(null);
 const isLoading = ref<boolean>(true);
-const showModalDeleteDelibeId = ref<number | null>(null);
+const showModalDeleteActualityId = ref<number | null>(null);
 
-const fetchDeliberations = async () => {
+const fetchActualities = async () => {
   try {
     isLoading.value = true;
 
     const token = auth.session.value?.accessToken;
     if (!token) throw new Error("Utilisateur non authentifié");
 
-    const response = await getCollectionDeliberations(token, numberPage.value);
+    const response = await getCollectionActualities(token, numberPage.value);
     const data = await response.json();
 
     if (response.ok) {
-      deliberations.value = data as ModelCollectionProps;
+      actualities.value = data as ModelCollectionProps;
     } else if (response.status === 401) {
       toast.warning("Session expirée", {
         description: "Veuillez vous reconnecter.",
@@ -81,7 +82,7 @@ const fetchDeliberations = async () => {
     }
   } catch {
     toast.error("Erreur", {
-      description: "Impossible de charger les délibérations.",
+      description: "Impossible de charger les actualités.",
     });
   } finally {
     isLoading.value = false;
@@ -90,36 +91,36 @@ const fetchDeliberations = async () => {
 
 const onPage = async (page: number) => {
   numberPage.value = page;
-  await router.push(`/admin/deliberation?page=${page}`);
-  await fetchDeliberations();
+  await router.push(`/admin/actuality?page=${page}`);
+  await fetchActualities();
 };
 
-const onDeleteDelibe = async (delibId: number) => {
+const onDeleteActuality = async (actualityId: number) => {
   try {
     isLoading.value = true;
 
     const token = auth.session.value?.accessToken;
     if (!token) throw new Error("Utilisateur non authentifié");
 
-    const response = await deleteDeliberation(token, delibId);
+    const response = await deleteActuality(token, actualityId);
     const data = await response.json();
 
     if (response.ok && (data as StateActionModel)) {
       toast("Suppression", {
-        description: `La délibération #${delibId} a été supprimée.`,
+        description: `L'actualité #${actualityId} a été supprimée.`,
       });
       await onPage(1);
     } else {
       toast.error("Échec de la suppression", {
-        description: `La délibération #${delibId} n'a pas pu être supprimée.`,
+        description: `L'actualité #${actualityId} n'a pas pu être supprimée.`,
       });
     }
   } catch {
     toast.error("Erreur", {
-      description: `Erreur lors de la suppression de la délibération #${delibId}.`,
+      description: `Erreur lors de la suppression de l'actualité #${actualityId}.`,
     });
   } finally {
-    showModalDeleteDelibeId.value = null;
+    showModalDeleteActualityId.value = null;
     isLoading.value = false;
   }
 };
@@ -130,26 +131,25 @@ watch(
     const pageNumber = parseInt(newPage as string) || 1;
     if (pageNumber !== numberPage.value) {
       numberPage.value = pageNumber;
-      fetchDeliberations();
+      fetchActualities();
     }
   }
 );
 
-onMounted(fetchDeliberations);
+onMounted(fetchActualities);
 </script>
-
 <template>
   <Card>
     <CardHeader>
       <div class="flex items-center gap-4 justify-between">
         <div>
-          <CardTitle>Gestion des délibérations</CardTitle>
+          <CardTitle>Gestion des actualités</CardTitle>
           <CardDescription>
-            Gérez les délibérations de la faculté de polytechnique
+            Gérez les actualités de la faculté de polytechnique
           </CardDescription>
         </div>
         <Button asChild variant="outline" size="sm">
-          <NuxtLink to="/admin/deliberation/create" class="flex items-center gap-2">
+          <NuxtLink to="/admin/actuality/create" class="flex items-center gap-2">
             Créer
           </NuxtLink>
         </Button>
@@ -159,40 +159,38 @@ onMounted(fetchDeliberations);
       <!-- Loader -->
       <LoaderContainer v-if="isLoading" />
 
-      <!-- Aucune délibération -->
-      <div v-else-if="!deliberations?.data?.length" class="text-center py-8">
-        <p class="text-muted-foreground">Aucune délibération trouvée</p>
+      <!-- Aucune actualité -->
+      <div v-else-if="!actualities?.data?.length" class="text-center py-8">
+        <p class="text-muted-foreground">Aucune actualité trouvée</p>
       </div>
 
-      <!-- Table des délibérations -->
+      <!-- Table des actualités -->
       <div v-else class="space-y-4">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Promotion</TableHead>
-              <TableHead>Année</TableHead>
-              <TableHead>Semestre</TableHead>
-              <TableHead>Début</TableHead>
+              <TableHead>Titre</TableHead>
+              <TableHead>Commentaires</TableHead>
               <TableHead>Création</TableHead>
               <TableHead class="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            <TableRow v-for="delibe in deliberations.data" :key="delibe.id">
+            <TableRow v-for="actuality in actualities.data" :key="actuality.id">
               <TableCell class="font-medium">
-                {{
-                  excerpt(`${delibe.level.name} ${delibe.level.department?.alias ?? ""}`, 30)
-                }}
+                {{ excerpt(actuality.title, 30) }}
               </TableCell>
 
-              <TableCell class="font-medium">{{ delibe.year.name }}</TableCell>
-
-              <TableCell class="font-medium">{{ delibe.semester }}</TableCell>
-
-              <TableCell>{{ delibe.start_at }}</TableCell>
+              <TableCell class="font-medium">
+                <Badge variant="outline">
+                  {{ actuality.comments.length }}
+                </Badge>
+              </TableCell>
 
               <TableCell>
-                <p class="text-sm text-muted-foreground">{{ ago(delibe.created_at) }}</p>
+                <p class="text-sm text-muted-foreground">
+                  {{ ago(actuality.created_at) }}
+                </p>
               </TableCell>
 
               <TableCell class="text-right">
@@ -207,7 +205,7 @@ onMounted(fetchDeliberations);
                   <DropdownMenuContent align="end">
                     <DropdownMenuItem>
                       <NuxtLink
-                        :to="`/admin/deliberation/${delibe.id}`"
+                        :to="`/admin/actuality/${actuality.id}`"
                         class="flex items-center gap-2"
                       >
                         <Eye class="mr-2 h-4 w-4" />
@@ -217,7 +215,7 @@ onMounted(fetchDeliberations);
 
                     <DropdownMenuItem>
                       <NuxtLink
-                        :to="`/admin/deliberation/${delibe.id}/edit`"
+                        :to="`/admin/actuality/${actuality.id}/edit`"
                         class="flex items-center gap-2"
                       >
                         <Edit class="mr-2 h-4 w-4" />
@@ -227,7 +225,7 @@ onMounted(fetchDeliberations);
 
                     <DropdownMenuItem
                       class="text-destructive"
-                      @click="showModalDeleteDelibeId = delibe.id"
+                      @click="showModalDeleteActualityId = actuality.id"
                     >
                       <Trash2 class="mr-2 h-4 w-4" />
                       Supprimer
@@ -236,15 +234,15 @@ onMounted(fetchDeliberations);
                 </DropdownMenu>
 
                 <ConfirmationDialog
-                  :open="showModalDeleteDelibeId === delibe.id"
+                  :open="showModalDeleteActualityId === actuality.id"
                   variant="destructive"
                   title="Suppression"
                   description="Cette action est irréversible. L'élément sera définitivement supprimé de nos serveurs."
                   confirm-text="Supprimer"
                   cancel-text="Annuler"
                   :loading="isLoading"
-                  @confirm="async () => await onDeleteDelibe(delibe.id)"
-                  @cancel="showModalDeleteDelibeId = null"
+                  @confirm="async () => await onDeleteActuality(actuality.id)"
+                  @cancel="showModalDeleteActualityId = null"
                 />
               </TableCell>
             </TableRow>
@@ -252,7 +250,7 @@ onMounted(fetchDeliberations);
         </Table>
 
         <!-- Pagination -->
-        <Pagination v-if="deliberations" :onPage="onPage" :meta="deliberations" />
+        <Pagination v-if="actualities" :onPage="onPage" :meta="actualities" />
       </div>
     </CardContent>
   </Card>

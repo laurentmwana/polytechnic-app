@@ -75,6 +75,10 @@ const items = [
         title: "Résultats",
         url: "/admin/result",
       },
+      {
+        title: "Actualité",
+        url: "/admin/actuality",
+      },
     ],
   },
 
