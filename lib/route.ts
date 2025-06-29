@@ -141,6 +141,13 @@ const ROUTES_API = {
   "~jury.update": "/admin/jury/:id",
   "~jury.delete": "/admin/jury/:id",
 
+  // ACTUALITY
+  "~actuality.index": "/admin/actuality",
+  "~actuality.store": "/admin/actuality",
+  "~actuality.show": "/admin/actuality/:id",
+  "~actuality.update": "/admin/actuality/:id",
+  "~actuality.delete": "/admin/actuality/:id",
+
   // YEAR
   "~year.index": "/admin/year-academic",
   "~year.close": "/admin/year-academic/:id/closed",

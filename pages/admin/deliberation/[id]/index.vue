@@ -112,7 +112,7 @@ onMounted(() => {
               <div>
                 <p class="text-sm font-medium">Promotion</p>
                 <p class="text-sm text-muted-foreground">
-                  {{ deliberation.level.name }} {{ deliberation.level.department.name }}
+                  {{ deliberation.level.name }} {{ deliberation.level.department?.name ?? "" }}
                 </p>
               </div>
             </div>
