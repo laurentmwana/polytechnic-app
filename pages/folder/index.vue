@@ -3,7 +3,9 @@ import type { FolderModel } from "@/types/model";
 import { toast } from "vue-sonner";
 import { getInitials } from "@/lib/utils";
 import { getItemFolder } from "@/services/folder";
-import { Phone, User } from "lucide-vue-next";
+import { Phone, User, GraduationCap, Calendar, BookOpen } from "lucide-vue-next";
+import { useAuth } from "@/composables/useAuth";
+import { useRouter } from "vue-router";
 
 useHead({
   title: "Mon dossier - Polytechnic Application",
@@ -33,6 +35,7 @@ const fetchFolder = async () => {
 
     const response = await getItemFolder(auth.session.value.accessToken);
     const data = await response.json();
+
     if (response.ok) {
       folder.value = (data as FolderResponseType).data;
     } else if (response.status === 401) {
@@ -49,7 +52,7 @@ const fetchFolder = async () => {
     }
   } catch (error) {
     toast.error("Erreur", {
-      description: `Impossible de récupèrer votre dossier académique`,
+      description: `Impossible de récupérer votre dossier académique`,
     });
   } finally {
     isPending.value = false;
@@ -68,33 +71,29 @@ const activeTab = ref("history");
     <div class="section-page-header">
       <h2 class="section-page-title">Mon dossier</h2>
     </div>
-
     <LoaderContainer :is-card="true" />
   </div>
 
-  <div class="container my-12" v-if="!folder && !isPending">
+  <div class="container my-12" v-else-if="!folder">
     <div class="section-page-header">
       <h2 class="section-page-title">Mon dossier</h2>
     </div>
     <p>Pas de dossier académique disponible</p>
   </div>
 
-  <div class="container my-12" v-if="folder">
+  <div class="container my-12" v-else>
     <div class="section-page-header">
       <h2 class="section-page-title">Mon dossier</h2>
     </div>
 
     <div class="grid gap-6">
-      <!-- En-tête du profil -->
+      <!-- Profil -->
       <Card>
         <CardHeader class="flex flex-row items-center gap-4">
           <Avatar class="h-16 w-16">
-            <AvatarFallback
-              class="text-lg bg-primary text-primary-foreground"
-              >{{
-                getInitials(`${folder.name} ${folder.firstname}`)
-              }}</AvatarFallback
-            >
+            <AvatarFallback class="text-lg bg-primary text-primary-foreground">
+              {{ getInitials(`${folder.name} ${folder.firstname}`) }}
+            </AvatarFallback>
           </Avatar>
           <div class="grid gap-1">
             <CardTitle class="text-2xl">
@@ -111,7 +110,7 @@ const activeTab = ref("history");
         </CardHeader>
       </Card>
 
-      <!-- Niveau actuel -->
+      <!-- Promotion actuelle -->
       <Card>
         <CardHeader>
           <CardTitle class="flex items-center gap-2">
@@ -124,12 +123,10 @@ const activeTab = ref("history");
             <div class="flex items-center justify-between">
               <div>
                 <p class="font-medium">
-                  {{ folder.actual_level.level.name }} ({{
-                    folder.actual_level.level.alias
-                  }})
+                  {{ folder.actual_level.level.name }} ({{ folder.actual_level.level.alias }})
                 </p>
                 <p class="text-sm text-muted-foreground">
-                  {{ folder.actual_level.level.programme }}
+                  {{ folder.actual_level.level.programme ?? "-" }}
                 </p>
               </div>
               <Badge variant="outline" class="flex items-center gap-1">
@@ -139,30 +136,28 @@ const activeTab = ref("history");
             </div>
             <div>
               <p class="text-sm font-medium">Département:</p>
-              <p class="text-sm">{{ folder.actual_level.level.department.name }}</p>
+              <p class="text-sm">{{ folder.actual_level.level.department?.name ?? "-" }}</p>
               <p class="text-xs text-muted-foreground">
-                Alias: {{ folder.actual_level.level.department.alias }}
+                Alias: {{ folder.actual_level.level.department?.alias ?? "-" }}
               </p>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      <!-- Onglets pour les autres informations -->
+      <!-- Onglets -->
       <Tabs v-model="activeTab" class="w-full">
         <TabsList class="grid grid-cols-2">
           <TabsTrigger value="history">Historique des promotions</TabsTrigger>
           <TabsTrigger value="courses">Cours Suivis</TabsTrigger>
         </TabsList>
 
-        <!-- Historique des niveaux -->
+        <!-- Historique académique -->
         <TabsContent value="history">
           <Card>
             <CardHeader>
               <CardTitle>Historique Académique</CardTitle>
-              <CardDescription
-                >Parcours académique de l'étudiant</CardDescription
-              >
+              <CardDescription>Parcours académique de l'étudiant</CardDescription>
             </CardHeader>
             <CardContent>
               <div class="space-y-6">
@@ -175,22 +170,18 @@ const activeTab = ref("history");
                   <div class="pt-2">
                     <div class="flex items-center justify-between">
                       <div class="flex items-center gap-2">
-                        <Badge variant="outline">{{
-                          history.level.alias
-                        }}</Badge>
-                        <span class="font-medium">{{
-                          history.level.name
-                        }}</span>
+                        <Badge variant="outline">{{ history.level.alias }}</Badge>
+                        <span class="font-medium">{{ history.level.name }}</span>
                       </div>
                       <Badge variant="secondary">{{ history.year.name }}</Badge>
                     </div>
                     <div class="mt-2">
                       <p class="text-sm">
-                        <span class="font-medium">Départment :</span>
-                        {{ history.level.department.name }}
+                        <span class="font-medium">Département :</span>
+                        {{ history.level.department?.name ?? "-" }}
                       </p>
                       <p class="text-xs text-muted-foreground">
-                        Alias: {{ history.level.department.alias }}
+                        Alias: {{ history.level.department?.alias ?? "-" }}
                       </p>
                     </div>
                   </div>
@@ -205,12 +196,10 @@ const activeTab = ref("history");
           <Card>
             <CardHeader>
               <CardTitle>Cours Suivis</CardTitle>
-              <CardDescription
-                >Année académique:
-                {{
-                  folder.course_followeds[0]?.year.name || "N/A"
-                }}</CardDescription
-              >
+              <CardDescription>
+                Année académique:
+                {{ folder.course_followeds[0]?.year.name ?? "N/A" }}
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div class="space-y-6">
@@ -224,9 +213,7 @@ const activeTab = ref("history");
                     <div class="flex items-center justify-between">
                       <div class="flex items-center gap-2">
                         <BookOpen class="h-4 w-4" />
-                        <span class="font-medium">{{
-                          courseFollowed.course.name
-                        }}</span>
+                        <span class="font-medium">{{ courseFollowed.course.name }}</span>
                       </div>
                       <Badge>{{ courseFollowed.course.credits }} crédits</Badge>
                     </div>
@@ -241,9 +228,9 @@ const activeTab = ref("history");
                       </p>
                       <p class="text-xs text-muted-foreground">
                         Département:
-                        {{ courseFollowed.course.teacher.department.name }} ({{
-                          courseFollowed.course.teacher.department.alias
-                        }})
+                        {{
+                          courseFollowed.course.teacher.department?.name ?? "-"
+                        }} ({{ courseFollowed.course.teacher.department?.alias ?? "-" }})
                       </p>
                     </div>
                   </div>
