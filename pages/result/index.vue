@@ -158,16 +158,17 @@ onMounted(fetchResults);
 
     <LoaderContainer v-if="isPending" />
 
-    <div v-else-if="results" class="rounded-lg shadow-sm border">
+    <!-- Résultats trouvés -->
+    <div v-else-if="results && results.data.length > 0" class="rounded-lg shadow-sm border">
       <div class="overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead>Délibération</TableHead>
-              <TableHead>Eligible</TableHead>
+              <TableHead>Éligible</TableHead>
               <TableHead>Frais académique</TableHead>
               <TableHead>Frais labo</TableHead>
-              <TableHead>Enrolement</TableHead>
+              <TableHead>Enrôlement</TableHead>
               <TableHead>Date</TableHead>
               <TableHead class="text-end">Action</TableHead>
             </TableRow>
@@ -192,9 +193,7 @@ onMounted(fetchResults);
                 </Badge>
               </TableCell>
               <TableCell>
-                <Badge
-                  :variant="result.is_paid_academic ? 'default' : 'outline'"
-                >
+                <Badge :variant="result.is_paid_academic ? 'default' : 'outline'">
                   {{ result.is_paid_academic ? "Oui" : "Non" }}
                 </Badge>
               </TableCell>
@@ -203,9 +202,9 @@ onMounted(fetchResults);
                   {{ result.is_paid_labo ? "Oui" : "Non" }}
                 </Badge>
               </TableCell>
-                <TableCell>
-                <Badge :variant="result.is_eligible ? 'default' : 'outline'">
-                  {{ result.is_eligible ? "Oui" : "Non" }}
+              <TableCell>
+                <Badge :variant="result.is_enrolled ? 'default' : 'outline'">
+                  {{ result.is_enrolled ? "Oui" : "Non" }}
                 </Badge>
               </TableCell>
               <TableCell>
@@ -243,5 +242,11 @@ onMounted(fetchResults);
         </Table>
       </div>
     </div>
+
+    <!-- Aucun résultat trouvé -->
+    <div v-else class="mt-8 text-center text-gray-500">
+      <p>Aucun résultat disponible pour le moment.</p>
+    </div>
   </div>
 </template>
+
