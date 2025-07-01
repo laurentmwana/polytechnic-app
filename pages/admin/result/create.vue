@@ -46,17 +46,14 @@ const onSubmit = async (values: SchemaResultFormInfer) => {
     formData.append("file", values.file, values.file.name);
     formData.append("deliberation_id", values.deliberation_id);
 
-    const response = await createResult(
-      auth.session.value.accessToken,
-      formData
-    );
+    const response = await createResult(auth.session.value.accessToken, formData);
     const data = await response.json();
 
     if (response.ok) {
       const state = (data as StateActionModel).state;
       if (state) {
         toast.success("Publication réussie", {
-          description: `Les résultats ont été publiés avec succès.`,
+          description: `Les résultats ont été publiés avec succès. Vous recevrez un e-mail de confirmation.`,
         });
         router.push("/admin/result");
       } else {
@@ -73,8 +70,7 @@ const onSubmit = async (values: SchemaResultFormInfer) => {
       auth.logout();
     } else {
       toast.error("Erreur", {
-        description:
-          (data as { message?: string }).message || "Une erreur est survenue.",
+        description: (data as { message?: string }).message || "Une erreur est survenue.",
       });
     }
   } catch (error) {

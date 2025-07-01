@@ -164,9 +164,10 @@ onMounted(fetchResults);
           <TableHeader>
             <TableRow>
               <TableHead>Délibération</TableHead>
-              <TableHead>Eligible (Académique)</TableHead>
-              <TableHead>Payé Académique</TableHead>
-              <TableHead>Payé Labo</TableHead>
+              <TableHead>Eligible</TableHead>
+              <TableHead>Frais académique</TableHead>
+              <TableHead>Frais labo</TableHead>
+              <TableHead>Enrolement</TableHead>
               <TableHead>Date</TableHead>
               <TableHead class="text-end">Action</TableHead>
             </TableRow>
@@ -200,6 +201,11 @@ onMounted(fetchResults);
               <TableCell>
                 <Badge :variant="result.is_paid_labo ? 'default' : 'outline'">
                   {{ result.is_paid_labo ? "Oui" : "Non" }}
+                </Badge>
+              </TableCell>
+                <TableCell>
+                <Badge :variant="result.is_eligible ? 'default' : 'outline'">
+                  {{ result.is_eligible ? "Oui" : "Non" }}
                 </Badge>
               </TableCell>
               <TableCell>

@@ -164,6 +164,7 @@ export interface ResultModel {
   is_eligible: boolean;
   is_paid_academic: boolean;
   is_paid_labo: boolean;
+  enrollment_status: boolean;
   file: string;
   student: StudentModel;
   deliberation: DeliberationModel;

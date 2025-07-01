@@ -105,7 +105,8 @@ const handleSubmit = form.handleSubmit(async (values) => {
                   :key="level.id"
                   :value="level.id.toString()"
                 >
-                  {{ level.name }} [{{ level.department.alias }}]
+                  {{ level.name }}
+                  {{ level.department ? `[${level.department.alias}]` : "" }}
                 </SelectItem>
               </SelectGroup>
               <SelectGroup v-else-if="!levelPending">
