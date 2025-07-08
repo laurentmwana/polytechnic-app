@@ -24,8 +24,8 @@ const { data: teachers, pending: teachersPending } = await useFetch<
 >(getRouteApi("&teacher"));
 
 const semesters = [
-  { id: "Semestre 1", label: "Semestre 1" },
-  { id: "Semestre 2", label: "Semestre 2" },
+  { id: "semestre 1", label: "Semestre 1" },
+  { id: "semestre 2", label: "Semestre 2" },
 ];
 
 const isPending = ref(false);
@@ -111,7 +111,8 @@ const handleSubmit = form.handleSubmit(async (values) => {
                   :key="level.id"
                   :value="level.id.toString()"
                 >
-                  {{ level.name }} - [{{ level.department.alias }}]
+                  {{ level.name }}
+                  {{ level.department ? `- [${level.department.alias}]` : "" }}
                 </SelectItem>
               </SelectGroup>
               <SelectGroup v-else-if="!levelsPending">

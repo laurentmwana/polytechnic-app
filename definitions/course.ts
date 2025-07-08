@@ -33,9 +33,9 @@ export const SchemaCourseForm = z.object({
 
   level_id: z.string().min(1, "Le niveau est requis."),
 
-  semester: z.enum(["Semestre 1", "Semestre 2"], {
+  semester: z.enum(["semestre 1", "semestre 2"], {
     errorMap: () => ({
-      message: "Le semestre doit être 'Semestre 1' ou 'Semestre 2'.",
+      message: "Le semestre doit être 'semestre 1' ou 'semestre 2'.",
     }),
   }),
 

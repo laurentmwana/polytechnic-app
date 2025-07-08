@@ -30,7 +30,9 @@ type NotificationPaginateProps = PaginatedResponse<NotificationModel[]>;
 
 const auth = useAuth();
 const isPending = ref(true);
-const notifications = ref<NotificationPaginateProps & { total: number; unread: number }>();
+const notifications = ref<
+  NotificationPaginateProps & { total: number; unread: number }
+>();
 const router = useRouter();
 const route = useRoute();
 
@@ -53,7 +55,10 @@ const fetchNotifications = async () => {
     const data = await response.json();
 
     if (response.ok) {
-      notifications.value = data as NotificationPaginateProps & { total: number; unread: number };
+      notifications.value = data as NotificationPaginateProps & {
+        total: number;
+        unread: number;
+      };
     } else {
       toast.error("Erreur", {
         description:
@@ -84,17 +89,21 @@ const onMarkAsRead = async () => {
       throw new Error("Utilisateur non authentifié.");
     }
 
-    const response = await markAsReadNotification(auth.session.value.accessToken);
+    const response = await markAsReadNotification(
+      auth.session.value.accessToken
+    );
     const data = await response.json();
 
     if (response.ok) {
       if ((data as { state: boolean }).state) {
         toast.success("Succès", {
-          description: "Toutes les notifications non lues ont été marquées comme lues.",
+          description:
+            "Toutes les notifications non lues ont été marquées comme lues.",
         });
       } else {
         toast.error("Échec", {
-          description: "Impossible de marquer les notifications comme lues. Veuillez réessayer.",
+          description:
+            "Impossible de marquer les notifications comme lues. Veuillez réessayer.",
         });
       }
     } else {
@@ -120,7 +129,10 @@ const onDelete = async (id: string) => {
       throw new Error("Utilisateur non authentifié.");
     }
 
-    const response = await deleteNotification(auth.session.value.accessToken, id);
+    const response = await deleteNotification(
+      auth.session.value.accessToken,
+      id
+    );
     const data = await response.json();
 
     if (response.ok) {
@@ -130,7 +142,8 @@ const onDelete = async (id: string) => {
         });
       } else {
         toast.error("Échec", {
-          description: "Impossible de supprimer cette notification. Veuillez réessayer.",
+          description:
+            "Impossible de supprimer cette notification. Veuillez réessayer.",
         });
       }
     } else {
@@ -183,7 +196,9 @@ onMounted(fetchNotifications);
                 >
                   <Bell :size="15" />
                   Notifications
-                  <div class="ml-auto inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold bg-primary text-primary-foreground">
+                  <div
+                    class="ml-auto inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold bg-primary text-primary-foreground"
+                  >
                     {{ notifications?.total ?? 0 }}
                   </div>
                 </a>
@@ -193,7 +208,9 @@ onMounted(fetchNotifications);
                 >
                   <div class="h-4 w-4 mr-2" />
                   Non lues
-                  <div class="ml-auto inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold bg-primary text-primary-foreground">
+                  <div
+                    class="ml-auto inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold bg-primary text-primary-foreground"
+                  >
                     {{ notifications?.unread ?? 0 }}
                   </div>
                 </a>
@@ -201,7 +218,11 @@ onMounted(fetchNotifications);
 
               <Separator class="my-4" />
 
-              <Button :onclick="onMarkAsRead" class="w-full" variant="secondary">
+              <Button
+                :onclick="onMarkAsRead"
+                class="w-full"
+                variant="secondary"
+              >
                 {{ isPending ? "Chargement..." : "Toutes marquer comme lues" }}
               </Button>
             </div>
@@ -214,10 +235,17 @@ onMounted(fetchNotifications);
             <div
               v-for="notification in notifications?.data"
               :key="notification.id"
-              :class="[ 'p-4 rounded-lg border flex items-start gap-4', notification.read_at ? '' : 'border-primary/60' ]"
+              :class="[
+                'p-4 rounded-lg border flex items-start gap-4',
+                notification.read_at ? '' : 'border-primary/60',
+              ]"
             >
-              <span class="relative flex shrink-0 overflow-hidden rounded-full h-10 w-10">
-                <span class="flex h-full w-full items-center justify-center rounded-full bg-muted">
+              <span
+                class="relative flex shrink-0 overflow-hidden rounded-full h-10 w-10"
+              >
+                <span
+                  class="flex h-full w-full items-center justify-center rounded-full bg-muted"
+                >
                   {{ getInitials(notification.data.title) }}
                 </span>
               </span>
@@ -228,21 +256,33 @@ onMounted(fetchNotifications);
                 </p>
                 <div class="flex items-center gap-3">
                   <Button variant="secondary" as-child>
-                    <NuxtLink :to="`/notification/${notification.id}`">En savoir plus</NuxtLink>
+                    <NuxtLink :to="`/notification/${notification.id}`"
+                      >En savoir plus</NuxtLink
+                    >
                   </Button>
-                  <Button :onclick="() => onDelete(notification.id)" variant="destructive">
+                  <Button
+                    :onclick="() => onDelete(notification.id)"
+                    variant="destructive"
+                  >
                     Supprimer
                   </Button>
                 </div>
               </div>
             </div>
 
-            <div v-if="notifications?.data?.length === 0" class="text-center text-muted-foreground mt-8">
+            <div
+              v-if="notifications?.data?.length === 0"
+              class="text-center text-muted-foreground mt-8"
+            >
               Vous n'avez aucune notification pour le moment.
             </div>
           </div>
 
-          <Pagination v-if="notifications && notifications.meta" :onPage="onPage" :meta="notifications" />
+          <Pagination
+            v-if="notifications && notifications.meta"
+            :onPage="onPage"
+            :meta="notifications"
+          />
         </div>
       </div>
     </div>
