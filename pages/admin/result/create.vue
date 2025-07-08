@@ -99,6 +99,17 @@ const onSubmit = async (values: SchemaResultFormInfer) => {
         <CardContent>
           <div class="max-w-2xl space-y-4">
             <ValidatorError :validator="validator" />
+            
+            <p class="text-sm text-muted-foreground mb-4">
+              Vous pouvez
+              <a
+                href="/exemples/resultat-exemple.xlsx"
+                target="_blank"
+                class="text-primary underline"
+                >télécharger un exemplaire du fichier Excel</a
+              >
+              pour voir le format attendu.
+            </p>
             <ResultForm :onSubmit="onSubmit" />
           </div>
         </CardContent>

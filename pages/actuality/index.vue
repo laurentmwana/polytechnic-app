@@ -38,13 +38,10 @@ const filters = ref([
 const route = useRoute();
 const router = useRouter();
 
-const selectedOrder = ref<string | null>(
-  (route.query.order as string) || null
-);
+const selectedOrder = ref<string | null>((route.query.order as string) || null);
 const search = ref<string>((route.query.search as string) || "");
 const isPending = ref(true);
 const actualities = ref<ActualityPaginateProps>();
-const showModalFollowId = ref<number | null>(null);
 const numberPage = ref(
   route.query.page ? parseInt(route.query.page as string, 10) : 1
 );
@@ -137,7 +134,10 @@ onMounted(fetchActualities);
     <LoaderContainer :is-card="true" />
   </div>
 
-  <div class="container my-12" v-else-if="!actualities || actualities.data.length === 0">
+  <div
+    class="container my-12"
+    v-else-if="!actualities || actualities.data.length === 0"
+  >
     <div class="section-page-header">
       <h2 class="section-page-title">Actualités</h2>
     </div>
@@ -149,11 +149,14 @@ onMounted(fetchActualities);
       <div>
         Résultats
         <span v-if="search">
-          pour la recherche "<strong>{{ search }}</strong>"
+          pour la recherche "<strong>{{ search }}</strong
+          >"
         </span>
         <span v-if="selectedOrder">
-          {{ search ? "et" : "filtrés" }} par
-          "<strong>{{ filters[0].options[selectedOrder] }}</strong>"
+          {{ search ? "et" : "filtrés" }} par "<strong>{{
+            filters[0].options[selectedOrder]
+          }}</strong
+          >"
         </span>
       </div>
       <Button variant="outline" size="sm" @click="resetFilters">
@@ -211,11 +214,14 @@ onMounted(fetchActualities);
       <div>
         Résultats
         <span v-if="search">
-          pour la recherche "<strong>{{ search }}</strong>"
+          pour la recherche "<strong>{{ search }}</strong
+          >"
         </span>
         <span v-if="selectedOrder">
-          {{ search ? "et" : "filtrés" }} par
-          "<strong>{{ filters[0].options[selectedOrder] }}</strong>"
+          {{ search ? "et" : "filtrés" }} par "<strong>{{
+            filters[0].options[selectedOrder]
+          }}</strong
+          >"
         </span>
       </div>
       <Button variant="outline" size="sm" @click="resetFilters">
@@ -228,7 +234,9 @@ onMounted(fetchActualities);
       <Card v-for="actuality in actualities.data" :key="actuality.id">
         <CardContent>
           <!-- Tu peux mettre ici le résumé de l’actualité -->
-          <p class="text-lg font-semibold mb-2">{{ excerpt(actuality.title, 100) }}</p>
+          <p class="text-lg font-semibold mb-2">
+            {{ excerpt(actuality.title, 100) }}
+          </p>
           <p class="text-muted-foreground text-sm mb-6">
             {{ excerpt(actuality.description, 200) }}
           </p>
@@ -238,18 +246,15 @@ onMounted(fetchActualities);
         </CardContent>
 
         <CardFooter class="flex items-center justify-between gap-5">
-
           <div>
             <Badge variant="outline" size="sm">
               <span>
                 {{ actuality.comments.length }}
               </span>
-              <span>
-                commentaire(s)
-              </span>
+              <span> commentaire(s) </span>
             </Badge>
           </div>
-          
+
           <Button variant="outline" size="sm" as-child>
             <NuxtLink :href="`/actuality/${actuality.id}`">
               <ArrowRight :size="15" />
