@@ -1,27 +1,75 @@
-export const ago = (date: Date | string): string => {
-    const obj = date instanceof Date ? date : new Date(date);
-
+export const ago = (
+    dateParse: string | Date | number,
+    options: {
+        short?: boolean;
+        withSuffix?: boolean;
+        fullText?: boolean;
+    } = {},
+) => {
+    const { short = true, withSuffix = true, fullText = false } = options;
+    const date = new Date(dateParse);
     const now = new Date();
+    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
 
-    const timeDifference = Math.floor((now.getTime() - obj.getTime()) / 1000);
-    const secondsDifference = Math.floor(timeDifference);
-    const minutesDifference = Math.floor(secondsDifference / 60);
-    const hoursDifference = Math.floor(minutesDifference / 60);
-    const daysDifference = Math.floor(hoursDifference / 24);
-    const monthsDifference = Math.floor(daysDifference / 30);
-    const yearsDifference = Math.floor(monthsDifference / 12);
+    // Calculate all time units
+    const minutes = Math.floor(diffInSeconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+    const weeks = Math.floor(days / 7);
+    const months = Math.floor(days / 30);
+    const years = Math.floor(days / 365);
 
-    if (secondsDifference < 60) {
-        return `il y a ${secondsDifference} seconde${secondsDifference > 1 ? 's' : ''}`;
-    } else if (minutesDifference < 60) {
-        return `il y a ${minutesDifference} minute${minutesDifference > 1 ? 's' : ''}`;
-    } else if (hoursDifference < 24) {
-        return `il y a ${hoursDifference} heure${hoursDifference > 1 ? 's' : ''}`;
-    } else if (daysDifference < 7) {
-        return `il y a ${daysDifference} jour${daysDifference > 1 ? 's' : ''}`;
-    } else if (monthsDifference < 12) {
-        return `il y a ${monthsDifference} mois`;
+    // Default suffix
+    const suffix = withSuffix ? (fullText ? ' ago' : '') : '';
+
+    // Full text labels
+    const fullLabels = {
+        seconds: 'secondes',
+        minutes: 'minutes',
+        hours: 'heures',
+        days: 'jours',
+        weeks: 'semaines',
+        months: 'mois',
+        years: 'ans',
+    };
+
+    // Short labels
+    const shortLabels = {
+        seconds: 's',
+        minutes: 'min',
+        hours: 'h',
+        days: 'j',
+        weeks: 'sem',
+        months: 'mois',
+        years: 'an',
+    };
+
+    const labels = fullText ? fullLabels : shortLabels;
+
+    if (diffInSeconds < 60) {
+        const value = fullText ? Math.floor(diffInSeconds) : diffInSeconds;
+        return `${value}${short ? labels.seconds : ''}${suffix}`;
     }
 
-    return `il y a ${yearsDifference} an${yearsDifference > 1 ? 's' : ''}`;
+    if (minutes < 60) {
+        return `${minutes}${short ? labels.minutes : ''}${suffix}`;
+    }
+
+    if (hours < 24) {
+        return `${hours}${short ? labels.hours : ''}${suffix}`;
+    }
+
+    if (days < 7) {
+        return `${days}${short ? labels.days : ''}${suffix}`;
+    }
+
+    if (weeks < 4) {
+        return `${weeks}${short ? labels.weeks : ''}${suffix}`;
+    }
+
+    if (months < 12) {
+        return `${months}${short ? labels.months : ''}${suffix}`;
+    }
+
+    return `${years}${short ? labels.years : ''}${suffix}`;
 };
