@@ -39,10 +39,10 @@ const form = useForm({
   },
 });
 
-// Placeholder dynamique pour les selects
+
 const selectPlaceholder = computed(() => {
   if (levelsPending.value || yearsPending.value) return "Chargement...";
-  return "Sélectionner une promotion";
+  return "Sélectionner une option";
 });
 
 const handleSubmit = form.handleSubmit(async (values) => {
@@ -127,7 +127,7 @@ const handleSubmit = form.handleSubmit(async (values) => {
                   :key="level.id"
                   :value="level.id.toString()"
                 >
-                  {{ level.alias }} - [{{ level.department.alias }}]
+                  {{ level.alias }} {{  level.department ? `- [${level.department.alias}]` : '' }}
                 </SelectItem>
               </SelectGroup>
               <SelectGroup v-else-if="!levelsPending">
